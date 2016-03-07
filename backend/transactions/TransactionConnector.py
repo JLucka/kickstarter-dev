@@ -62,9 +62,9 @@ class TransactionConnector(SQLConnector):
         self.db.commit()
 
     def check_if_this_project_is_in_database(self, project_id):
-        self.cursor.execute("select check_if_project_in_database(%s)" % project_id)
-        return self.cursor.fetchall()[0][0]
+        self.cursor.execute("SELECT count(id) FROM projects where id = ?", project_id)
+        return self.cursor.fetchall()[0][0] == 1
 
     def can_user_pass_that_amount_of_money(self, user_id, money):
-        self.cursor.execute("select check_if_user_can_pass_this_amount(%s, %s)" % (user_id, money))
-        return self.cursor.fetchall()[0][0]
+        self.cursor.execute("SELECT count(id) FROM kickstarter.users where id = ? and money >= ?", user_id, money)
+        return self.cursor.fetchall()[0][0] == 1
