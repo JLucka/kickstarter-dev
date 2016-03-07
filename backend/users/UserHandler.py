@@ -1,7 +1,7 @@
 import json
 from google.appengine.api import users
 import webapp2
-from UsersConnector import UserConnector, User
+from UsersConnector import UserConnector
 
 
 class UserHandler(webapp2.RequestHandler):
@@ -11,8 +11,7 @@ class UserHandler(webapp2.RequestHandler):
 
     def get(self):
         current_user = users.get_current_user()
-        row = self.user_conn.select_all_where("name = '%s'" % current_user)
-        print row
+        row = self.user_conn.select_all_where("name = '%s'", (current_user))
         obj = {
             'id': row[0][0],
             'name': row[0][1],
