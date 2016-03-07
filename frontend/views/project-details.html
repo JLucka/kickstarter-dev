@@ -145,7 +145,7 @@
                 "money": donation
             };
             this.$.transactionAjax.generateRequest();
-            setTimeout(this.getUserUpdate(), 1000);
+            setTimeout(this.getUserUpdate, 1000);
         },
         onSupportClick: function(e) {
             this.querySelector('#dialog').toggle();
@@ -157,8 +157,8 @@
             this.$.user.generateRequest();
         },
         updateMoney: function(request) {
-            this.ovc = this.user.money;
             console.log(this.user.money + " pieniazki usera. " + this.ovc);
+            this.ovc = this.user.money;
         }
     });
 </script>
