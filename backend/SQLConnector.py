@@ -15,7 +15,7 @@ class SQLConnector:
         self.table_name = ""
 
     def select_all(self):
-        self.cursor.execute("""SELECT * FROM %s""", (self.table_name,))
+        self.cursor.execute("SELECT * FROM %s" % self.table_name)
         return self.cursor.fetchall()
 
     def select_from(self, columns):
