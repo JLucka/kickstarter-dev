@@ -35,7 +35,7 @@
             <div id="content">
                 <iron-pages attr-for-selected="data-route" selected="{{route}}">
                     <projects-list data-route="home"></projects-list>
-                    <project-details data-route="project" user-id="{{user.id}}"></project-details>
+                    <project-details data-route="project" user-id="{{user.id}}" ovc="{{user.money}}"></project-details>
                     <div id="loading" data-route="load"><paper-spinner alt="Loading project details" active></paper-spinner></div>
                 </iron-pages>
             </div>

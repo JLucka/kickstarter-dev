@@ -71,11 +71,19 @@
             }
         </style>
         <iron-ajax
+            id="user"
+            url="https://kickstarter-dev.appspot.com/user"
+            handle-as="json"
+            on-response="updateMoney"
+            last-response="{{user}}">
+        </iron-ajax>
+        <iron-ajax
                 id="details-ajax"
                 url="https://kickstarter-dev.appspot.com/projects"
                 handle-as="json"
                 on-response="handleResponse"
-                last-response="{{project}}"></iron-ajax>
+                last-response="{{project}}">
+        </iron-ajax>
         <paper-dialog id="dialog" modal>
             <h2>Support project</h2>
             <div>
@@ -99,23 +107,6 @@
                 on-response="handleResponse"
                 handle-as="json">
         </iron-ajax>
-        <!--<template is="dom-repeat" items="{{ajaxResponse}}">-->
-
-            <!--<paper-card>-->
-                <!--<div class="card-content title-bar">-->
-                    <!--<div class="title"><span class="{{item.name}}">{{item.name}}</span></div>-->
-                    <!--<div id="more-info">-->
-                        <!--<div class="datetime"><span>{{item.date}}</span> <span>{{item.time}}</span></div>-->
-                        <!--<div class="dotation"><span>{{item.money}}</span> OVC collected</div>-->
-                        <!--<div class="subtitle">by<paper-button>{{item.creatorname}}</paper-button></div>-->
-                        <!--<div class="support-button" on-click="onSupportClick"><paper-button>Support</paper-button></div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="card-content description">-->
-                    <!--<p>{{item.description}}</p>-->
-                <!--</div>-->
-            <!--</paper-card>-->
-        <!--</template>-->
         <paper-card>
             <div class="card-content title-bar">
                 <div class="title"><span class="{{project.name}}">{{project.name}}</span></div>
@@ -140,7 +131,8 @@
             userId: {
                 type: Number,
                 value: 0
-            }
+            },
+            ovc: Number
         },
         listeners: {
             'add-button.tap': 'donate'
@@ -153,12 +145,17 @@
                 "money": donation
             };
             this.$.transactionAjax.generateRequest();
+            this.$.user.generateRequest();
         },
         onSupportClick: function(e) {
             this.querySelector('#dialog').toggle();
         },
         handleResponse: function(request) {
             document.querySelector("#app").route='project';
+        },
+        updateMoney: function(request) {
+            this.ovc = this.user.money;
+            console.log(this.user.money + " pieniazki usera.");
         }
     });
 </script>
