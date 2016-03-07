@@ -137,7 +137,10 @@
     Polymer({
         is: 'project-details',
         properties: {
-            userId: Number
+            userId: {
+                type: Number,
+                value: 0
+            }
         },
         listeners: {
             'add-button.tap': 'donate'

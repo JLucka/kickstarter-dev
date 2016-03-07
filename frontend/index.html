@@ -22,7 +22,7 @@
 </head>
 <body id="no-padding">
     <paper-header-panel class="flex">
-        <template is="dom-bind">
+        <template is="dom-bind" id="app">
             <!--url="https://kickstarter-dev.appspot.com/user"-->
             <iron-ajax
                     id="user"
@@ -31,15 +31,13 @@
                     handle-as="json"
                     last-response="{{user}}">
             </iron-ajax>
-            <user-bar login="{{user.name}}" ovc="{{user.money}}" id="{{user.id}}" class="paper-header"></user-bar>
+            <user-bar login="{{user.name}}" ovc="{{user.money}}" class="paper-header"></user-bar>
             <div id="content">
-                <template is="dom-bind" id="app">
-                    <iron-pages attr-for-selected="data-route" selected="{{route}}">
-                        <projects-list data-route="home"></projects-list>
-                        <project-details data-route="project" userId="{{user.id}}"></project-details>
-                        <div id="loading" data-route="load"><paper-spinner alt="Loading project details" active></paper-spinner></div>
-                    </iron-pages>
-                </template>
+                <iron-pages attr-for-selected="data-route" selected="{{route}}">
+                    <projects-list data-route="home"></projects-list>
+                    <project-details data-route="project" user-id="{{user.id}}"></project-details>
+                    <div id="loading" data-route="load"><paper-spinner alt="Loading project details" active></paper-spinner></div>
+                </iron-pages>
             </div>
         </template>
     </paper-header-panel>
