@@ -71,7 +71,7 @@
             }
         </style>
         <iron-ajax
-            id="user"
+            id="userAjax"
             url="https://kickstarter-dev.appspot.com/user"
             handle-as="json"
             on-response="updateMoney"
@@ -145,16 +145,16 @@
                 "money": donation
             };
             this.$.transactionAjax.generateRequest();
-            setTimeout(this.getUserUpdate, 1000);
+            this.async(function() {
+                this.$.userAjax.generateRequest();
+                this.$.detailsAjax.generateRequest();
+            }, 1000);
         },
         onSupportClick: function(e) {
             this.querySelector('#dialog').toggle();
         },
         handleResponse: function(request) {
             document.querySelector("#app").route='project';
-        },
-        getUserUpdate: function() {
-            this.$.user.generateRequest();
         },
         updateMoney: function(request) {
             console.log(this.user.money + " pieniazki usera. " + this.ovc);
