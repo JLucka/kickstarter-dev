@@ -88,7 +88,7 @@
             <h2>Support project</h2>
             <div>
                 <div id="slider-label">0</div><br>
-                <paper-slider pin min="0" max="15" value="0" immediateValue="{{donated-money}}"></paper-slider>
+                <paper-slider pin min="0" max="{{ovc}}" value="0" immediateValue="{{donated-money}}"></paper-slider>
                 <script>
                     document.querySelector('paper-slider').addEventListener('value-change', function(e) {
                         document.querySelector('#slider-label').textContent = this.value;
@@ -145,13 +145,16 @@
                 "money": donation
             };
             this.$.transactionAjax.generateRequest();
-            setTimeout(function(){ this.$.user.generateRequest(); }, 1000);
+            setTimeout(this.getUserUpdate(), 1000);
         },
         onSupportClick: function(e) {
             this.querySelector('#dialog').toggle();
         },
         handleResponse: function(request) {
             document.querySelector("#app").route='project';
+        },
+        getUserUpdate: function() {
+            this.$.user.generateRequest();
         },
         updateMoney: function(request) {
             this.ovc = this.user.money;
