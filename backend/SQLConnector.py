@@ -34,12 +34,10 @@ class SQLConnector:
         keys = (', '.join(keys_and_values.keys()))
         values = (', '.join(map(str, keys_and_values.values())))
         try:
-            query = ("INSERT INTO %s(%s) VALUES (%s)", (self.table_name, keys, values))
-            self.cursor.execute(query)
+            self.cursor.execute("INSERT INTO %s(%s) VALUES (%s)", (self.table_name, keys, values))
             self.db.commit()
             return True
         except MySQLdb.Error, e:
-            print query
             print e
             self.db.rollback()
             return False
