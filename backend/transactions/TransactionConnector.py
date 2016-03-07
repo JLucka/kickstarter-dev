@@ -52,19 +52,21 @@ class TransactionConnector(SQLConnector):
         return False
 
     def save_accepted_transaction(self, user_id, project_id, money):
-        self.cursor.execute("update users set money = money - %s where id = %s"%(money, user_id))
-        self.cursor.execute("update projects set money = money + %s where id = %s" % (money, project_id))
-        self.cursor.execute("insert into transactions (project_id, user_id, money, timestamp, state) values (%s, %s, %s, now(), 'accepted' )" % (project_id, user_id, money))
+        self.cursor.execute("update users set money = money - %s where id = %s", (money, user_id))
+        self.cursor.execute("update projects set money = money + %s where id = %s", (money, project_id))
+        self.cursor.execute("insert into transactions (project_id, user_id, money, timestamp, state) values (%s, %s, "
+                            "%s, now(), 'accepted' )", (project_id, user_id, money))
         self.db.commit()
 
     def save_failure_transaction(self, user_id, project_id, money):
-        self.cursor.execute("insert into transactions (project_id,user_id, money, timestamp, state) values (%s, %s, %s, now(), 'failed' )" % (project_id, user_id, money))
+        self.cursor.execute("insert into transactions (project_id,user_id, money, timestamp, state) values (%s, %s, "
+                            "%s, now(), 'failed' )", (project_id, user_id, money))
         self.db.commit()
 
     def check_if_this_project_is_in_database(self, project_id):
-        self.cursor.execute("SELECT count(id) FROM projects where id = %s" % project_id)
+        self.cursor.execute("SELECT count(id) FROM projects where id = %s", (project_id,))
         return self.cursor.fetchall()[0][0] == 1
 
     def can_user_pass_that_amount_of_money(self, user_id, money):
-        self.cursor.execute("SELECT count(id) FROM kickstarter.users where id = %s and money >= %s" % (user_id, money))
+        self.cursor.execute("SELECT count(id) FROM kickstarter.users where id = %s and money >= %s", (user_id, money))
         return self.cursor.fetchall()[0][0]
