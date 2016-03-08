@@ -17,19 +17,20 @@ class ProjectsHandler(webapp2.RequestHandler):
     def get(self):
         name = str(self.request.get("name"))
 
-        if name != "" and ';' not in name:
-            rows = self.project_conn.select_all_where("name = '%s'", name)
+        if name != "" not in name:
+            rows = self.project_conn.select_all_where("name = %s", name)
         else:
             rows = self.project_conn.select_all()
 
         response = []
         for row in rows:
+            print row
             obj = {
                 'id': row[0],
                 'name': row[1],
                 'description': row[2],
                 'creatorid': row[3],
-                'creatorname': self.user_conn.select_where(["name"], "id = %s", (row[3]))[0][0],
+                'creatorname': self.user_conn.select_where(["name"], "id = %s" % row[3]),
                 'money': row[4],
                 'date': str(row[5]).split(' ')[0],
                 'time': str(row[5]).split(' ')[1]
