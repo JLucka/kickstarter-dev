@@ -18,8 +18,8 @@ class UserHandler(webapp2.RequestHandler):
             'name': row[0][1],
             'money': row[0][2]
             }
-        response.append(obj)
-        return self.response.out.write(json.dumps(response))
+        #response.append(obj)
+        return self.response.out.write(json.dumps(obj))
 
 
 app = webapp2.WSGIApplication([
