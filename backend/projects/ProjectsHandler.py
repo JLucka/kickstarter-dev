@@ -32,7 +32,8 @@ class ProjectsHandler(webapp2.RequestHandler):
                 'creatorid': row[3],
                 'creatorname': self.user_conn.select_where(["name"], "id = %s" % row[3])[0][0],
                 'money': row[4],
-                'date': str(row[5]),
+                'date': str(row[5]).split(" ")[0],
+                'time': str(row[5]).split(" ")[1]
             }
             response.append(obj)
 
