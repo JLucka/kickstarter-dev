@@ -16,11 +16,11 @@
             }
 
             .title-bar {
-                height: 20%;
+                height: 30%;
             }
 
             .description {
-                height: 67%;
+                height: 57%;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 padding-bottom: 10px;
@@ -39,10 +39,10 @@
             }
 
             #more-info {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
+                /*display: flex;*/
+                /*flex-direction: row;*/
+                /*justify-content: space-between;*/
+                /*align-items: center;*/
                 padding-top: 3px;
                 font-family: 'Open Sans', cursive;
                 font-weight: bold;
@@ -52,26 +52,32 @@
             .subtitle {
                 font-family: 'Open Sans', sans-serif;
                 font-weight: lighter;
-                text-align: right;
             }
 
             #more-info span {
                 color: black;
             }
 
-            .subtitle paper-button {
-                border: 1px solid transparent;
-                padding: 0;
-                color: black;
-            }
-
-            .subtitle paper-button:hover {
-                border: 1px solid limegreen;
-            }
-
             p {
                 white-space: pre-wrap;
                 font-family: 'Open Sans', sans-serif;
+            }
+
+            td:first-child {
+                text-align: right;
+                padding-right: 5px;
+            }
+
+            td:nth-child(2) {
+                color: black;
+            }
+
+            iron-icon {
+                height: 18px;
+            }
+
+            iron-icon:hover {
+                color: var(--google-green-500);
             }
         </style>
         <iron-ajax
@@ -87,14 +93,27 @@
                         <div class="card-content title-bar">
                             <div class="title">
                                 <span class="{{item.name}}" on-click="showDetails">{{item.name}}</span>
-                                <donation-button>
-                                    <iron-icon icon="icons:add"></iron-icon>
-                                </donation-button>
                             </div>
                             <div id="more-info">
-                                <div class="datetime">{{item.date}}</div>
-                                <div class="dotation"><span>{{item.money}}</span> OVC collected</div>
-                                <div class="subtitle">by<paper-button>{{item.creatorname}}</paper-button></div>
+                                <table>
+                                    <tr>
+                                        <td>Created on:</td>
+                                        <td>{{item.date}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>OVC collected:</td>
+                                        <td>
+                                            <span>{{item.money}}</span>
+                                            <donation-button>
+                                                <iron-icon icon="icons:add"></iron-icon>
+                                            </donation-button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Created by:</td>
+                                        <td>{{item.creatorname}}</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                         <div class="card-content description">

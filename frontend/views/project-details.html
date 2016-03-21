@@ -34,18 +34,6 @@
                 text-overflow: ellipsis;
             }
 
-            .subtitle paper-button {
-                border: 1px solid transparent;
-                padding: 0;
-                color: black;
-                font-family: 'Open Sans', sans-serif;
-                font-weight: lighter;
-            }
-
-            .subtitle paper-button:hover {
-                border: 1px solid limegreen;
-            }
-
             #more-info {
                 padding-top: 3px;
                 font-family: 'Open Sans', cursive;
@@ -53,13 +41,26 @@
                 color: gray;
             }
 
-            #more-info span {
-                color: black;
-            }
-
             p {
                 white-space: pre-wrap;
                 font-family: 'Open Sans', sans-serif;
+            }
+
+            td:first-child {
+                text-align: right;
+                padding-right: 5px;
+            }
+
+            td:nth-child(2) {
+                color: black;
+            }
+
+            iron-icon {
+                height: 18px;
+            }
+
+            iron-icon:hover {
+                color: var(--google-green-500);
             }
         </style>
 
@@ -83,9 +84,29 @@
             <div class="card-content title-bar">
                 <div class="title"><span class="{{project.name}}">{{project.name}}</span></div>
                 <div id="more-info">
-                    <div class="datetime"><span>{{project.date}}</span> <span>{{project.time}}</span></div>
-                    <div class="subtitle">by<paper-button>{{project.creatorname}}</paper-button></div>
-                    <div class="dotation">collected <span>{{project.money}}</span> OVC!</div>
+                    <table>
+                        <tr>
+                            <td>Created on:</td>
+                            <td>{{project.date}}</td>
+                        </tr>
+                        <tr>
+                            <td>Created at:</td>
+                            <td>{{project.time}}</td>
+                        </tr>
+                        <tr>
+                            <td>OVC collected:</td>
+                            <td>
+                                <span>{{project.money}}</span>
+                                <donation-button>
+                                    <iron-icon icon="icons:add"></iron-icon>
+                                </donation-button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Created by:</td>
+                            <td>{{project.creatorname}}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <div class="card-content description">
