@@ -10,49 +10,43 @@
 <dom-module id="project-details">
     <template>
         <style is="custom-style">
-            paper-card {
-                width: 100%;
-                margin: 10px 0;
+
+            .panel {
+                margin-top: 10px;
+            }
+
+            .panel-footer {
+                background-color: #dff0d8;
+                border-color: #d6e9c6
             }
 
             .description {
-                height: 67%;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 padding-bottom: 10px;
+                padding-top: 10px;
                 border-top: 1px #dddddd solid;
             }
 
             .title {
                 font-family: 'Open Sans', sans-serif;
                 font-weight: bold;
-                text-shadow: 0px 1px green;
                 font-size: 25px;
-                color: limegreen;
+                color: #59af5a;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
 
             #more-info {
-                padding-top: 3px;
+                padding-bottom: 10px !important;
                 font-family: 'Open Sans', cursive;
-                font-weight: bold;
                 color: gray;
             }
 
             p {
                 white-space: pre-wrap;
                 font-family: 'Open Sans', sans-serif;
-            }
-
-            td:first-child {
-                text-align: right;
-                padding-right: 5px;
-            }
-
-            td:nth-child(2) {
-                color: black;
             }
 
             iron-icon {
@@ -62,6 +56,11 @@
             iron-icon:hover {
                 color: var(--google-green-500);
             }
+
+            paper-button span.green-hover:hover {
+                color: #3c763d !important;
+            }
+
         </style>
 
         <iron-ajax
@@ -80,44 +79,56 @@
                 last-response="{{project}}">
         </iron-ajax>
 
-        <paper-card>
-            <div class="card-content title-bar">
-                <div class="title"><span class="{{project.name}}">{{project.name}}</span></div>
-                <div id="more-info">
-                    <table>
-                        <tr>
-                            <td>Created on:</td>
-                            <td>{{project.date}}</td>
-                        </tr>
-                        <tr>
-                            <td>Created at:</td>
-                            <td>{{project.time}}</td>
-                        </tr>
-                        <tr>
-                            <td>OVC collected:</td>
-                            <td>
-                                <span>{{project.money}}</span>
-                                <donation-button>
-                                    <iron-icon icon="icons:add"></iron-icon>
-                                </donation-button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Created by:</td>
-                            <td>{{stripOcado(project.creatorname)}}</td>
-                        </tr>
-                    </table>
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <div class="title text-center">
+                    {{project.name}}
                 </div>
             </div>
-            <div class="card-content description">
-                <p>{{project.description}}</p>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6 text-right" id="more-info">
+                        Created on:
+                        <br>
+                        Created at:
+                        <br>
+                        OVC collected:
+                        <br>
+                        Created by:
+                    </div>
+                    <div class="col-xs-6">
+                        <b>
+                            {{project.date}}
+                            <br>
+                            {{project.time}}
+                            <br>
+                            {{project.money}}
+                            <br>
+                            {{stripOcado(project.creatorname)}}
+                        </b>
+                    </div>
+                </div>
+                <div class="card-content description ">
+                    <p class="text-justify">{{project.description}}</p>
+                </div>
+                <div class="col-md-6 col-md-offset-3 col-sm-12">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" role="progressbar" id="progbar">
+                            <span class="hidden-md hidden-lg"><b>{{project.money}} OVC Raised</b></span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-actions">
-                <donation-button user-id="{{userId}}" ovc="{{ovc}}">
-                    <paper-button>Support</paper-button>
+            <div class="panel-footer text-center">
+                <donation-button>
+                    <paper-button>
+                            <span class="custom green-hover">
+                                <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                            </span>
+                    </paper-button>
                 </donation-button>
             </div>
-        </paper-card>
+            </div>
     </template>
 </dom-module>
 
