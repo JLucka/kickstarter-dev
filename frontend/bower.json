@@ -35,5 +35,8 @@
   },
   "authors": [
     "Liseck <timages94@gmail.com>"
-  ]
+  ],
+  "resolutions": {
+    "paper-styles": "^1.1.0"
+  }
 }
