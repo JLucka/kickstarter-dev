@@ -78,7 +78,7 @@
             name: String,
             desc: String,
             login: String,
-            id: {
+            userId: {
                 type: Number,
                 value: 0
             },
@@ -102,7 +102,7 @@
             this.$.ajax.params = {
                 "name": this.name,
                 "desc": this.desc,
-                "creatorId": this.id
+                "creatorId": this.userId
             };
             this.$.ajax.generateRequest();
         },

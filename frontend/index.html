@@ -31,7 +31,7 @@
                     handle-as="json"
                     last-response="{{user}}">
             </iron-ajax>
-            <user-bar login="{{user.name}}" ovc="{{user.money}}" class="paper-header"></user-bar>
+            <user-bar user-id="{{user.id}}" login="{{user.name}}" ovc="{{user.money}}" class="paper-header"></user-bar>
             <div id="content">
                 <iron-pages attr-for-selected="data-route" selected="{{route}}">
                     <projects-list data-route="home"></projects-list>
