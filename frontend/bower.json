@@ -30,7 +30,8 @@
     "iron-meta": "PolymerElements/iron-meta#~1.1.1",
     "iron-page-url": "PolymerElements/iron-page-url#^0.7.3",
     "paper-slider": "PolymerElements/paper-slider#^1.0.9",
-    "iron-icons": "PolymerElements/iron-icons#^1.1.3"
+    "iron-icons": "PolymerElements/iron-icons#^1.1.3",
+    "paper-progress": "PolymerElements/paper-progress#~1.0.9"
   },
   "authors": [
     "Liseck <timages94@gmail.com>"

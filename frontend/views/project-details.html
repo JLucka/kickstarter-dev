@@ -10,7 +10,6 @@
 <dom-module id="project-details">
     <template>
         <style is="custom-style">
-
             .panel {
                 margin-top: 10px;
             }
@@ -113,8 +112,7 @@
                 </div>
                 <div class="col-md-6 col-md-offset-3 col-sm-12">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-success" role="progressbar" id="progbar">
-                            <span class="hidden-md hidden-lg"><b>{{project.money}} OVC Raised</b></span>
+                        <div class="progress-bar progress-bar-success" role="progressbar"  style$="width: {{project.money}}%">
                         </div>
                     </div>
                 </div>
@@ -147,6 +145,6 @@
         },
         stripOcado: function(name) {
             return name.replace('@ocado.com', '');
-        }
+        },
     });
 </script>
