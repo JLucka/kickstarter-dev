@@ -104,7 +104,7 @@
                         </tr>
                         <tr>
                             <td>Created by:</td>
-                            <td>{{project.creatorname}}</td>
+                            <td>{{stripOcado(project.creatorname)}}</td>
                         </tr>
                     </table>
                 </div>
@@ -133,6 +133,9 @@
         },
         handleResponse: function(request) {
             document.querySelector("#app").route='project';
+        },
+        stripOcado: function(name) {
+            return name.replace('@ocado.com', '');
         }
     });
 </script>

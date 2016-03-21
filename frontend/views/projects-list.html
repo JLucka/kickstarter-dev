@@ -111,7 +111,7 @@
                                     </tr>
                                     <tr>
                                         <td>Created by:</td>
-                                        <td>{{item.creatorname}}</td>
+                                        <td>{{stripOcado(item.creatorname)}}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -141,6 +141,9 @@
                 return a.time < b.time ? 1 : -1;
             }
             return a.date < b.date ? 1 : -1;
+        },
+        stripOcado: function(name) {
+            return name.replace('@ocado.com', '');
         }
     });
 </script>
