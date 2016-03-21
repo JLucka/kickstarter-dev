@@ -1,0 +1,121 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+
+<dom-module id="donation-button">
+    <template>
+        <style is="custom-style">
+            #content{
+                display: inline;
+            }
+
+            #cat-dialog {
+                width: 250px;
+            }
+            #dialog {
+                width: 30%;
+            }
+            p {
+                white-space: pre-wrap;
+                font-family: 'Open Sans', sans-serif;
+            }
+
+            paper-dialog {
+                width: 100px;
+            }
+
+            paper-slider {
+                --paper-slider-knob-color: var(--paper-green-500);
+                --paper-slider-active-color: var(--paper-green-500);
+                --paper-slider-pin-color: var(--paper-green-500);
+            }
+        </style>
+
+        <!--<paper-button on-click="onSupportClick">Support</paper-button>-->
+        <div id="content" on-click="onSupportClick">
+            <content></content>
+        </div>
+
+        <paper-dialog id="dialog" modal>
+            <h2>Support project</h2>
+            <div>
+                <div id="slider-label">0</div><br>
+                <paper-slider pin min="0" max="{{ovc}}" value="0" immediateValue="{{donated-money}}"></paper-slider>
+                <script>
+                    document.querySelector('paper-slider').addEventListener('value-change', function(e) {
+                        document.querySelector('#slider-label').textContent = this.value;
+                    });
+                </script>
+            </div>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm autofocus id="donate-button">Donate</paper-button>
+            </div>
+        </paper-dialog>
+
+        <paper-dialog id="cat-dialog" modal>
+            <h2>Support project</h2>
+            <p>Are you sure?</p>
+            <div class="buttons">
+                <paper-button dialog-dismiss autofocus>No</paper-button>
+                <paper-button dialog-confirm id="confirm-button">Yes</paper-button>
+            </div>
+        </paper-dialog>
+
+        <iron-ajax
+                id="transactionAjax"
+                url="https://kickstarter-dev.appspot.com/transaction"
+                method="POST"
+                on-response="handleResponse"
+                handle-as="json">
+        </iron-ajax>
+
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'donation-button',
+        properties: {
+            userId: {
+                type: Number,
+                value: 0
+            },
+            ovc: Number
+        },
+        listeners: {
+            'donate-button.tap': 'requestConfirmation',
+            'confirm-button.tap': 'donate'
+        },
+        donate: function(e) {
+            var donation = document.querySelector('paper-slider').value;
+            this.$.transactionAjax.params = {
+                "projectId": this.project.id,
+                "userId": this.userId,
+                "money": donation
+            };
+            this.$.transactionAjax.generateRequest();
+            this.async(function() {
+                this.$.userAjax.generateRequest();
+                this.$.detailsAjax.generateRequest();
+            }, 1000);
+        },
+        onSupportClick: function(e) {
+            this.querySelector('#dialog').toggle();
+        },
+        requestConfirmation: function(e) {
+            this.querySelector('#cat-dialog').toggle();
+        },
+        handleResponse: function(request) {
+            document.querySelector("#app").route='project';
+        },
+        updateMoney: function(request) {
+            console.log(this.user.money + " pieniazki usera. " + this.ovc);
+            this.ovc = this.user.money;
+        }
+    });
+</script>

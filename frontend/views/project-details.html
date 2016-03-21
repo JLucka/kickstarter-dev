@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="donation-button.html">
 
 
 <dom-module id="project-details">
@@ -13,6 +14,7 @@
                 width: 100%;
                 margin: 10px 0;
             }
+
             .description {
                 height: 67%;
                 overflow: hidden;
@@ -20,6 +22,7 @@
                 padding-bottom: 10px;
                 border-top: 1px #dddddd solid;
             }
+
             .title {
                 font-family: 'Open Sans', sans-serif;
                 font-weight: bold;
@@ -30,46 +33,36 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
-             .subtitle paper-button {
+
+            .subtitle paper-button {
                 border: 1px solid transparent;
                 padding: 0;
                 color: black;
                 font-family: 'Open Sans', sans-serif;
                 font-weight: lighter;
             }
+
             .subtitle paper-button:hover {
                 border: 1px solid limegreen;
             }
-            #cat-dialog {
-                width: 250px;
-            }
-            #dialog {
-                width: 30%;
-            }
+
             #more-info {
                 padding-top: 3px;
                 font-family: 'Open Sans', cursive;
                 font-weight: bold;
                 color: gray;
             }
+
             #more-info span {
                 color: black;
             }
+
             p {
                 white-space: pre-wrap;
                 font-family: 'Open Sans', sans-serif;
             }
-
-            paper-dialog {
-                width: 100px;
-            }
-
-            paper-slider {
-                --paper-slider-knob-color: var(--paper-green-500);
-                --paper-slider-active-color: var(--paper-green-500);
-                --paper-slider-pin-color: var(--paper-green-500);
-            }
         </style>
+
         <iron-ajax
             id="userAjax"
             url="https://kickstarter-dev.appspot.com/user"
@@ -77,6 +70,7 @@
             on-response="updateMoney"
             last-response="{{user}}">
         </iron-ajax>
+
         <iron-ajax
                 id="detailsAjax"
                 url="https://kickstarter-dev.appspot.com/projects"
@@ -84,39 +78,7 @@
                 on-response="handleResponse"
                 last-response="{{project}}">
         </iron-ajax>
-        <paper-dialog id="dialog" modal>
-            <h2>Support project</h2>
-            <div>
-                <div id="slider-label">0</div><br>
-                <paper-slider pin min="0" max="{{ovc}}" value="0" immediateValue="{{donated-money}}"></paper-slider>
-                <script>
-                    document.querySelector('paper-slider').addEventListener('value-change', function(e) {
-                        document.querySelector('#slider-label').textContent = this.value;
-                    });
-                </script>
-            </div>
-            <div class="buttons">
-                <paper-button dialog-dismiss>Cancel</paper-button>
-                <paper-button dialog-confirm autofocus id="donate-button">Donate</paper-button>
-            </div>
-        </paper-dialog>
-        <paper-dialog id="cat-dialog" modal>
-            <h2>Support project</h2>
-            <p>
-                Are you sure?
-            </p>
-            <div class="buttons">
-                <paper-button dialog-dismiss autofocus>No</paper-button>
-                <paper-button dialog-confirm id="confirm-button">Yes</paper-button>
-            </div>
-        </paper-dialog>
-        <iron-ajax
-                id="transactionAjax"
-                url="https://kickstarter-dev.appspot.com/transaction"
-                method="POST"
-                on-response="handleResponse"
-                handle-as="json">
-        </iron-ajax>
+
         <paper-card>
             <div class="card-content title-bar">
                 <div class="title"><span class="{{project.name}}">{{project.name}}</span></div>
@@ -124,14 +86,15 @@
                     <div class="datetime"><span>{{project.date}}</span> <span>{{project.time}}</span></div>
                     <div class="subtitle">by<paper-button>{{project.creatorname}}</paper-button></div>
                     <div class="dotation">collected <span>{{project.money}}</span> OVC!</div>
-                    <!--<div class="support-button" on-click="onSupportClick"><paper-button>Support</paper-button></div>-->
                 </div>
             </div>
             <div class="card-content description">
                 <p>{{project.description}}</p>
             </div>
             <div class="card-actions">
-                <paper-button on-click="onSupportClick">Support</paper-button>
+                <donation-button user-id="{{userId}}" ovc="{{ovc}}">
+                    <paper-button>Support</paper-button>
+                </donation-button>
             </div>
         </paper-card>
     </template>
@@ -147,35 +110,8 @@
             },
             ovc: Number
         },
-        listeners: {
-            'donate-button.tap': 'requestConfirmation',
-            'confirm-button.tap': 'donate'
-        },
-        donate: function(e) {
-            var donation = document.querySelector('paper-slider').value;
-            this.$.transactionAjax.params = {
-                "projectId": this.project.id,
-                "userId": this.userId,
-                "money": donation
-            };
-            this.$.transactionAjax.generateRequest();
-            this.async(function() {
-                this.$.userAjax.generateRequest();
-                this.$.detailsAjax.generateRequest();
-            }, 1000);
-        },
-        onSupportClick: function(e) {
-            this.querySelector('#dialog').toggle();
-        },
-        requestConfirmation: function(e) {
-            this.querySelector('#cat-dialog').toggle();
-        },
         handleResponse: function(request) {
             document.querySelector("#app").route='project';
-        },
-        updateMoney: function(request) {
-            console.log(this.user.money + " pieniazki usera. " + this.ovc);
-            this.ovc = this.user.money;
         }
     });
 </script>

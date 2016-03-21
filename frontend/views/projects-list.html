@@ -2,6 +2,8 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="donation-button.html">
 
 
 <dom-module id="projects-list">
@@ -83,7 +85,12 @@
                 <div class="col-md-4">
                     <paper-card>
                         <div class="card-content title-bar">
-                            <div class="title"><span class="{{item.name}}" on-click="showDetails">{{item.name}}</span></div>
+                            <div class="title">
+                                <span class="{{item.name}}" on-click="showDetails">{{item.name}}</span>
+                                <donation-button>
+                                    <iron-icon icon="icons:add"></iron-icon>
+                                </donation-button>
+                            </div>
                             <div id="more-info">
                                 <div class="datetime">{{item.date}}</div>
                                 <div class="dotation"><span>{{item.money}}</span> OVC collected</div>
