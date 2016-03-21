@@ -11,6 +11,9 @@
         <style>
             .panel-body {
                 height: 280px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-bottom: 10px;
             }
 
             .panel {
@@ -22,13 +25,7 @@
                 border-color: #d6e9c6
             }
 
-            .title-bar {
-                height: 30%;
-            }
-
             .description {
-                overflow: hidden;
-                text-overflow: ellipsis;
                 padding-bottom: 10px;
                 padding-top: 10px;
                 border-top: 1px #dddddd solid;
@@ -48,11 +45,6 @@
                 padding-bottom: 10px;
                 font-family: 'Open Sans', cursive;
                 color: gray;
-            }
-
-            .subtitle {
-                font-family: 'Open Sans', sans-serif;
-                font-weight: lighter;
             }
 
             #more-info span {
@@ -115,27 +107,27 @@
                                     </b>
                                 </div>
                             </div>
-                                <div class="card-content description">
-                                    <p>{{item.description}}</p>
-                                </div>
+                            <div class="description">
+                                <p>{{item.description}}</p>
+                            </div>
                         </div>
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-xs-6 text-left">
-                                <paper-button class="{{item.name}}" on-click="showDetails" >
-                                    <span class="custom green-hover">
-                                        See More<iron-icon icon="icons:chevron-right"></iron-icon>
-                                    </span>
-                                </paper-button>
+                                    <paper-button class="{{item.name}}" on-click="showDetails" >
+                                        <span class="custom green-hover">
+                                            <span class="{{item.name}}">See More</span><iron-icon class="{{item.name}}" icon="icons:chevron-right"></iron-icon>
+                                        </span>
+                                    </paper-button>
                                 </div>
                                 <div class="col-xs-6 text-right">
                                     <donation-button>
-                                    <paper-button>
-                                    <span class="custom green-hover">
-                                        <iron-icon icon="icons:favorite-border"></iron-icon>Support
-                                    </span>
-                                    </paper-button>
-                                </donation-button>
+                                        <paper-button>
+                                            <span class="custom green-hover">
+                                                <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                                            </span>
+                                        </paper-button>
+                                    </donation-button>
                                 </div>
                             </div>
                         </div>
