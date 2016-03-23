@@ -2,74 +2,75 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="donation-button.html">
 
 
 <dom-module id="projects-list">
     <template>
         <style>
-            paper-card {
-                width: 100%;
-                height: 400px;
-                margin: 10px 0;
+            .panel-body {
+                height: 280px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-bottom: 10px;
             }
 
-            .title-bar {
-                height: 20%;
+            .panel {
+                margin-top: 10px;
+            }
+
+            .panel-footer {
+                background-color: #dff0d8;
+                border-color: #d6e9c6
             }
 
             .description {
-                height: 67%;
-                overflow: hidden;
-                text-overflow: ellipsis;
                 padding-bottom: 10px;
+                padding-top: 10px;
                 border-top: 1px #dddddd solid;
             }
 
             .title {
                 font-family: 'Open Sans', sans-serif;
                 font-weight: bold;
-                text-shadow: 0px 1px green;
                 font-size: 25px;
-                color: limegreen;
+                color: #59af5a;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
 
             #more-info {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                padding-top: 3px;
+                padding-bottom: 10px;
                 font-family: 'Open Sans', cursive;
-                font-weight: bold;
                 color: gray;
-            }
-
-            .subtitle {
-                font-family: 'Open Sans', sans-serif;
-                font-weight: lighter;
-                text-align: right;
             }
 
             #more-info span {
                 color: black;
             }
 
-            .subtitle paper-button {
-                border: 1px solid transparent;
-                padding: 0;
-                color: black;
-            }
-
-            .subtitle paper-button:hover {
-                border: 1px solid limegreen;
-            }
-
             p {
                 white-space: pre-wrap;
                 font-family: 'Open Sans', sans-serif;
+            }
+
+            iron-icon {
+                height: 18px;
+            }
+
+            iron-icon:hover {
+                color: var(--google-green-500);
+            }
+
+            paper-button span.green-hover:hover {
+                color: #3c763d !important;
+            }
+
+            .col-xs-6 {
+                padding-left: 8px;
+                padding-right: 8px;
             }
         </style>
         <iron-ajax
@@ -80,25 +81,60 @@
                 last-response="{{ajaxResponse}}"></iron-ajax>
         <div class="container-fluid">
             <template is="dom-repeat" items="{{ajaxResponse}}" sort="_sort">
-                <div class="col-md-4">
-                    <paper-card>
-                        <div class="card-content title-bar">
-                            <div class="title"><span class="{{item.name}}" on-click="showDetails">{{item.name}}</span></div>
-                            <div id="more-info">
-                                <div class="datetime">{{item.date}}</div>
-                                <div class="dotation"><span>{{item.money}}</span> OVC collected</div>
-                                <div class="subtitle">by<paper-button>{{item.creatorname}}</paper-button></div>
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <div class="title text-center">
+                                <span class="{{item.name}}" on-click="showDetails">{{item.name}}</span>
                             </div>
                         </div>
-                        <div class="card-content description">
-                            <p>{{item.description}}</p>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-6 text-right" id="more-info">
+                                    Created on:
+                                    <br>
+                                    OVC collected:
+                                    <br>
+                                    Created by:
+                                </div>
+                                <div class="col-xs-6">
+                                    <b>
+                                    {{item.date}}
+                                    <br>
+                                    {{item.money}}
+                                    <br>
+                                    {{stripOcado(item.creatorname)}}
+                                    </b>
+                                </div>
+                            </div>
+                            <div class="description">
+                                <p>{{item.description}}</p>
+                            </div>
                         </div>
-                        <div class="card-actions">
-                            <paper-button class="{{item.name}}" on-click="showDetails">See More</paper-button>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-xs-6 text-left">
+                                    <paper-button class="{{item.name}}" on-click="showDetails" >
+                                        <span class="custom green-hover">
+                                            <span class="{{item.name}}">See More</span><iron-icon class="{{item.name}}" icon="icons:chevron-right"></iron-icon>
+                                        </span>
+                                    </paper-button>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <donation-button>
+                                        <paper-button>
+                                            <span class="custom green-hover">
+                                                <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                                            </span>
+                                        </paper-button>
+                                    </donation-button>
+                                </div>
+                            </div>
                         </div>
-                    </paper-card>
+                    </div>
                 </div>
             </template>
+        </div>
         </div>
     </template>
 </dom-module>
@@ -115,6 +151,9 @@
                 return a.time < b.time ? 1 : -1;
             }
             return a.date < b.date ? 1 : -1;
+        },
+        stripOcado: function(name) {
+            return name.replace('@ocado.com', '');
         }
     });
 </script>

@@ -4,72 +4,64 @@
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="donation-button.html">
 
 
 <dom-module id="project-details">
     <template>
         <style is="custom-style">
-            paper-card {
-                width: 100%;
-                margin: 10px 0;
+            .panel {
+                margin-top: 10px;
             }
+
+            .panel-footer {
+                background-color: #dff0d8;
+                border-color: #d6e9c6
+            }
+
             .description {
-                height: 67%;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 padding-bottom: 10px;
+                padding-top: 10px;
                 border-top: 1px #dddddd solid;
             }
+
             .title {
                 font-family: 'Open Sans', sans-serif;
                 font-weight: bold;
-                text-shadow: 0px 1px green;
                 font-size: 25px;
-                color: limegreen;
+                color: #59af5a;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
-             .subtitle paper-button {
-                border: 1px solid transparent;
-                padding: 0;
-                color: black;
-                font-family: 'Open Sans', sans-serif;
-                font-weight: lighter;
-            }
-            .subtitle paper-button:hover {
-                border: 1px solid limegreen;
-            }
-            .support-button {
-                color: limegreen;
-            }
-            #dialog {
-                width: 30%;
-            }
+
             #more-info {
-                padding-top: 3px;
+                padding-bottom: 10px !important;
                 font-family: 'Open Sans', cursive;
-                font-weight: bold;
                 color: gray;
             }
-            #more-info span {
-                color: black;
-            }
+
             p {
                 white-space: pre-wrap;
                 font-family: 'Open Sans', sans-serif;
             }
 
-            paper-dialog {
-                width: 100px;
+            iron-icon {
+                height: 18px;
             }
 
-            paper-slider {
-                --paper-slider-knob-color: var(--paper-green-500);
-                --paper-slider-active-color: var(--paper-green-500);
-                --paper-slider-pin-color: var(--paper-green-500);
+            iron-icon:hover {
+                color: var(--google-green-500);
             }
+
+            paper-button span.green-hover:hover {
+                color: #3c763d !important;
+            }
+
         </style>
+
         <iron-ajax
             id="userAjax"
             url="https://kickstarter-dev.appspot.com/user"
@@ -77,6 +69,7 @@
             on-response="updateMoney"
             last-response="{{user}}">
         </iron-ajax>
+
         <iron-ajax
                 id="detailsAjax"
                 url="https://kickstarter-dev.appspot.com/projects"
@@ -84,43 +77,56 @@
                 on-response="handleResponse"
                 last-response="{{project}}">
         </iron-ajax>
-        <paper-dialog id="dialog" modal>
-            <h2>Support project</h2>
-            <div>
-                <div id="slider-label">0</div><br>
-                <paper-slider pin min="0" max="{{ovc}}" value="0" immediateValue="{{donated-money}}"></paper-slider>
-                <script>
-                    document.querySelector('paper-slider').addEventListener('value-change', function(e) {
-                        document.querySelector('#slider-label').textContent = this.value;
-                    });
-                </script>
-            </div>
-            <div class="buttons">
-                <paper-button dialog-dismiss>Cancel</paper-button>
-                <paper-button dialog-confirm autofocus id="add-button">Donate</paper-button>
-            </div>
-        </paper-dialog>
-        <iron-ajax
-                id="transactionAjax"
-                url="https://kickstarter-dev.appspot.com/transaction"
-                method="POST"
-                on-response="handleResponse"
-                handle-as="json">
-        </iron-ajax>
-        <paper-card>
-            <div class="card-content title-bar">
-                <div class="title"><span class="{{project.name}}">{{project.name}}</span></div>
-                <div id="more-info">
-                    <div class="datetime"><span>{{project.date}}</span> <span>{{project.time}}</span></div>
-                    <div class="dotation"><span>{{project.money}}</span> OVC collected</div>
-                    <div class="subtitle">by<paper-button>{{project.creatorname}}</paper-button></div>
-                    <div class="support-button" on-click="onSupportClick"><paper-button>Support</paper-button></div>
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <div class="title text-center">
+                    {{project.name}}
                 </div>
             </div>
-            <div class="card-content description">
-                <p>{{project.description}}</p>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6 text-right" id="more-info">
+                        Created on:
+                        <br>
+                        Created at:
+                        <br>
+                        OVC collected:
+                        <br>
+                        Created by:
+                    </div>
+                    <div class="col-xs-6">
+                        <b>
+                            {{project.date}}
+                            <br>
+                            {{project.time}}
+                            <br>
+                            {{project.money}}
+                            <br>
+                            {{stripOcado(project.creatorname)}}
+                        </b>
+                    </div>
+                </div>
+                <div class="card-content description ">
+                    <p class="text-justify">{{project.description}}</p>
+                </div>
+                <div class="col-md-6 col-md-offset-3 col-sm-12">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" role="progressbar"  style$="width: {{project.money}}%">
+                        </div>
+                    </div>
+                </div>
             </div>
-        </paper-card>
+            <div class="panel-footer text-center">
+                <donation-button>
+                    <paper-button>
+                            <span class="custom green-hover">
+                                <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                            </span>
+                    </paper-button>
+                </donation-button>
+            </div>
+            </div>
     </template>
 </dom-module>
 
@@ -134,31 +140,11 @@
             },
             ovc: Number
         },
-        listeners: {
-            'add-button.tap': 'donate'
-        },
-        donate: function(e) {
-            var donation = document.querySelector('paper-slider').value;
-            this.$.transactionAjax.params = {
-                "projectId": this.project.id,
-                "userId": this.userId,
-                "money": donation
-            };
-            this.$.transactionAjax.generateRequest();
-            this.async(function() {
-                this.$.userAjax.generateRequest();
-                this.$.detailsAjax.generateRequest();
-            }, 1000);
-        },
-        onSupportClick: function(e) {
-            this.querySelector('#dialog').toggle();
-        },
         handleResponse: function(request) {
             document.querySelector("#app").route='project';
         },
-        updateMoney: function(request) {
-            console.log(this.user.money + " pieniazki usera. " + this.ovc);
-            this.ovc = this.user.money;
-        }
+        stripOcado: function(name) {
+            return name.replace('@ocado.com', '');
+        },
     });
 </script>
