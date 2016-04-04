@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html">
 <link rel="import" href="../bower_components/iron-page-url/iron-page-url.html">
+<link rel="import" href="configuration-constants.html">
 
 
 <dom-module id="user-bar">
@@ -40,13 +41,16 @@
                 color: white;
             }
         </style>
+
+        <configuration-constants name="project" value="{{url}}"></configuration-constants>
         <iron-ajax
                 id="ajax"
-                url="https://kickstarter-dev.appspot.com/projects"
+                url="{{url}}"
                 method="POST"
                 on-response="handleResponse"
                 handle-as="json">
         </iron-ajax>
+
         <iron-page-url path="{{path}}"></iron-page-url>
         <div class="header">
             <div><div id="logo">Kickstarter</div><span id="bread">{{path}}</span></div>

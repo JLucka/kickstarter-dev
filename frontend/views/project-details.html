@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="donation-button.html">
+<link rel="import" href="configuration-constants.html">
 
 
 <dom-module id="project-details">
@@ -62,9 +63,10 @@
 
         </style>
 
+        <configuration-constants name="project" value="{{url}}"></configuration-constants>
         <iron-ajax
                 id="detailsAjax"
-                url="https://kickstarter-dev.appspot.com/projects"
+                url="{{url}}"
                 handle-as="json"
                 on-response="handleResponse"
                 last-response="{{project}}">

@@ -15,6 +15,7 @@
     <link rel="import" href="bower_components/iron-pages/iron-pages.html">
     <link rel="import" href="bower_components/paper-spinner/paper-spinner.html">
     <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+    <link rel="import" href="views/configuration-constants.html">
     <link rel="import" href="views/user-bar.html">
     <link rel="import" href="views/projects-list.html">
     <link rel="import" href="views/project-details.html">
@@ -23,14 +24,15 @@
 <body id="no-padding">
     <paper-header-panel class="flex">
         <template is="dom-bind" id="app">
-            <!--url="https://kickstarter-dev.appspot.com/user"-->
+            <configuration-constants name="user" value="{{url}}"></configuration-constants>
             <iron-ajax
                     id="user"
                     auto
-                    url="https://kickstarter-dev.appspot.com/user"
+                    url="{{url}}"
                     handle-as="json"
                     last-response="{{user}}">
             </iron-ajax>
+
             <user-bar user-id="{{user.id}}" login="{{user.name}}" ovc="{{user.money}}" class="paper-header"></user-bar>
             <div id="content">
                 <iron-pages attr-for-selected="data-route" selected="{{route}}">

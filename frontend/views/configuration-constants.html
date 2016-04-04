@@ -1,0 +1,29 @@
+<dom-module id="configuration-constants"></dom-module>
+<script>
+    Polymer({
+        is: 'configuration-constants',
+        properties: {
+            name: {
+                type: String,
+                value: ''
+            },
+            value: {
+                type: Object,
+                notify: true
+            }
+        },
+        ready: function() {
+            var test_constants = {
+                user: 'http://localhost:3000/user',
+                project: 'https://kickstarter-dev.appspot.com/projects',
+                transaction: 'http://localhost:3000/transaction'
+            };
+            var constants = {
+                user: 'https://kickstarter-dev.appspot.com/user',
+                project: 'https://kickstarter-dev.appspot.com/projects',
+                transaction: 'https://kickstarter-dev.appspot.com/transaction'
+            };
+            this.value = constants[this.name];
+        }
+    });
+</script>

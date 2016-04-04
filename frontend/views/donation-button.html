@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="configuration-constants.html">
 
 
 <dom-module id="donation-button">
@@ -63,9 +64,12 @@
         </paper-dialog>
 
         <!--url="https://kickstarter-dev.appspot.com/transaction"-->
+        <configuration-constants name="transaction" value="{{transactionUrl}}"></configuration-constants>
+        <configuration-constants name="user" value="{{userUrl}}"></configuration-constants>
+        <configuration-constants name="project" value="{{projectUrl}}"></configuration-constants>
         <iron-ajax
                 id="transactionAjax"
-                url="https://kickstarter-dev.appspot.com/transaction"
+                url="{{transactionUrl}}"
                 method="POST"
                 on-response="handleResponse"
                 handle-as="json">
@@ -73,7 +77,7 @@
 
         <iron-ajax
                 id="userAjax"
-                url="https://kickstarter-dev.appspot.com/user"
+                url="{{userUrl}}"
                 handle-as="json"
                 on-response="updateMoney"
                 last-response="{{user}}">
@@ -81,7 +85,7 @@
 
         <iron-ajax
                 id="projectDetailsAjax"
-                url="https://kickstarter-dev.appspot.com/projects"
+                url="{{projectUrl}}"
                 handle-as="json"
                 on-response="handleResponse"
                 last-response="{{project}}">
