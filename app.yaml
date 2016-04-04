@@ -23,6 +23,9 @@ handlers:
   script: backend.users.UserHandler.app
   secure: always
 
+- url: /files
+  script: backend.files.FilesHandler.app
+
 - url: /transaction
   script: backend.transactions.TransactionHandler.app
   secure: always
