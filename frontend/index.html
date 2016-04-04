@@ -34,7 +34,7 @@
             <user-bar user-id="{{user.id}}" login="{{user.name}}" ovc="{{user.money}}" class="paper-header"></user-bar>
             <div id="content">
                 <iron-pages attr-for-selected="data-route" selected="{{route}}">
-                    <projects-list data-route="home"></projects-list>
+                    <projects-list data-route="home" user-id="{{user.id}}" ovc="{{user.money}}"></projects-list>
                     <project-details data-route="project" user-id="{{user.id}}" ovc="{{user.money}}"></project-details>
                     <div id="loading" data-route="load"><paper-spinner alt="Loading project details" active></paper-spinner></div>
                 </iron-pages>
@@ -43,3 +43,7 @@
     </paper-header-panel>
 </body>
 </html>
+
+<!-- include layouts -->
+<!-- iron-location -->
+<!-- notify -->

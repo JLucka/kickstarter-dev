@@ -44,13 +44,8 @@
         <paper-dialog id="dialog" modal>
             <h2>Support project</h2>
             <div>
-                <div id="slider-label">0</div><br>
-                <paper-slider pin min="0" max="{{ovc}}" value="0" immediateValue="{{donated-money}}"></paper-slider>
-                <script>
-                    document.querySelector('paper-slider').addEventListener('value-change', function(e) {
-                        document.querySelector('#slider-label').textContent = this.value;
-                    });
-                </script>
+                <div id$="slider-label-{{projectId}}">0</div><br>
+                <paper-slider id$="dotation-slider-{{projectId}}" pin min="0" max="{{ovc}}" value="0" immediateValue="{{donated-money}}"></paper-slider>
             </div>
             <div class="buttons">
                 <paper-button dialog-dismiss>Cancel</paper-button>
@@ -67,12 +62,29 @@
             </div>
         </paper-dialog>
 
+        <!--url="https://kickstarter-dev.appspot.com/transaction"-->
         <iron-ajax
                 id="transactionAjax"
                 url="https://kickstarter-dev.appspot.com/transaction"
                 method="POST"
                 on-response="handleResponse"
                 handle-as="json">
+        </iron-ajax>
+
+        <iron-ajax
+                id="userAjax"
+                url="https://kickstarter-dev.appspot.com/user"
+                handle-as="json"
+                on-response="updateMoney"
+                last-response="{{user}}">
+        </iron-ajax>
+
+        <iron-ajax
+                id="projectDetailsAjax"
+                url="https://kickstarter-dev.appspot.com/projects"
+                handle-as="json"
+                on-response="handleResponse"
+                last-response="{{project}}">
         </iron-ajax>
 
     </template>
@@ -86,23 +98,37 @@
                 type: Number,
                 value: 0
             },
-            ovc: Number
+            projectId: {
+                type: Number,
+                value: 0
+            },
+            ovc: {
+                type: Number,
+                notify: true
+            }
+        },
+        ready: function() {
+            var slider = this.$$('#dotation-slider-'+this.projectId);
+            var label = this.$$('#slider-label-'+this.projectId);
+            slider.addEventListener('value-change', function(e) {
+                label.textContent = slider.value;
+            });
         },
         listeners: {
             'donate-button.tap': 'requestConfirmation',
             'confirm-button.tap': 'donate'
         },
         donate: function(e) {
-            var donation = document.querySelector('paper-slider').value;
+            var donation = this.$$('#dotation-slider-'+this.projectId).value;
             this.$.transactionAjax.params = {
-                "projectId": this.project.id,
+                "projectId": this.projectId,
                 "userId": this.userId,
                 "money": donation
             };
             this.$.transactionAjax.generateRequest();
             this.async(function() {
                 this.$.userAjax.generateRequest();
-                this.$.detailsAjax.generateRequest();
+//                this.$.projectDetailsAjax.generateRequest();
             }, 1000);
         },
         onSupportClick: function(e) {
@@ -110,9 +136,6 @@
         },
         requestConfirmation: function(e) {
             this.querySelector('#cat-dialog').toggle();
-        },
-        handleResponse: function(request) {
-            document.querySelector("#app").route='project';
         },
         updateMoney: function(request) {
             console.log(this.user.money + " pieniazki usera. " + this.ovc);

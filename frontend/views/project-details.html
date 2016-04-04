@@ -63,14 +63,6 @@
         </style>
 
         <iron-ajax
-            id="userAjax"
-            url="https://kickstarter-dev.appspot.com/user"
-            handle-as="json"
-            on-response="updateMoney"
-            last-response="{{user}}">
-        </iron-ajax>
-
-        <iron-ajax
                 id="detailsAjax"
                 url="https://kickstarter-dev.appspot.com/projects"
                 handle-as="json"
@@ -118,7 +110,7 @@
                 </div>
             </div>
             <div class="panel-footer text-center">
-                <donation-button>
+                <donation-button user-id="{{userId}}" ovc="{{ovc}}" project-id="{{project.id}}">
                     <paper-button>
                             <span class="custom green-hover">
                                 <iron-icon icon="icons:favorite-border"></iron-icon>Support

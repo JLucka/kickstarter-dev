@@ -121,7 +121,7 @@
                                     </paper-button>
                                 </div>
                                 <div class="col-xs-6 text-right">
-                                    <donation-button>
+                                    <donation-button user-id="{{userId}}" ovc="{{ovc}}" project-id="{{item.id}}">
                                         <paper-button>
                                             <span class="custom green-hover">
                                                 <iron-icon icon="icons:favorite-border"></iron-icon>Support
@@ -142,6 +142,13 @@
 <script>
     Polymer({
         is: 'projects-list',
+        properties: {
+            userId: {
+                type: Number,
+                value: 0
+            },
+            ovc: Number
+        },
         showDetails: function(e) {
             page('/project/'+encodeURIComponent(e.target.class));
         },

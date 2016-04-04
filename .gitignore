@@ -39,3 +39,7 @@ tmtagsHistory
 *.sublime-project
 *.sublime-workspace
 .bundle
+
+# bower components #
+####################
+frontend/bower_components/
