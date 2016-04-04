@@ -15,7 +15,12 @@ class SQLConnector:
         self.table_name = ""
 
     def select_all(self):
-        self.cursor.execute("SELECT * FROM %s" % self.table_name)
+        list = (self.table_name,)
+        try:
+            self.cursor.execute("SELECT * FROM %s" % list)
+        except MySQLdb.Error, e:
+            print e
+
         return self.cursor.fetchall()
 
     def select_from(self, columns):
