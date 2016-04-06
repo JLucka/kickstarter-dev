@@ -20,12 +20,6 @@ class UserHandler(webapp2.RequestHandler):
         return self.response.out.write(json.dumps(obj))
 
 
-class LogoutHandler(webapp2.RequestHandler):
-    def get(self):
-        self.request.get("name")
-        return webapp2.redirect(users.create_logout_url("/"))
-
-
 def get_user():
     user = users.get_current_user()
     if user:
@@ -40,7 +34,6 @@ def get_user():
         return False
 
 app = webapp2.WSGIApplication([
-    ('/newusers', UserHandler),
-    ('/newlogout', LogoutHandler)
+    ('/newusers', UserHandler)
 ])
 

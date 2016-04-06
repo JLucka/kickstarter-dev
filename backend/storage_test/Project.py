@@ -6,7 +6,7 @@ class Project(ndb.Model):
     description = ndb.TextProperty()
     money = ndb.IntegerProperty(default=0)
     createdOn = ndb.DateTimeProperty(auto_now_add=True)
-    # user = ndb.KeyProperty(kind='User')
+    user = ndb.KeyProperty(kind='User')
 
     def to_json_object(self):
         obj = {
@@ -14,7 +14,7 @@ class Project(ndb.Model):
                 'name': self.name,
                 'description': self.description,
                 'creatorid': 1,
-                'creatorname': 'Test',
+                'creatorname': self.user,
                 'money': self.money,
                 'date': str(self.createdOn.date()),
                 'time': str(self.createdOn.time())
