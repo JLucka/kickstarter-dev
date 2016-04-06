@@ -47,6 +47,19 @@ handlers:
   secure: always
 
 
+- url: /newprojects
+  script: backend.storage_test.ProjectsHandler.app
+  secure: always
+
+- url: /newlogout
+  script: backend.storage_test.LogoutHandler.app
+  secure: always
+
+- url: /newusers
+  script: backend.storage_test.UserHandler.app
+  secure: always
+
+
 libraries:
 - name: MySQLdb
   version: "latest"
