@@ -10,12 +10,12 @@ from backend.storage_test.User import User
 class UserHandler(webapp2.RequestHandler):
 
     def get(self):
-        current_user_name = users.get_current_user()
-        row = User.query(User.name == current_user_name).get()
+        current_use = users.get_current_user()
         obj = {
-            'id': row[0][0],
-            'name': row[0][1],
-            'money': row[0][2]
+            'id': current_use.user_id(),
+            'name': current_use.nickname(),
+            'email': current_use.email(),
+            'money': 0
             }
         return self.response.out.write(json.dumps(obj))
 
