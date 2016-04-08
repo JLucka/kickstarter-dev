@@ -59,6 +59,9 @@ handlers:
   script: backend.storage_test.UserHandler.app
   secure: always
 
+- url: /newtransaction
+  script: backend.storage_test.TransactionHandler.app
+  secure: always
 
 libraries:
 - name: MySQLdb

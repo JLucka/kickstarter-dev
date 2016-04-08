@@ -1,6 +1,9 @@
 import json
 import webapp2
+
+from backend.storage_test import User
 from backend.storage_test.Project import Project
+from backend.storage_test.UserHandler import get_user
 
 
 class ProjectsHandler(webapp2.RequestHandler):
@@ -23,7 +26,8 @@ class ProjectsHandler(webapp2.RequestHandler):
         new_project = Project()
         new_project.name = str(self.request.get("name"))
         new_project.description = str(self.request.get("desc"))
-        new_project.creator = str(self.request.get("creatorId"))
+        #new_project.creator = get_user()
+        new_project.creator = User.query(User.User.google_id == str(self.request.get("creatorId")))
         if new_project.put():
             self.response.status = 201
             self.response.write(new_project)
