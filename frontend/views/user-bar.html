@@ -6,6 +6,10 @@
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html">
 <link rel="import" href="../bower_components/iron-page-url/iron-page-url.html">
+<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="configuration-constants.html">
 
 
@@ -16,29 +20,36 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                background-color: limegreen;
+                background-color: #f6fcf6;
                 padding: 0 20px;
             }
-            .paper-button {
-                padding: 20px 6px;
-            }
-
             #dialog {
                 width: 70%;
             }
-            #logo {
+            #user-info span{
                 font-family: 'Open Sans', sans-serif;
-                font-weight: bold;
-                text-shadow: 0px 1px darkgray;
-                font-size: 36px;
-                color: #CCFFCC;
+                font-weight: lighter;
+                font-size: 25px;
+            }
+            #coins-frame {
+                border: 1px solid #afafaf;
+                border-radius: 20px;
+                padding: 0 5px 5px;
+                font-weight: bolder;
                 display: inline;
+            }
+            #logo {
+                display: inline;
+            }
+            #logo img {
+                height: 40px;
+                margin: 10px 0;
             }
             #bread {
                 font-family: 'Open Sans', sans-serif;
                 font-weight: lighter;
                 font-size: 18px;
-                color: white;
+                color: black;
             }
         </style>
 
@@ -53,12 +64,23 @@
 
         <iron-page-url path="{{path}}"></iron-page-url>
         <div class="header">
-            <div><div id="logo">Kickstarter</div><span id="bread">{{path}}</span></div>
+            <div>
+                <paper-menu-button vertical-align="down">
+                    <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
+                    <paper-menu class="dropdown-content">
+                        <paper-item id="form-button">New Project</paper-item>
+                        <paper-item id="logout">Logout</paper-item>
+                    </paper-menu>
+                </paper-menu-button>
+                <div id="logo">
+                    <img src="/frontend/images/kicklogo.png"
+                         onmouseover="this.src = '/frontend/images/kicklogohover.png'"
+                         onmouseout="this.src = '/frontend/images/kicklogo.png'"/>
+                </div>
+                <span id="bread">{{path}}</span>
+            </div>
             <div id="user-info">
-                <span>{{login}}</span>
-                <span>(<span>{{ovc}}</span> OVC)</span>
-                <paper-button id="form-button">New Project</paper-button>
-                <paper-button id="logout">Logout</paper-button>
+                <span>{{login}} <div id="coins-frame"><img src="/frontend/images/ovc.png" height="30px"/> {{ovc}}</div></span>
             </div>
         </div>
         <paper-dialog id="dialog" modal>
@@ -86,7 +108,6 @@
                 type: Number,
                 value: 0
             },
-            path: String,
             ovc: {
                 type: Number,
                 value: 0,
