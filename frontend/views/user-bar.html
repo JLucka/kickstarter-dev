@@ -54,6 +54,8 @@
         </style>
 
         <configuration-constants name="project" value="{{url}}"></configuration-constants>
+        <configuration-constants name="images" value="{{img}}"></configuration-constants>
+
         <iron-ajax
                 id="ajax"
                 url="{{url}}"
@@ -73,14 +75,14 @@
                     </paper-menu>
                 </paper-menu-button>
                 <div id="logo">
-                    <img src="/frontend/images/kicklogo.png"
-                         onmouseover="this.src = '/frontend/images/kicklogohover.png'"
-                         onmouseout="this.src = '/frontend/images/kicklogo.png'"/>
+                    <img src$="{{img}}/kicklogo.png"
+                         onmouseover$="this.src = '{{img}}/kicklogohover.png'"
+                         onmouseout$="this.src = '{{img}}/kicklogo.png'"/>
                 </div>
                 <span id="bread">{{path}}</span>
             </div>
             <div id="user-info">
-                <span>{{login}} <div id="coins-frame"><img src="/frontend/images/ovc.png" height="30px"/> {{ovc}}</div></span>
+                <span>{{login}} <div id="coins-frame"><img src$="{{img}}/ovc.png" height="30px"/> {{ovc}}</div></span>
             </div>
         </div>
         <paper-dialog id="dialog" modal>
