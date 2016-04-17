@@ -21,14 +21,14 @@ class UserHandler(webapp2.RequestHandler):
 
 
 def get_user():
-    user = users.get_current_user()
-    if user:
-        User.query(User.name == user).get()
-        response = User.query(User.name == user).get()
-        if len(response) < 1:
+    current_user = users.get_current_user()
+    if current_user:
+        response = User.query(User.name == current_user.nickname()).get()
+        if response is None:
             new_user = User()
-            new_user.name = user.nickname()
-            new_user.google_id = user.user_id()
+            new_user.name = current_user.nickname()
+            new_user.google_id = current_user.user_id()
+            print "new user is created: " + new_user.google_id
             return new_user.put()
     else:
         return False
