@@ -42,6 +42,9 @@ handlers:
   static_dir: frontend/views
   secure: always
 
+- url: /images
+  static_dir: frontend/images
+
 - url: /routing
   static_dir: frontend/routing
   secure: always
