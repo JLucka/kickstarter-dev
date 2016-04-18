@@ -4,7 +4,7 @@ from google.appengine.api import mail
 from protorpc import messages
 import datetime
 
-GOAL_OVC = 100
+GOAL_OVC = 10
 
 
 class Status(messages.Enum):
@@ -40,19 +40,20 @@ class Project(ndb.Model):
         if self.money >= GOAL_OVC:
             self.status = Status.ACCEPTED
             self.put()
-            send_accepted_emails()
+            self.send_accepted_emails()
 
 
-def send_accepted_emails():
-    message = mail.EmailMessage(sender="Ocado Kickstarter <julka.lu@gmail.com>",
-                        subject="Your project has reached its goal!")
-    message.to = "Maciek Fedorowiat <MFedorowiat@gmail.com>"
-    message.body = "Dear Maciek: Everything Works fine. 500 error, lol."
-    message.send()
+    def send_accepted_emails(self):
+        message = mail.EmailMessage(sender="Ocado Kickstarter <kickstarter@ocado.com>",
+                            subject="Your project has reached its goal!")
+        message.to = "Kierownik Praktyk <a.sokolwoski@ocado.com>"
+        message.body = "Dear Arek: You wanted the app to send emails to admin. Well, it does."
+        message.send()
+        message.to = str(self.user.get().name) + "@gmail.com"
+        message.send()
 
 
 def get_entities_by_name(name):
-    send_accepted_emails()
     if name != "":
         project = Project.query(Project.name == name).get()
         return project.to_json_object()
