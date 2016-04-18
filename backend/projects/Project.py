@@ -21,3 +21,20 @@ class Project(ndb.Model):
             'time': str(self.createdOn.time())
         }
         return obj
+
+    def save_entity(self):
+        self.put()
+
+
+def get_entities_by_name(name):
+    if name != "":
+        project = Project.query(Project.name == name).get()
+        return project.to_json_object()
+
+    else:
+        projects = Project.query().fetch(25)
+        projects_jsons = []
+        for project in projects:
+            obj = project.to_json_object()
+            projects_jsons.append(obj)
+        return projects_jsons
