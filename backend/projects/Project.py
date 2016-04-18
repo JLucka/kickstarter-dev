@@ -1,4 +1,16 @@
 from google.appengine.ext import ndb
+from google.appengine.ext.ndb import msgprop
+from protorpc import messages
+import datetime
+# from datetime import datetime as python_datetime
+# from datetime import timedelta as python_timedelta
+
+GOAL_OVC = 100
+
+class Status(messages.Enum):
+    ACTIVE = 0
+    ACCEPTED = 1
+    EXPIRED = 2
 
 
 class Project(ndb.Model):
@@ -7,6 +19,7 @@ class Project(ndb.Model):
     money = ndb.IntegerProperty(default=0)
     createdOn = ndb.DateTimeProperty(auto_now_add=True)
     creator = ndb.KeyProperty(kind='User')
+    status = msgprop.EnumProperty(Status, default=Status.ACTIVE, indexed=True)
 
     def to_json_object(self):
         user = self.creator.get()
@@ -17,13 +30,16 @@ class Project(ndb.Model):
             'creatoryid': user.google_id,
             'creatorname': user.name,
             'money': self.money,
+            'status': int(self.status),
             'date': str(self.createdOn.date()),
             'time': str(self.createdOn.time())
         }
         return obj
 
-    def save_entity(self):
-        self.put()
+    def check_if_accepted(self):
+        if self.money >= GOAL_OVC:
+            self.status = Status.ACCEPTED
+            self.put()
 
 
 def get_entities_by_name(name):
@@ -38,3 +54,17 @@ def get_entities_by_name(name):
             obj = project.to_json_object()
             projects_jsons.append(obj)
         return projects_jsons
+
+
+def update_projects_status():
+    month_ago = datetime.datetime.now() - datetime.timedelta(days=30)
+    expired_projects = Project.query().filter(Project.createdOn > month_ago).fetch()
+    for project in expired_projects:
+        if project.status == Status.ACTIVE:
+            project.status = Status.EXPIRED
+            project.put()
+
+
+
+
+
