@@ -1,23 +1,33 @@
 import json
-from google.appengine.api import users
+
 import webapp2
-from UsersConnector import UserConnector
+from google.appengine.api import users
+
+from backend.users.User import User
 
 
 class UserHandler(webapp2.RequestHandler):
-    def __init__(self, request, response):
-        self.initialize(request, response)
-        self.user_conn = UserConnector()
-
     def get(self):
         current_user = users.get_current_user()
-        row = self.user_conn.select_all_where("name = '%s'" % current_user)
-        obj = {
-            'id': row[0][0],
-            'name': row[0][1],
-            'money': row[0][2]
-            }
-        return self.response.out.write(json.dumps(obj))
+        if current_user:
+            query_user = User.query(User.name == current_user.nickname()).get()
+            if query_user:
+                response_object = query_user.to_json_obj()
+                self.response.out.write(json.dumps(response_object))
+
+
+def get_user():
+    current_user = users.get_current_user()
+    if current_user:
+        response = User.query(User.name == current_user.nickname()).get()
+        if response is None:
+            new_user = User()
+            new_user.name = current_user.nickname()
+            new_user.google_id = current_user.user_id()
+            print "new user is created: " + new_user.google_id
+            return new_user.put()
+    else:
+        return False
 
 
 app = webapp2.WSGIApplication([
