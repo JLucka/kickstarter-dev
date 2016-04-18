@@ -46,11 +46,15 @@ class Project(ndb.Model):
     def send_accepted_emails(self):
         message = mail.EmailMessage(sender="Ocado Kickstarter <kickstarter@ocado.com>",
                             subject="Your project has reached its goal!")
-        # message.to = "Kierownik Praktyk <a.sokolwoski@ocado.com>"
+        message.to = "Kierownik Praktyk <a.sokolowski@ocado.com>"
         message.body = "Dear Arek: You wanted the app to send emails to admin. Well, it does."
-        # message.send()
-        message.to = str(self.creator.get().name) + "@gmail.com"
         message.send()
+        second_message = mail.EmailMessage(sender="Ocado Kickstarter <kickstarter@ocado.com>",
+                            subject="Your project has reached its goal!")
+        second_message.to = "Maciek F <" + str(self.creator.get().name) + "@gmail.com>"
+        print second_message.to
+        second_message.body = "Wiadomosc do Macka"
+        second_message.send()
 
 
 def get_entities_by_name(name):
