@@ -38,9 +38,6 @@
             }
         },
         observers: ['_pathChanged(page.name)'],
-        ready: function() {
-            console.log(this.route);
-        },
         _pathChanged: function() {
             if(this.route.path == "/"+this.page.name)
                 this.set('item.id', '');

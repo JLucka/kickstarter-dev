@@ -98,7 +98,8 @@
                 auto
                 url="{{url}}"
                 handle-as="json"
-                last-response="{{ajaxResponse}}">
+                last-response="{{ajaxResponse}}"
+                debounce-duration="3000">
         </iron-ajax>
 
         <div class="container-fluid">
@@ -179,7 +180,7 @@
         },
         showDetails: function(e) {
             var id = encodeURIComponent(e.target.class);
-            this.set("route.path", '/load/'+id);
+            this.set("route.path", '/project/'+id);
             document.querySelector('#detailsAjax').params.name = e.target.class;
             document.querySelector('#detailsAjax').generateRequest();
         },
