@@ -27,7 +27,6 @@ handlers:
 
 - url: /transaction
   script: backend.transactions.TransactionHandler.app
-  secure: always
 
 - url: /styles
   static_dir: frontend/styles
@@ -48,14 +47,10 @@ handlers:
   static_dir: frontend/routing
   secure: always
 
-
 - url: /projects
   script: backend.projects.ProjectsHandler.app
   secure: always
 
-- url: /newtransaction
-  script: backend.storage_test.TransactionHandler.app
-  secure: always
 
 libraries:
 - name: MySQLdb
