@@ -13,7 +13,6 @@ handlers:
 
 - url: /projects
   script: backend.projects.ProjectsHandler.app
-  secure: always
 
 - url: /logout
   script: backend.users.LogoutHandler.app
