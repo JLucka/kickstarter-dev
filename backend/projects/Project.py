@@ -46,9 +46,9 @@ class Project(ndb.Model):
     def send_accepted_emails(self):
         message = mail.EmailMessage(sender="Ocado Kickstarter <kickstarter@ocado.com>",
                             subject="Your project has reached its goal!")
-        message.to = "Kierownik Praktyk <a.sokolwoski@ocado.com>"
+        # message.to = "Kierownik Praktyk <a.sokolwoski@ocado.com>"
         message.body = "Dear Arek: You wanted the app to send emails to admin. Well, it does."
-        message.send()
+        # message.send()
         message.to = str(self.creator.get().name) + "@gmail.com"
         message.send()
 
