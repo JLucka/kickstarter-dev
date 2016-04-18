@@ -12,6 +12,7 @@
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/carbon-route/carbon-location.html">
 <link rel="import" href="../bower_components/carbon-route/carbon-route.html">
+<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="configuration-constants.html">
 <link rel="import" href="page-routing.html">
 
@@ -57,16 +58,29 @@
                 color: black;
             }
             .page-box {
+                position: relative;
                 display: inline;
-                margin-left: 2px;
                 border-radius: 20px;
                 padding: 0 15px;
-                border: 1px #afafaf solid;
+                border: 1px #9fa581 solid;
                 font-family: 'Open Sans', sans-serif;
-                font-weight: lighter;
+                font-weight: bold;
                 font-size: 20px;
-                white-space: nowrap;
-                text-overflow: clip;
+                background-color: #dff0d8;
+                color: #3d773e;
+            }
+
+            .left-box {
+                border-bottom-right-radius: 0;
+                border-top-right-radius: 0;
+                font-weight: lighter;
+                background-color: transparent;
+                color: black;
+            }
+
+            .right-box {
+                border-bottom-left-radius: 0;
+                border-top-left-radius: 0;
             }
         </style>
 
@@ -99,9 +113,12 @@
                 </div>
             </div>
             <div id="bread">
-                <div class="page-box">{{page.name}}</div>
+                <template is="dom-if" if="{{!decodeName(item.id)}}">
+                    <div class="page-box"><paper-ripple recenters></paper-ripple>{{page.name}}</div>
+                </template>
                 <template is="dom-if" if="{{decodeName(item.id)}}">
-                    <div class="page-box">{{decodeName(item.id)}}</div>
+                    <div class="page-box left-box"><paper-ripple recenters></paper-ripple>{{page.name}}</div>
+                    <div class="page-box right-box"><paper-ripple recenters></paper-ripple>{{decodeName(item.id)}}</div>
                 </template>
             </div>
             <div id="user-info">
