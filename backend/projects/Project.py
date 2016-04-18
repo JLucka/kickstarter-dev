@@ -2,10 +2,9 @@ from google.appengine.ext import ndb
 from google.appengine.ext.ndb import msgprop
 from protorpc import messages
 import datetime
-# from datetime import datetime as python_datetime
-# from datetime import timedelta as python_timedelta
 
 GOAL_OVC = 100
+
 
 class Status(messages.Enum):
     ACTIVE = 0
@@ -58,13 +57,8 @@ def get_entities_by_name(name):
 
 def update_projects_status():
     month_ago = datetime.datetime.now() - datetime.timedelta(days=30)
-    expired_projects = Project.query().filter(Project.createdOn > month_ago).fetch()
+    expired_projects = Project.query().filter(Project.createdOn < month_ago).fetch()
     for project in expired_projects:
         if project.status == Status.ACTIVE:
             project.status = Status.EXPIRED
             project.put()
-
-
-
-
-
