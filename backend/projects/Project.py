@@ -49,7 +49,7 @@ class Project(ndb.Model):
         message.to = "Kierownik Praktyk <a.sokolwoski@ocado.com>"
         message.body = "Dear Arek: You wanted the app to send emails to admin. Well, it does."
         message.send()
-        message.to = str(self.user.get().name) + "@gmail.com"
+        message.to = str(self.creator.get().name) + "@gmail.com"
         message.send()
 
 
