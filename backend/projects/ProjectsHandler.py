@@ -1,7 +1,6 @@
 import json
 
 import webapp2
-import Project
 from backend.projects.Project import Project, get_entities_by_name, update_projects_status
 from backend.projects.ProjectValidator import validate
 from backend.users.User import User
