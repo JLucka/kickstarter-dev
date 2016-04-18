@@ -1,5 +1,6 @@
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import msgprop
+from google.appengine.api import mail
 from protorpc import messages
 import datetime
 
@@ -39,9 +40,19 @@ class Project(ndb.Model):
         if self.money >= GOAL_OVC:
             self.status = Status.ACCEPTED
             self.put()
+            send_accepted_emails()
+
+
+def send_accepted_emails():
+    message = mail.EmailMessage(sender="Ocado Kickstarter <julka.lu@gmail.com>",
+                        subject="Your project has reached its goal!")
+    message.to = "Maciek Fedorowiat <MFedorowiat@gmail.com>"
+    message.body = "Dear Maciek: Everything Works fine. 500 error, lol."
+    message.send()
 
 
 def get_entities_by_name(name):
+    send_accepted_emails()
     if name != "":
         project = Project.query(Project.name == name).get()
         return project.to_json_object()
@@ -62,3 +73,4 @@ def update_projects_status():
         if project.status == Status.ACTIVE:
             project.status = Status.EXPIRED
             project.put()
+
