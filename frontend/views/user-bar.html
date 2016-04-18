@@ -53,10 +53,20 @@
                 margin: 10px 0;
             }
             #bread {
+                display: inline;
+                color: black;
+            }
+            .page-box {
+                display: inline;
+                margin-left: 2px;
+                border-radius: 20px;
+                padding: 0 15px;
+                border: 1px #afafaf solid;
                 font-family: 'Open Sans', sans-serif;
                 font-weight: lighter;
-                font-size: 18px;
-                color: black;
+                font-size: 20px;
+                white-space: nowrap;
+                text-overflow: clip;
             }
         </style>
 
@@ -70,15 +80,6 @@
                 on-response="handleResponse"
                 handle-as="json">
         </iron-ajax>
-
-        <!--<iron-page-url path="{{path}}"></iron-page-url>-->
-        <!--<carbon-location route="{{route}}" active></carbon-location>-->
-        <!--<carbon-route-->
-                <!--route="{{route}}"-->
-                <!--pattern="/:page"-->
-                <!--data="{{path}}"-->
-                <!--tail="{{tail}}">-->
-        <!--</carbon-route>-->
 
         <page-routing page="{{page}}" item="{{item}}"></page-routing>
 
@@ -96,7 +97,12 @@
                          onmouseover$="this.src = '{{img}}kicklogohover.png'"
                          onmouseout$="this.src = '{{img}}kicklogo.png'"/>
                 </div>
-                <span id="bread">{{page.name}} / {{item.id}}</span>
+            </div>
+            <div id="bread">
+                <div class="page-box">{{page.name}}</div>
+                <template is="dom-if" if="{{decodeName(item.id)}}">
+                    <div class="page-box">{{decodeName(item.id)}}</div>
+                </template>
             </div>
             <div id="user-info">
                 <span>{{login}} <div id="coins-frame"><img src$="{{img}}ovc.png" height="22px"/> {{ovc}}</div></span>
@@ -162,6 +168,9 @@
         },
         handleResponse: function(request) {
             document.querySelector("#list-ajax").generateRequest();
+        },
+        decodeName: function(name) {
+            return decodeURIComponent(name);
         }
     });
 </script>
