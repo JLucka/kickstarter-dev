@@ -1,6 +1,6 @@
 import webapp2
 
-from backend.users.UserService import get_user
+from backend.users.UserHandler import get_user
 
 
 class MainPage(webapp2.RequestHandler):

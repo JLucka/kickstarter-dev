@@ -8,7 +8,7 @@ def validate(response, new_project):
         response.status = 400
         response.write("description can not be empty")
         return False
-    elif new_project.creator == "":
+    elif new_project.creator is None:
         response.status = 400
         response.write("creator can not be empty")
         return False
