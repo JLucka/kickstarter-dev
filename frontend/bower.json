@@ -42,6 +42,7 @@
     "Liseck <timages94@gmail.com>"
   ],
   "resolutions": {
-    "paper-styles": "^1.1.0"
+    "paper-styles": "^1.1.0",
+    "polymer": "^1.3.1"
   }
 }
