@@ -40,17 +40,17 @@ class Project(ndb.Model):
         if self.money >= GOAL_OVC:
             self.status = Status.ACCEPTED
             self.put()
-        send_accepted_emails()
+        send_accepted_emails(self)
 
 
-def send_accepted_emails():
-        message = mail.EmailMessage(sender="Ocado Kickstarter <julka.lu@gmail.com>",
-                            subject="Your project has reached its goal!")
-        message.to = "Maciek Fedorowiat <MFedorowiat@gmail.com>"
+def send_accepted_emails(project):
+        message = mail.EmailMessage(sender="Ocado Kickstarter <a.sokolowski@ocado.com>",
+                            subject="[Ocado Kickstarter]Your project has reached its goal!")
+        message.to = "Maciek Fedorowiat <%s@gmail.com>" % project.creator.get().name
         message.body = """
-            Dear Maciek:
+            Dear %s:
             Everything Works fine. 500 error, lol.
-            """
+            """ % project.creator.get().name
         message.send()
 
 
