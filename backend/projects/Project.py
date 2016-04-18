@@ -9,6 +9,7 @@ class Project(ndb.Model):
     creator = ndb.KeyProperty(kind='User')
 
     def to_json_object(self):
+        print Project.query().fetch(25)
         user = self.creator.get()
         obj = {
             'id': int(self.key.id()),

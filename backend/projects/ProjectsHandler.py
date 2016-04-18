@@ -9,7 +9,7 @@ from backend.users.User import User
 
 class ProjectsHandler(webapp2.RequestHandler):
     def get(self):
-        print "wchodze sobie"
+        print "wchodze sobie get"
         name = str(self.request.get("name"))
         if name != "":
             project = Project.query(Project.name == name).get()
@@ -24,6 +24,7 @@ class ProjectsHandler(webapp2.RequestHandler):
             self.response.out.write(json.dumps(response))
 
     def post(self):
+        print "wchodze sobie post"
         self.response.status = 400
         new_project = Project()
         new_project.name = str(self.request.get("name"))
