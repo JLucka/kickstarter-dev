@@ -52,7 +52,6 @@ def send_accepted_emails(project):
 
 
 def get_entities_by_name(name):
-    send_accepted_emails()
     if name != "":
         project = Project.query(Project.name == name).get()
         return project.to_json_object()
