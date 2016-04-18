@@ -34,9 +34,13 @@
             #coins-frame {
                 border: 1px solid #afafaf;
                 border-radius: 20px;
-                padding: 0 5px 5px;
+                padding-right: 5px;
                 font-weight: bolder;
-                display: inline;
+                display: inline-flex;
+                align-items: center;
+            }
+            #coins-frame img {
+                margin: 0 5px 0
             }
             #logo {
                 display: inline;
@@ -82,7 +86,7 @@
                 <span id="bread">{{path}}</span>
             </div>
             <div id="user-info">
-                <span>{{login}} <div id="coins-frame"><img src$="{{img}}ovc.png" height="30px"/> {{ovc}}</div></span>
+                <span>{{login}} <div id="coins-frame"><img src$="{{img}}ovc.png" height="22px"/> {{ovc}}</div></span>
             </div>
         </div>
         <paper-dialog id="dialog" modal>
@@ -107,8 +111,8 @@
             desc: String,
             login: String,
             userId: {
-                type: Number,
-                value: 0
+                type: String,
+                value: '0'
             },
             ovc: {
                 type: Number,
