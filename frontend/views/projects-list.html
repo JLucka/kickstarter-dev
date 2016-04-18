@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="donation-button.html">
 <link rel="import" href="configuration-constants.html">
+<link rel="import" href="page-routing.html">
 
 
 <dom-module id="projects-list">
@@ -75,6 +76,8 @@
             }
         </style>
         <configuration-constants name="project" value="{{url}}"></configuration-constants>
+        <page-routing route="{{route}}"></page-routing>
+
         <iron-ajax
                 id="list-ajax"
                 auto
@@ -154,7 +157,10 @@
             ovc: Number
         },
         showDetails: function(e) {
-            page('/project/'+encodeURIComponent(e.target.class));
+            var id = encodeURIComponent(e.target.class);
+            this.set("route.path", '/load/'+id);
+            document.querySelector('#detailsAjax').params.name = e.target.class;
+            document.querySelector('#detailsAjax').generateRequest();
         },
         _sort: function(a, b) {
             if (a.date === b.date) {

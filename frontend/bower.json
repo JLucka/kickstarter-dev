@@ -35,7 +35,8 @@
     "paper-menu-button": "PolymerElements/paper-menu-button#^1.1.0",
     "paper-icon-button": "PolymerElements/paper-icon-button#^1.0.7",
     "paper-menu": "PolymerElements/paper-menu#^1.2.2",
-    "paper-item": "PolymerElements/paper-item#^1.1.4"
+    "paper-item": "PolymerElements/paper-item#^1.1.4",
+    "carbon-route": "PolymerElements/carbon-route#^0.8.4"
   },
   "authors": [
     "Liseck <timages94@gmail.com>"

@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="donation-button.html">
 <link rel="import" href="configuration-constants.html">
+<link rel="import" href="page-routing.html">
 
 
 <dom-module id="project-details">
@@ -64,6 +65,8 @@
         </style>
 
         <configuration-constants name="project" value="{{url}}"></configuration-constants>
+        <page-routing route="{{route}}" page="{{page}}" item="{{item}}"></page-routing>
+
         <iron-ajax
                 id="detailsAjax"
                 url="{{url}}"
@@ -135,7 +138,9 @@
             ovc: Number
         },
         handleResponse: function(request) {
-            document.querySelector("#app").route='project';
+            this.set("route.path", "/project/"+this.item.id);
+//            this.set("page.name", "project");
+//            document.querySelector("#app").route='project';
         },
         stripOcado: function(name) {
             return name.replace('@ocado.com', '');

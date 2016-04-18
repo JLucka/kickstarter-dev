@@ -1,0 +1,44 @@
+<link rel="import" href="../bower_components/carbon-route/carbon-location.html">
+<link rel="import" href="../bower_components/carbon-route/carbon-route.html">
+
+<dom-module id="page-routing">
+    <template>
+        <carbon-location route="{{route}}"></carbon-location>
+        <carbon-route
+                route="{{route}}"
+                pattern="/:name"
+                data="{{page}}"
+                tail="{{tail}}"
+                active>
+        </carbon-route>
+        <carbon-route
+                route="{{tail}}"
+                pattern="/:id"
+                data="{{item}}"
+                active>
+        </carbon-route>
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'page-routing',
+        properties: {
+            route: {
+                type: Object,
+                notify: true
+            },
+            page: {
+                type: Object,
+                notify: true
+            },
+            item: {
+                type: Object,
+                notify: true
+            }
+        },
+        ready: function() {
+            console.log(this.route);
+        }
+    });
+</script>

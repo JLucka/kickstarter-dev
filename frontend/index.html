@@ -9,17 +9,21 @@
     <link href='https://fonts.googleapis.com/css?family=Poiret+One&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
-    <script src="bower_components/page/page.js"></script>
+    <!--<script src="bower_components/page/page.js"></script>-->
     <link rel="import" href="bower_components/paper-styles/demo-pages.html">
     <link rel="import" href="bower_components/paper-header-panel/paper-header-panel.html">
     <link rel="import" href="bower_components/iron-pages/iron-pages.html">
     <link rel="import" href="bower_components/paper-spinner/paper-spinner.html">
     <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+    <link rel="import" href="bower_components/carbon-route/carbon-location.html">
+    <link rel="import" href="bower_components/carbon-route/carbon-route.html">
     <link rel="import" href="views/configuration-constants.html">
+    <link rel="import" href="views/page-routing.html">
     <link rel="import" href="views/user-bar.html">
     <link rel="import" href="views/projects-list.html">
     <link rel="import" href="views/project-details.html">
-    <link rel="import" href="routing/routing.html">
+
+    <!--<link rel="import" href="routing/routing.html">-->
 </head>
 <body id="no-padding">
     <paper-header-panel class="flex">
@@ -33,11 +37,13 @@
                     last-response="{{user}}">
             </iron-ajax>
 
+            <page-routing page="{{page}}"></page-routing>
+
             <user-bar user-id="{{user.google_id}}" login="{{user.name}}" ovc="{{user.money}}" class="paper-header"></user-bar>
             <div id="content">
-                <iron-pages attr-for-selected="data-route" selected="{{route}}">
-                    <projects-list data-route="home" user-id="{{user.id}}" ovc="{{user.money}}"></projects-list>
-                    <project-details data-route="project" user-id="{{user.id}}" ovc="{{user.money}}"></project-details>
+                <iron-pages attr-for-selected="data-route" selected="{{page.name}}">
+                    <projects-list data-route="home" user-id="{{user.google_id}}" ovc="{{user.money}}"></projects-list>
+                    <project-details data-route="project" user-id="{{user.google_id}}" ovc="{{user.money}}"></project-details>
                     <div id="loading" data-route="load"><paper-spinner alt="Loading project details" active></paper-spinner></div>
                 </iron-pages>
             </div>
@@ -45,7 +51,3 @@
     </paper-header-panel>
 </body>
 </html>
-
-<!-- include layouts -->
-<!-- iron-location -->
-<!-- notify -->

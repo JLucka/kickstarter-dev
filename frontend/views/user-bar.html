@@ -10,7 +10,10 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/carbon-route/carbon-location.html">
+<link rel="import" href="../bower_components/carbon-route/carbon-route.html">
 <link rel="import" href="configuration-constants.html">
+<link rel="import" href="page-routing.html">
 
 
 <dom-module id="user-bar">
@@ -68,7 +71,17 @@
                 handle-as="json">
         </iron-ajax>
 
-        <iron-page-url path="{{path}}"></iron-page-url>
+        <!--<iron-page-url path="{{path}}"></iron-page-url>-->
+        <!--<carbon-location route="{{route}}" active></carbon-location>-->
+        <!--<carbon-route-->
+                <!--route="{{route}}"-->
+                <!--pattern="/:page"-->
+                <!--data="{{path}}"-->
+                <!--tail="{{tail}}">-->
+        <!--</carbon-route>-->
+
+        <page-routing page="{{page}}" item="{{item}}"></page-routing>
+
         <div class="header">
             <div>
                 <paper-menu-button vertical-align="down">
@@ -83,7 +96,7 @@
                          onmouseover$="this.src = '{{img}}kicklogohover.png'"
                          onmouseout$="this.src = '{{img}}kicklogo.png'"/>
                 </div>
-                <span id="bread">{{path}}</span>
+                <span id="bread">{{page.name}} / {{item.id}}</span>
             </div>
             <div id="user-info">
                 <span>{{login}} <div id="coins-frame"><img src$="{{img}}ovc.png" height="22px"/> {{ovc}}</div></span>
@@ -118,6 +131,10 @@
                 type: Number,
                 value: 0,
                 notify: true
+            },
+            route: {
+                type: Object,
+                notify: true
             }
         },
         listeners: {
@@ -138,7 +155,7 @@
             this.$.ajax.generateRequest();
         },
         goHome: function(e) {
-            page('/');
+            this.set('page.name', 'home');
         },
         logout: function(e) {
             window.location.replace("/logout");
