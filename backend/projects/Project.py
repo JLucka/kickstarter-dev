@@ -44,7 +44,7 @@ class Project(ndb.Model):
 
 
 def send_accepted_emails(project):
-    message = mail.EmailMessage(sender="Ocado Kickstarter <MFedorowiat@gmail.com>",
+    message = mail.EmailMessage(sender="Ocado Kickstarter <julka.lu@gmail.com>",
                         subject="Your project has reached its goal!")
     message.to = "Maciek Fedorowiat <" + project.creator.get().name + "@gmail.com>"
     message.body = "Dear Maciek: Everything Works fine. 500 error, lol."
