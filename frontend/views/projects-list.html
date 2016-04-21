@@ -4,9 +4,9 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
-<link rel="import" href="donation-button.html">
-<link rel="import" href="configuration-constants.html">
-<link rel="import" href="page-routing.html">
+<link rel="import" href="components/donation-button.html">
+<link rel="import" href="../configuration-constants.html">
+<link rel="import" href="../routing/page-routing.html">
 
 
 <dom-module id="projects-list">
@@ -104,7 +104,7 @@
 
         <div class="container-fluid">
             <template is="dom-repeat" items="{{ajaxResponse}}" sort="_sort">
-                <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="col-md-4 col-sm-12 col-xs-12">
                     <div class$="panel {{chooseClass(item.status)}} status-{{item.status}}">
                         <div class="panel-heading">
                             <div class="title text-center">

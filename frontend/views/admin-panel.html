@@ -1,0 +1,95 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../configuration-constants.html">
+
+<dom-module id="admin-panel">
+    <template>
+        <style is="custom-style">
+            paper-card {
+                margin-top: 5px;
+                width: 100%;
+                font-family: 'Open Sans', sans-serif;
+            }
+
+            .check-icon {
+                --iron-icon-fill-color: #0fb611;;
+            }
+
+            #header {
+                --paper-card-background-color: #91ff8c;
+                font-weight: bold;
+            }
+
+            .card-content {
+                display: flex;
+            }
+
+            .wide-col {
+                width: 40%;
+            }
+
+            .narrow-col {
+                width: 10%;
+                text-align: center;
+            }
+        </style>
+        <configuration-constants name="admin" value="{{url}}"></configuration-constants>
+        <!--<page-routing route="{{route}}"></page-routing>-->
+
+        <iron-ajax
+                id="user"
+                auto
+                url="{{url}}"
+                handle-as="json"
+                last-response="{{users}}">
+        </iron-ajax>
+
+        <paper-card id="header">
+            <div class="card-content">
+                <div class="wide-col">
+                    Name
+                </div>
+                <div class="wide-col">
+                    Google ID
+                </div>
+                <div class="narrow-col">
+                    OVC
+                </div>
+                <div class="narrow-col">
+                    Admin
+                </div>
+            </div>
+        </paper-card>
+        <template is="dom-repeat" items="{{users}}" as="user">
+            <paper-card>
+                <div class="card-content">
+                    <div class="wide-col">
+                        {{user.name}}
+                    </div>
+                    <div class="wide-col">
+                        {{user.google_id}}
+                    </div>
+                    <div class="narrow-col">
+                        {{user.money}}
+                    </div>
+                    <div class="narrow-col">
+                        <template is="dom-if" if="{{user.admin}}">
+                            <iron-icon class="check-icon" icon="icons:check"></iron-icon>
+                        </template>
+                        <template is="dom-if" if="{{!user.admin}}">
+                            <iron-icon icon="icons:close"></iron-icon>
+                        </template>
+                    </div>
+                </div>
+            </paper-card>
+        </template>
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'admin-panel'
+    });
+</script>

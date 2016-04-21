@@ -1,21 +1,21 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
-<link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html">
-<link rel="import" href="../bower_components/iron-page-url/iron-page-url.html">
-<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../bower_components/carbon-route/carbon-location.html">
-<link rel="import" href="../bower_components/carbon-route/carbon-route.html">
-<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
-<link rel="import" href="configuration-constants.html">
-<link rel="import" href="page-routing.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html">
+<link rel="import" href="../../bower_components/iron-page-url/iron-page-url.html">
+<link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/carbon-route/carbon-location.html">
+<link rel="import" href="../../bower_components/carbon-route/carbon-route.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../configuration-constants.html">
+<link rel="import" href="../../routing/page-routing.html">
 
 
 <dom-module id="user-bar">
@@ -105,6 +105,7 @@
                     <paper-menu class="dropdown-content">
                         <paper-item id="form-button">New Project</paper-item>
                         <paper-item id="logout">Logout</paper-item>
+                        <paper-item hidden$="{{!admin}}" id="admin-panel">Admin Panel</paper-item>
                     </paper-menu>
                 </paper-menu-button>
                 <div id="logo">
@@ -156,6 +157,7 @@
                 value: 0,
                 notify: true
             },
+            admin: Number,
             route: {
                 type: Object,
                 notify: true
@@ -165,7 +167,8 @@
             'form-button.tap': 'showForm',
             'add-button.tap': 'addProject',
             'logo.tap': 'goHome',
-            'logout.tap': 'logout'
+            'logout.tap': 'logout',
+            'admin-panel.tap': 'goAdmin'
         },
         showForm: function(e) {
             this.querySelector('#dialog').toggle();
@@ -180,6 +183,9 @@
         },
         goHome: function(e) {
             this.set('page.name', 'home');
+        },
+        goAdmin: function(e) {
+            this.set('page.name', 'admin-panel');
         },
         logout: function(e) {
             window.location.replace("/logout");

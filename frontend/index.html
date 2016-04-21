@@ -23,11 +23,12 @@
     <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
     <link rel="import" href="bower_components/carbon-route/carbon-location.html">
     <link rel="import" href="bower_components/carbon-route/carbon-route.html">
-    <link rel="import" href="views/configuration-constants.html">
-    <link rel="import" href="views/page-routing.html">
-    <link rel="import" href="views/user-bar.html">
+    <link rel="import" href="configuration-constants.html">
+    <link rel="import" href="routing/page-routing.html">
+    <link rel="import" href="views/components/user-bar.html">
     <link rel="import" href="views/projects-list.html">
     <link rel="import" href="views/project-details.html">
+    <link rel="import" href="views/admin-panel.html">
 </head>
 <body id="no-padding">
     <paper-header-panel class="flex">
@@ -43,7 +44,11 @@
 
             <page-routing page="{{page}}"></page-routing>
 
-            <user-bar user-id="{{user.google_id}}" login="{{user.name}}" ovc="{{user.money}}" class="paper-header"></user-bar>
+            <user-bar user-id="{{user.google_id}}"
+                      login="{{user.name}}"
+                      ovc="{{user.money}}"
+                      admin="{{user.admin}}"
+                      class="paper-header"></user-bar>
             <div id="content">
                 <neon-animated-pages attr-for-selected="data-route" selected="{{page.name}}">
                     <neon-animatable data-route="home"
@@ -56,10 +61,10 @@
                                      exit-animation="slide-right-animation">
                         <project-details user-id="{{user.google_id}}" ovc="{{user.money}}"></project-details>
                     </neon-animatable>
-                    <neon-animatable data-route="load"
+                    <neon-animatable data-route="admin-panel"
                                      entry-animation="slide-from-right-animation"
                                      exit-animation="slide-right-animation">
-                        <div id="loading"><paper-spinner alt="Loading project details" active></paper-spinner></div>
+                        <admin-panel></admin-panel>
                     </neon-animatable>
                 </neon-animated-pages>
             </div>
