@@ -6,11 +6,12 @@ class User(ndb.Model):
     money = ndb.IntegerProperty(default=15)
     google_id = ndb.StringProperty()
 
-    def to_json_obj(self):
+    def to_json_obj(self, admin=False):
         obj = {
             'name': self.name,
             'money': self.money,
-            'google_id': self.google_id
+            'google_id': self.google_id,
+            'admin': admin
             }
         return obj
 

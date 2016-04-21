@@ -11,6 +11,7 @@ class Status(messages.Enum):
     ACTIVE = 0
     ACCEPTED = 1
     EXPIRED = 2
+    HIDDEN = 3
 
 
 class Project(ndb.Model):
@@ -41,6 +42,10 @@ class Project(ndb.Model):
             self.status = Status.ACCEPTED
             self.put()
             send_accepted_emails(self)
+
+    def hide(self):
+        self.status = Status.HIDDEN
+        self.put()
 
 
 def send_accepted_emails(project):

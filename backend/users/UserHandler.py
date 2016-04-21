@@ -11,7 +11,8 @@ class UserHandler(webapp2.RequestHandler):
         user = get_user()
         if user:
             self.response.status = 200
-            response_object = user.to_json_obj()
+            is_admin = users.is_current_user_admin()
+            response_object = user.to_json_obj(admin=is_admin)
             self.response.out.write(json.dumps(response_object))
         else:
             self.response.status = 400

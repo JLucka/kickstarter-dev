@@ -1,6 +1,8 @@
 import json
 import webapp2
 from google.appengine.api import users
+
+from backend.projects.Project import Project
 from backend.users.User import User
 
 
@@ -19,19 +21,23 @@ class AdminHandler(webapp2.RequestHandler):
     def post(self):
         if users.is_current_user_admin():
             function = self.request.get("function")
-            user = User.query(User.google_id == str(self.request.get("userId"))).get()
-            amount = int(self.request.get("amount"))
-            if function == "substract":
-                user.substract_money(amount)
-                self.response.out.write(user.to_json_obj())
-            elif function == 'add':
-                user.add_money(amount)
-                self.response.out.write(user.to_json_obj())
-            elif function == 'set':
-                user.set_money(amount)
-                self.response.out.write(user.to_json_obj())
+            if function == "hide":
+                project = Project.get_by_id(int(str(self.request.get("projectId"))))
+                project.hide()
             else:
-                self.response.status = 400
+                user = User.query(User.google_id == str(self.request.get("userId"))).get()
+                amount = int(self.request.get("amount"))
+                if function == "substract":
+                    user.substract_money(amount)
+                    self.response.out.write(user.to_json_obj())
+                elif function == 'add':
+                    user.add_money(amount)
+                    self.response.out.write(user.to_json_obj())
+                elif function == 'set':
+                    user.set_money(amount)
+                    self.response.out.write(user.to_json_obj())
+                else:
+                    self.response.status = 400
         else:
             self.response.status = 401
 
