@@ -2,6 +2,9 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/hardware-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="configuration-constants.html">
 
 <dom-module id="admin-panel">
@@ -17,6 +20,11 @@
                 --iron-icon-fill-color: #0fb611;;
             }
 
+            .arrow-icon {
+                width: 30px;
+                height: 30px;
+            }
+
             #header {
                 --paper-card-background-color: #91ff8c;
                 font-weight: bold;
@@ -24,6 +32,7 @@
 
             .card-content {
                 display: flex;
+                align-items: center;
             }
 
             .wide-col {
@@ -33,10 +42,20 @@
             .narrow-col {
                 width: 10%;
                 text-align: center;
+                display: flex;
+                align-items: center;
             }
         </style>
         <configuration-constants name="admin" value="{{url}}"></configuration-constants>
         <!--<page-routing route="{{route}}"></page-routing>-->
+
+        <iron-ajax
+                id="ajax"
+                url="{{url}}"
+                method="POST"
+                on-response="handleResponse"
+                handle-as="json">
+        </iron-ajax>
 
         <iron-ajax
                 id="user"
@@ -45,6 +64,24 @@
                 handle-as="json"
                 last-response="{{users}}">
         </iron-ajax>
+
+        <paper-dialog id="add-dialog">
+            <h2>How much do you want to give?</h2>
+            <div><paper-input id="add-input" type="number"></paper-input></div>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button on-click="addMoney" dialog-confirm>Accept</paper-button>
+            </div>
+        </paper-dialog>
+
+        <paper-dialog id="substract-dialog">
+            <h2>How much do you want to take away?</h2>
+            <div><paper-input id="substract-input" type="number"></paper-input></div>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button on-click="substractMoney" dialog-confirm>Accept</paper-button>
+            </div>
+        </paper-dialog>
 
         <paper-card id="header">
             <div class="card-content">
@@ -73,6 +110,12 @@
                     </div>
                     <div class="narrow-col">
                         {{user.money}}
+                        <div>
+                            <paper-icon-button class="arrow-icon" icon="hardware:keyboard-arrow-up"
+                                               on-tap="add" data-args$="{{user.google_id}}"></paper-icon-button><br>
+                            <paper-icon-button class="arrow-icon" icon="hardware:keyboard-arrow-down"
+                                               on-click="substract" data-args$="{{user.google_id}}"></paper-icon-button>
+                        </div>
                     </div>
                     <div class="narrow-col">
                         <template is="dom-if" if="{{user.admin}}">
@@ -90,6 +133,32 @@
 
 <script>
     Polymer({
-        is: 'admin-panel'
+        is: 'admin-panel',
+        add: function(e) {
+            this.$.ajax.params = {
+                "userId": e.target.parentNode.dataset.args,
+                "function": "add",
+                "amount": 0
+            };
+            this.$$("#add-dialog").toggle();
+        },
+        addMoney: function() {
+            this.$.ajax.params.amount = this.$$("#add-input").value;
+            this.$.ajax.generateRequest();
+            this.$.user.generateRequest();
+        },
+        substract: function(e) {
+            this.$.ajax.params = {
+                "userId": e.target.parentNode.dataset.args,
+                "function": "substract",
+                "amount": 0
+            };
+            this.$$("#substract-dialog").toggle();
+        },
+        substractMoney: function() {
+            this.$.ajax.params.amount = this.$$("#substract-input").value;
+            this.$.ajax.generateRequest();
+            this.$.user.generateRequest();
+        }
     });
 </script>
