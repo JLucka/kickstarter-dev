@@ -4,6 +4,9 @@
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-styles.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
 <link rel="import" href="donation-button.html">
 <link rel="import" href="configuration-constants.html">
 <link rel="import" href="page-routing.html">
@@ -62,6 +65,10 @@
                 color: #3c763d !important;
             }
 
+            paper-spinner-lite {
+                --paper-spinner-color: var(--google-green-500);
+            }
+
         </style>
 
         <configuration-constants name="project" value="{{url}}"></configuration-constants>
@@ -72,58 +79,74 @@
                 url="{{url}}"
                 handle-as="json"
                 on-response="handleResponse"
-                last-response="{{project}}">
+                last-response="{{project}}"
+                debounce-duration="3000">
         </iron-ajax>
 
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <div class="title text-center">
-                    {{project.name}}
+        <template is="dom-if" if="{{loading}}">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <div class="title text-center">
+                        Loading...
+                    </div>
+                </div>
+                <div class="panel-body text-center">
+                    <paper-spinner-lite alt="Loading project details" active></paper-spinner-lite>
                 </div>
             </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-xs-6 text-right" id="more-info">
-                        Created on:
-                        <br>
-                        Created at:
-                        <br>
-                        OVC collected:
-                        <br>
-                        Created by:
-                    </div>
-                    <div class="col-xs-6">
-                        <b>
-                            {{project.date}}
-                            <br>
-                            {{project.time}}
-                            <br>
-                            {{project.money}}
-                            <br>
-                            {{stripOcado(project.creatorname)}}
-                        </b>
+        </template>
+
+        <template is="dom-if" if="{{!loading}}">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <div class="title text-center">
+                        {{project.name}}
                     </div>
                 </div>
-                <div class="card-content description ">
-                    <p class="text-justify">{{project.description}}</p>
-                </div>
-                <div class="col-md-6 col-md-offset-3 col-sm-12">
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-success" role="progressbar"  style$="width: {{project.money}}%">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-6 text-right" id="more-info">
+                            Created on:
+                            <br>
+                            Created at:
+                            <br>
+                            OVC collected:
+                            <br>
+                            Created by:
+                        </div>
+                        <div class="col-xs-6">
+                            <b>
+                                {{project.date}}
+                                <br>
+                                {{project.time}}
+                                <br>
+                                {{project.money}}
+                                <br>
+                                {{stripOcado(project.creatorname)}}
+                            </b>
+                        </div>
+                    </div>
+                    <div class="card-content description ">
+                        <p class="text-justify">{{project.description}}</p>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3 col-sm-12">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success" role="progressbar"  style$="width: {{project.money}}%">
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="panel-footer text-center">
+                    <donation-button user-id="{{userId}}" ovc="{{ovc}}" project-id="{{project.id}}">
+                        <paper-button>
+                                <span class="custom green-hover">
+                                    <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                                </span>
+                        </paper-button>
+                    </donation-button>
+                </div>
             </div>
-            <div class="panel-footer text-center">
-                <donation-button user-id="{{userId}}" ovc="{{ovc}}" project-id="{{project.id}}">
-                    <paper-button>
-                            <span class="custom green-hover">
-                                <iron-icon icon="icons:favorite-border"></iron-icon>Support
-                            </span>
-                    </paper-button>
-                </donation-button>
-            </div>
-            </div>
+        </template>
     </template>
 </dom-module>
 
@@ -135,15 +158,24 @@
                 type: String,
                 value: '0'
             },
-            ovc: Number
+            ovc: Number,
+            loading: {
+                type: Boolean,
+                value: true,
+                notify: true
+            },
+            route: Object
+        },
+        observers: ['_pathChanged(route.path)'],
+        _pathChanged: function() {
+            this.set("loading", true);
         },
         handleResponse: function(request) {
             this.set("route.path", "/project/"+this.item.id);
-//            this.set("page.name", "project");
-//            document.querySelector("#app").route='project';
+            this.set("loading", false);
         },
         stripOcado: function(name) {
             return name.replace('@ocado.com', '');
-        },
+        }
     });
 </script>

@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="donation-button.html">
 <link rel="import" href="configuration-constants.html">
 <link rel="import" href="page-routing.html">
@@ -37,7 +38,7 @@
                 font-family: 'Open Sans', sans-serif;
                 font-weight: bold;
                 font-size: 25px;
-                color: #59af5a;
+                /*color: #59af5a;*/
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -74,6 +75,20 @@
                 padding-left: 8px;
                 padding-right: 8px;
             }
+
+            .status-2 {
+                border-color: #cbcbcb;
+            }
+
+            .status-2 .panel-heading {
+                background-color: #cbcbcb;
+                color: #666666;
+            }
+
+            .status-2 .panel-footer {
+                background-color: #cbcbcb;
+                color: #666666;
+            }
         </style>
         <configuration-constants name="project" value="{{url}}"></configuration-constants>
         <page-routing route="{{route}}"></page-routing>
@@ -83,13 +98,14 @@
                 auto
                 url="{{url}}"
                 handle-as="json"
-                last-response="{{ajaxResponse}}">
+                last-response="{{ajaxResponse}}"
+                debounce-duration="3000">
         </iron-ajax>
 
         <div class="container-fluid">
             <template is="dom-repeat" items="{{ajaxResponse}}" sort="_sort">
                 <div class="col-md-4 col-sm-6 col-xs-12">
-                    <div class="panel panel-success">
+                    <div class$="panel {{chooseClass(item.status)}} status-{{item.status}}">
                         <div class="panel-heading">
                             <div class="title text-center">
                                 <span class="{{item.name}}" on-click="showDetails">{{item.name}}</span>
@@ -109,6 +125,10 @@
                                     {{item.date}}
                                     <br>
                                     {{item.money}}
+                                        <template is="dom-if" if="{{isFunded(item.status)}}">
+                                            <iron-icon icon="icons:favorite-border"></iron-icon>
+                                            <paper-tooltip offset="0">Already funded <3</paper-tooltip>
+                                        </template>
                                     <br>
                                     {{stripOcado(item.creatorname)}}
                                     </b>
@@ -127,15 +147,17 @@
                                         </span>
                                     </paper-button>
                                 </div>
-                                <div class="col-xs-6 text-right">
-                                    <donation-button user-id="{{userId}}" ovc="{{ovc}}" project-id="{{item.id}}">
-                                        <paper-button>
-                                            <span class="custom green-hover">
-                                                <iron-icon icon="icons:favorite-border"></iron-icon>Support
-                                            </span>
-                                        </paper-button>
-                                    </donation-button>
-                                </div>
+                                <template is="dom-if" if="{{!isExpired(item.status)}}">
+                                    <div class="col-xs-6 text-right">
+                                        <donation-button user-id="{{userId}}" ovc="{{ovc}}" project-id="{{item.id}}">
+                                            <paper-button>
+                                                <span class="custom green-hover">
+                                                    <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                                                </span>
+                                            </paper-button>
+                                        </donation-button>
+                                    </div>
+                                </template>
                             </div>
                         </div>
                     </div>
@@ -158,11 +180,17 @@
         },
         showDetails: function(e) {
             var id = encodeURIComponent(e.target.class);
-            this.set("route.path", '/load/'+id);
+            this.set("route.path", '/project/'+id);
             document.querySelector('#detailsAjax').params.name = e.target.class;
             document.querySelector('#detailsAjax').generateRequest();
         },
         _sort: function(a, b) {
+            if(a.status != b.status){
+                if(a.status == 2)
+                    return 1;
+                if(b.status == 2)
+                    return -1;
+            }
             if (a.date === b.date) {
                 if(a.time === b.time) return 0;
                 return a.time < b.time ? 1 : -1;
@@ -171,6 +199,17 @@
         },
         stripOcado: function(name) {
             return name.replace('@ocado.com', '');
+        },
+        isFunded: function(status) {
+            return status == 1;
+        },
+        isExpired: function(status) {
+            return status == 2;
+        },
+        chooseClass: function(status) {
+            if(status < 2) {
+                    return 'panel-success';
+            }
         }
     });
 </script>
