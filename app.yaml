@@ -51,9 +51,10 @@ handlers:
   script: backend.projects.ProjectsHandler.app
   secure: always
 
+- url: /admin
+  script: backend.admin.AdminHandler.app
+
 
 libraries:
-- name: MySQLdb
-  version: "latest"
 - name: webapp2
   version: latest

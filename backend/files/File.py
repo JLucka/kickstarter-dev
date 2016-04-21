@@ -3,4 +3,5 @@ from google.appengine.ext import ndb
 
 class File(ndb.Model):
     project = ndb.KeyProperty(kind='Project')
-    full_size_image = ndb.BlobProperty()
+    blobKey = ndb.BlobKeyProperty(required=True)
+    servingUrl = ndb.StringProperty()

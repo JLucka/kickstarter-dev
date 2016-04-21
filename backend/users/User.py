@@ -13,3 +13,15 @@ class User(ndb.Model):
             'google_id': self.google_id
             }
         return obj
+
+    def substract_money(self, amount):
+        self.money -= amount
+        self.put()
+
+    def add_money(self, amount):
+        self.money += amount
+        self.put()
+
+    def set_money(self, amount):
+        self.money = amount
+        self.put()
