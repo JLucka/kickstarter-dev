@@ -40,6 +40,10 @@ handlers:
   static_dir: frontend/views
   secure: always
 
+- url: /views/components
+  static_dir: frontend/views/components
+  secure: always
+
 - url: /images
   static_dir: frontend/images
 
