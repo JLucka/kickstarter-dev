@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../configuration-constants.html">
+<link rel="import" href="../active-user.html">
 
 
 <dom-module id="donation-button">
@@ -37,7 +38,8 @@
             }
         </style>
 
-        <!--<paper-button on-click="onSupportClick">Support</paper-button>-->
+        <active-user ovc="{{ovc}}" id="userProvider"></active-user>
+
         <div id="content" on-click="onSupportClick">
             <content></content>
         </div>
@@ -63,9 +65,7 @@
             </div>
         </paper-dialog>
 
-        <!--url="https://kickstarter-dev.appspot.com/transaction"-->
         <configuration-constants name="transaction" value="{{transactionUrl}}"></configuration-constants>
-        <configuration-constants name="user" value="{{userUrl}}"></configuration-constants>
         <configuration-constants name="project" value="{{projectUrl}}"></configuration-constants>
         <iron-ajax
                 id="transactionAjax"
@@ -73,14 +73,6 @@
                 method="POST"
                 on-response="handleResponse"
                 handle-as="json">
-        </iron-ajax>
-
-        <iron-ajax
-                id="userAjax"
-                url="{{userUrl}}"
-                handle-as="json"
-                on-response="updateMoney"
-                last-response="{{user}}">
         </iron-ajax>
 
         <iron-ajax
@@ -106,10 +98,7 @@
                 type: Number,
                 value: 0
             },
-            ovc: {
-                type: Number,
-                notify: true
-            }
+            ovc: Number
         },
         ready: function() {
             var slider = this.$$('#dotation-slider-'+this.projectId);
@@ -131,19 +120,16 @@
             };
             this.$.transactionAjax.generateRequest();
             this.async(function() {
-                this.$.userAjax.generateRequest();
-//                this.$.projectDetailsAjax.generateRequest();
-            }, 1000);
+                this.$.userProvider.refreshUser();
+                document.querySelector('#userUpdater').refreshUser();
+                document.querySelector('#detailsAjax').generateRequest();
+            }, 400);
         },
         onSupportClick: function(e) {
             this.querySelector('#dialog').toggle();
         },
         requestConfirmation: function(e) {
             this.querySelector('#cat-dialog').toggle();
-        },
-        updateMoney: function(request) {
-            console.log(this.user.money + " pieniazki usera. " + this.ovc);
-            this.set('ovc', this.user.money);
         }
     });
 </script>

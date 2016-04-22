@@ -23,7 +23,7 @@
     <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
     <link rel="import" href="bower_components/carbon-route/carbon-location.html">
     <link rel="import" href="bower_components/carbon-route/carbon-route.html">
-    <link rel="import" href="views/configuration-constants.html">
+    <link rel="import" href="views/active-user.html">
     <link rel="import" href="routing/page-routing.html">
     <link rel="import" href="views/components/user-bar.html">
     <link rel="import" href="views/projects-list.html">
@@ -33,33 +33,28 @@
 <body id="no-padding">
     <paper-header-panel class="flex">
         <template is="dom-bind" id="app">
-            <configuration-constants name="user" value="{{url}}"></configuration-constants>
-            <iron-ajax
-                    id="user"
-                    auto
-                    url="{{url}}"
-                    handle-as="json"
-                    last-response="{{user}}">
-            </iron-ajax>
+
+            <active-user id="userUpdater" name="{{login}}" ovc="{{ovc}}" user-id="{{userId}}" admin="{{admin}}"></active-user>
 
             <page-routing page="{{page}}"></page-routing>
 
-            <user-bar user-id="{{user.google_id}}"
-                      login="{{user.name}}"
-                      ovc="{{user.money}}"
-                      admin="{{user.admin}}"
+            <user-bar admin="{{admin}}"
+                      name="{{login}}"
+                      ovc="{{ovc}}"
+                      user-id="{{userId}}"
                       class="paper-header"></user-bar>
+
             <div id="content">
                 <neon-animated-pages attr-for-selected="data-route" selected="{{page.name}}">
                     <neon-animatable data-route="home"
                                      entry-animation="slide-from-left-animation"
                                      exit-animation="slide-left-animation">
-                        <projects-list user-id="{{user.google_id}}" ovc="{{user.money}}"></projects-list>
+                        <projects-list user-id="{{userId}}" ovc="{{ovc}}"></projects-list>
                     </neon-animatable>
                     <neon-animatable data-route="project"
                                      entry-animation="slide-from-right-animation"
                                      exit-animation="slide-right-animation">
-                        <project-details user-id="{{user.google_id}}" ovc="{{user.money}}"></project-details>
+                        <project-details user-id="{{userId}}" ovc="{{ovc}}"></project-details>
                     </neon-animatable>
                     <neon-animatable data-route="admin-panel"
                                      entry-animation="slide-from-right-animation"
@@ -68,6 +63,7 @@
                     </neon-animatable>
                 </neon-animated-pages>
             </div>
+
         </template>
     </paper-header-panel>
 </body>

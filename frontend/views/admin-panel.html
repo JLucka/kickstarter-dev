@@ -47,13 +47,11 @@
             }
         </style>
         <configuration-constants name="admin" value="{{url}}"></configuration-constants>
-        <!--<page-routing route="{{route}}"></page-routing>-->
 
         <iron-ajax
                 id="ajax"
                 url="{{url}}"
                 method="POST"
-                on-response="handleResponse"
                 handle-as="json">
         </iron-ajax>
 
@@ -135,8 +133,9 @@
     Polymer({
         is: 'admin-panel',
         add: function(e) {
+            var id = (e.target.dataset.args == undefined ? id = e.target.parentNode.dataset.args : e.target.dataset.args);
             this.$.ajax.params = {
-                "userId": e.target.parentNode.dataset.args,
+                "userId": id,
                 "function": "add",
                 "amount": 0
             };
@@ -150,8 +149,9 @@
             }, 400);
         },
         substract: function(e) {
+            var id = (e.target.dataset.args == undefined ? id = e.target.parentNode.dataset.args : e.target.dataset.args);
             this.$.ajax.params = {
-                "userId": e.target.parentNode.dataset.args,
+                "userId": id,
                 "function": "substract",
                 "amount": 0
             };

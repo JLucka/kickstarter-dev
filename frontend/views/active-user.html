@@ -1,0 +1,52 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="configuration-constants.html">
+
+<dom-module id="active-user">
+    <template>
+
+        <configuration-constants name="user" value="{{url}}"></configuration-constants>
+        <iron-ajax
+                id="user"
+                auto
+                url="{{url}}"
+                handle-as="json"
+                on-response="updateUser">
+        </iron-ajax>
+
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'active-user',
+        properties: {
+            name: {
+                type: String,
+                value: '',
+                notify: true
+            },
+            userId: {
+                type: String,
+                value: '',
+                notify: true
+            },
+            ovc: {
+                type: Number,
+                notify: true
+            },
+            admin: {
+                type: Boolean,
+                notify: true
+            }
+        },
+        updateUser: function(data) {
+            var user = data.detail.response;
+            this.set('name', user.name);
+            this.set('ovc', user.money);
+            this.set('userId', user.google_id);
+        },
+        refreshUser: function() {
+            this.$$("#user").generateRequest();
+        }
+    });
+</script>
