@@ -168,10 +168,13 @@
         },
         observers: ['_pathChanged(route.path)'],
         _pathChanged: function() {
-            this.set("loading", true);
+            if(this.page && this.page.name == "project") {
+                this.set("loading", true);
+                this.$.detailsAjax.params.name = decodeURIComponent(this.item.id);
+                this.$.detailsAjax.generateRequest();
+            }
         },
         handleResponse: function(request) {
-            this.set("route.path", "/project/"+this.item.id);
             this.set("loading", false);
         },
         stripOcado: function(name) {

@@ -181,8 +181,6 @@
         showDetails: function(e) {
             var id = encodeURIComponent(e.target.class);
             this.set("route.path", '/project/'+id);
-            document.querySelector('#detailsAjax').params.name = e.target.class;
-            document.querySelector('#detailsAjax').generateRequest();
         },
         _sort: function(a, b) {
             if(a.status != b.status){

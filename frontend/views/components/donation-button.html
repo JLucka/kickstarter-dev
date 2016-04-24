@@ -71,7 +71,6 @@
                 id="transactionAjax"
                 url="{{transactionUrl}}"
                 method="POST"
-                on-response="handleResponse"
                 handle-as="json">
         </iron-ajax>
 
@@ -79,7 +78,6 @@
                 id="projectDetailsAjax"
                 url="{{projectUrl}}"
                 handle-as="json"
-                on-response="handleResponse"
                 last-response="{{project}}">
         </iron-ajax>
 
@@ -122,6 +120,7 @@
             this.async(function() {
                 this.$.userProvider.refreshUser();
                 document.querySelector('#userUpdater').refreshUser();
+                document.querySelector('#list-ajax').generateRequest();
                 document.querySelector('#detailsAjax').generateRequest();
             }, 400);
         },
