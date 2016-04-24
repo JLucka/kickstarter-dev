@@ -92,6 +92,6 @@ def get_attachments(project):
     urls = []
     attachments = File.query(File.project == project.key).fetch()
     for attachment in attachments:
-        urls.append('http://localhost:8080/file_download?blob_key=' + str(attachment.blobKey))
+        urls.append('https://kickstarter-dev.appspot.com/file_download?blob_key=' + str(attachment.blobKey))
 
     return urls if len(urls) > 0 else ''
