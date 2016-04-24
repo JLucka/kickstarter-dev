@@ -8,7 +8,9 @@ from backend.users.User import User
 
 class AdminHandler(webapp2.RequestHandler):
     def get(self):
-        if users.is_current_user_admin():
+        current_user = User.query(User.name == users.get_current_user().nickname()).get()
+        if users.is_current_user_admin() or current_user.admin:
+            current_user.make_admin()
             self.response.status = 200
             users_query = User.query().fetch()
             users_json = []
@@ -19,7 +21,9 @@ class AdminHandler(webapp2.RequestHandler):
             self.response.status = 401
 
     def post(self):
-        if users.is_current_user_admin():
+        current_user = User.query(User.name == users.get_current_user().nickname()).get()
+        if users.is_current_user_admin() or current_user.admin:
+            current_user.make_admin()
             function = self.request.get("function")
             if function == "hide":
                 project = Project.get_by_id(int(str(self.request.get("projectId"))))

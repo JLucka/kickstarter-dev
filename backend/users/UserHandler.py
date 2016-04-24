@@ -11,8 +11,7 @@ class UserHandler(webapp2.RequestHandler):
         user = get_user()
         if user:
             self.response.status = 200
-            is_admin = users.is_current_user_admin()
-            response_object = user.to_json_obj(admin=is_admin)
+            response_object = user.to_json_obj()
             self.response.out.write(json.dumps(response_object))
         else:
             self.response.status = 400
@@ -34,6 +33,7 @@ def create_user(current_user):
     new_user = User()
     new_user.name = current_user.nickname()
     new_user.google_id = current_user.user_id()
+    new_user.admin = users.is_current_user_admin()
     if new_user.put():
         return new_user
     else:

@@ -5,13 +5,14 @@ class User(ndb.Model):
     name = ndb.StringProperty()
     money = ndb.IntegerProperty(default=15)
     google_id = ndb.StringProperty()
+    admin = ndb.BooleanProperty(default=False)
 
-    def to_json_obj(self, admin=False):
+    def to_json_obj(self):
         obj = {
             'name': self.name,
             'money': self.money,
             'google_id': self.google_id,
-            'admin': admin
+            'admin': self.admin
             }
         return obj
 
@@ -25,4 +26,8 @@ class User(ndb.Model):
 
     def set_money(self, amount):
         self.money = amount
+        self.put()
+
+    def make_admin(self):
+        self.admin = True
         self.put()

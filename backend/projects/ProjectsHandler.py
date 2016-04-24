@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+
 import json
 
 import webapp2
@@ -9,7 +11,7 @@ from backend.users.User import User
 class ProjectsHandler(webapp2.RequestHandler):
     def get(self):
         update_projects_status()
-        name = str(self.request.get("name"))
+        name = unicode(self.request.get("name"))
         projects = get_entities_by_name(name)
         self.response.out.write(json.dumps(projects))
 
@@ -25,8 +27,8 @@ class ProjectsHandler(webapp2.RequestHandler):
 
     def create_project_from_params(self):
         new_project = Project()
-        new_project.name = str(self.request.get("name"))
-        new_project.description = str(self.request.get("desc"))
+        new_project.name = unicode(self.request.get("name"))
+        new_project.description = unicode(self.request.get("desc"))
         new_project.creator = User.query(User.google_id == str(self.request.get("creatorId"))).get().key
 
         return new_project

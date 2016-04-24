@@ -57,7 +57,7 @@ def send_accepted_emails(project):
         message.to = "%s <%s>" % (project.creator.get().name, recipient)
         message.body = """
             Dear %s:
-            Everything Works fine. 500 error, lol.
+            Your project has reached its goal. Congratulations! You've earned it.
             """ % project.creator.get().name
         message.send()
 
