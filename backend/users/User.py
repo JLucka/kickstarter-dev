@@ -31,3 +31,11 @@ class User(ndb.Model):
     def make_admin(self):
         self.admin = True
         self.put()
+
+    @staticmethod
+    def get_all_as_json():
+        users_query = User.query().fetch()
+        users_json = []
+        for user in users_query:
+            users_json.append(user.to_json_obj())
+        return users_json
