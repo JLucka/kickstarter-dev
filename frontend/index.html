@@ -39,7 +39,7 @@
             <page-routing page="{{page}}"></page-routing>
 
             <user-bar admin="{{admin}}"
-                      name="{{login}}"
+                      login="{{login}}"
                       ovc="{{ovc}}"
                       user-id="{{userId}}"
                       class="paper-header"></user-bar>
@@ -56,9 +56,7 @@
                                      exit-animation="slide-right-animation">
                         <project-details user-id="{{userId}}" ovc="{{ovc}}"></project-details>
                     </neon-animatable>
-                    <neon-animatable data-route="admin-panel"
-                                     entry-animation="slide-from-right-animation"
-                                     exit-animation="slide-right-animation">
+                    <neon-animatable data-route="admin-panel">
                         <admin-panel></admin-panel>
                     </neon-animatable>
                 </neon-animated-pages>

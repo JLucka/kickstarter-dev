@@ -122,6 +122,7 @@
             this.async(function() {
                 this.$.userProvider.refreshUser();
                 document.querySelector('#userUpdater').refreshUser();
+                document.querySelector('#list-ajax').refreshUser();
                 document.querySelector('#detailsAjax').generateRequest();
             }, 400);
         },

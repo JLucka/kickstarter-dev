@@ -44,6 +44,7 @@
             this.set('name', user.name);
             this.set('ovc', user.money);
             this.set('userId', user.google_id);
+            this.set('admin', user.admin);
         },
         refreshUser: function() {
             this.$$("#user").generateRequest();
