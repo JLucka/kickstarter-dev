@@ -4,6 +4,8 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-styles.html">
 <link rel="import" href="components/donation-button.html">
 <link rel="import" href="configuration-constants.html">
 <link rel="import" href="../routing/page-routing.html">
@@ -11,7 +13,7 @@
 
 <dom-module id="projects-list">
     <template>
-        <style>
+        <style is="custom-style">
             .panel-body {
                 height: 280px;
                 overflow: hidden;
@@ -89,6 +91,11 @@
                 background-color: #cbcbcb;
                 color: #666666;
             }
+
+            paper-spinner-lite {
+                margin-top: 20px;
+                --paper-spinner-color: var(--google-green-500);
+            }
         </style>
         <configuration-constants name="project" value="{{url}}"></configuration-constants>
         <page-routing route="{{route}}"></page-routing>
@@ -99,8 +106,15 @@
                 url="{{url}}"
                 handle-as="json"
                 last-response="{{ajaxResponse}}"
-                debounce-duration="3000">
+                debounce-duration="3000"
+                loading="{{loading}}">
         </iron-ajax>
+
+        <template is="dom-if" if="{{loading}}">
+            <div class="text-center">
+                <paper-spinner-lite alt="Loading project details" active></paper-spinner-lite>
+            </div>
+        </template>
 
         <div class="container-fluid">
             <template is="dom-repeat" items="{{ajaxResponse}}" sort="_sort">
@@ -163,7 +177,6 @@
                     </div>
                 </div>
             </template>
-        </div>
         </div>
     </template>
 </dom-module>

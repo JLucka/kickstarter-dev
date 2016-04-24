@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-styles.html">
 <link rel="import" href="../bower_components/paper-styles/color.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="components/donation-button.html">
 <link rel="import" href="configuration-constants.html">
 <link rel="import" href="../routing/page-routing.html">
@@ -137,13 +138,22 @@
                     </div>
                 </div>
                 <div class="panel-footer text-center">
-                    <donation-button user-id="{{userId}}" project-id="{{project.id}}">
-                        <paper-button>
-                                <span class="custom green-hover">
-                                    <iron-icon icon="icons:favorite-border"></iron-icon>Support
-                                </span>
+                    <template is="dom-if" if="{{!isExpired(project.status)}}">
+                        <donation-button user-id="{{userId}}" project-id="{{project.id}}">
+                            <paper-button>
+                                    <span class="custom green-hover">
+                                        <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                                    </span>
+                            </paper-button>
+                        </donation-button>
+                    </template>
+                    <template is="dom-if" if="{{isExpired(project.status)}}">
+                        <paper-button noink>
+                            <span class="custom green-hover">
+                                <iron-icon icon="social:mood-bad"></iron-icon>Expired
+                            </span>
                         </paper-button>
-                    </donation-button>
+                    </template>
                 </div>
             </div>
         </template>
@@ -169,6 +179,7 @@
         observers: ['_pathChanged(route.path)'],
         _pathChanged: function() {
             if(this.page && this.page.name == "project") {
+                document.querySelector('#mainContainer').scrollTop = 0;
                 this.set("loading", true);
                 this.$.detailsAjax.params.name = decodeURIComponent(this.item.id);
                 this.$.detailsAjax.generateRequest();
@@ -179,6 +190,9 @@
         },
         stripOcado: function(name) {
             return name.replace('@ocado.com', '');
+        },
+        isExpired: function(status) {
+            return status == 2;
         }
     });
 </script>
