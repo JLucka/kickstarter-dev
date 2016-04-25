@@ -80,7 +80,7 @@ def get_entities_by_name(name):
         return project.to_json_object(get_attachments(project))
 
     else:
-        get_all_projects()
+        return get_all_projects()
 
 
 def get_all_projects():

@@ -12,9 +12,9 @@ from backend.users.User import User
 class ProjectsHandler(webapp2.RequestHandler):
     def get(self):
         update_projects_status()
-        if self.request.get("best"):
+        if self.request.get("best") != "":
             projects = get_best_projects()
-        elif self.request.get('trending'):
+        elif self.request.get('trending') != "":
             projects = get_trending_projects()
         else:
             name = unicode(self.request.get("name"))
