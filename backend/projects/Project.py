@@ -48,6 +48,7 @@ class Project(ndb.Model):
         self.put()
 
 
+
 def send_accepted_emails(project):
         recipient = project.creator.get().name
         if '@' not in recipient:
@@ -62,18 +63,26 @@ def send_accepted_emails(project):
         message.send()
 
 
+def convert_to_json(projects):
+    projects_jsons = []
+    for project in projects:
+        obj = project.to_json_object()
+        projects_jsons.append(obj)
+    return projects_jsons
+
+
 def get_entities_by_name(name):
     if name != "":
         project = Project.query(Project.name == name).get()
         return project.to_json_object()
 
     else:
-        projects = Project.query().fetch(25)
-        projects_jsons = []
-        for project in projects:
-            obj = project.to_json_object()
-            projects_jsons.append(obj)
-        return projects_jsons
+        get_all_projects()
+
+
+def get_all_projects():
+    projects = Project.query().fetch(25)
+    return convert_to_json(projects)
 
 
 def update_projects_status():
@@ -84,3 +93,12 @@ def update_projects_status():
             project.status = Status.EXPIRED
             project.put()
 
+
+def get_best_projects():
+    projects = Project.query().order(-Project.money).fetch(3)
+    return convert_to_json(projects)
+
+
+def get_trending_projects():
+    projects = Project.query().filter(Project.money > 30).order(-Project.createdOn).fetch(3)
+    return convert_to_json(projects)

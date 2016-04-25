@@ -3,7 +3,8 @@
 import json
 
 import webapp2
-from backend.projects.Project import Project, get_entities_by_name, update_projects_status
+from backend.projects.Project import Project, get_entities_by_name, update_projects_status, get_best_projects, \
+    get_trending_projects
 from backend.projects.ProjectValidator import validate
 from backend.users.User import User
 
@@ -11,8 +12,13 @@ from backend.users.User import User
 class ProjectsHandler(webapp2.RequestHandler):
     def get(self):
         update_projects_status()
-        name = unicode(self.request.get("name"))
-        projects = get_entities_by_name(name)
+        if self.request.get("best"):
+            projects = get_best_projects()
+        elif self.request.get('trending'):
+            projects = get_trending_projects()
+        else:
+            name = unicode(self.request.get("name"))
+            projects = get_entities_by_name(name)
         self.response.out.write(json.dumps(projects))
 
     def post(self):
