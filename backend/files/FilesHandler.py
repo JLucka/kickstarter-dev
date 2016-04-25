@@ -9,19 +9,23 @@ from backend.projects.Project import Project
 
 
 class UploadLinkHandler(webapp2.RequestHandler):
-    def post(self):
-        upload_url = blobstore.create_upload_url('/files_upload') + '?projectId=' + str(self.request.get('projectId'))
-        self.response.write(urlfetch.fetch(url=upload_url, payload=self.request.body, method=urlfetch.POST))
+    def get(self):
+        upload_url = blobstore.create_upload_url('/api/files_upload')
+        self.response.write(upload_url)
 
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
-        upload = self.get_uploads()[0]
-        my_file = File()
-        my_file.project = Project.get_by_id(int(str(self.request.get("projectId")))).key
-        my_file.blobKey = upload.key()
-        my_file.put()
-        self.response.write(my_file.blobKey)
+        project_id = Project.get_by_id(int(str(self.request.get("projectId")))).key
+        answer = []
+        for i in range(0, len(self.get_uploads()) - 1):
+            upload = self.get_uploads()[i]
+            my_file = File()
+            my_file.project = project_id
+            my_file.blobKey = upload.key()
+            my_file.put()
+            answer.append(str(my_file.blobKey))
+        self.response.write(answer)
 
 
 class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):

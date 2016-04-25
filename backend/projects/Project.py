@@ -24,7 +24,7 @@ class Project(ndb.Model):
     creator = ndb.KeyProperty(kind='User')
     status = msgprop.EnumProperty(Status, default=Status.ACTIVE, indexed=True)
 
-    def to_json_object(self, attachments_urls=''):
+    def to_json_object(self):
         user = self.creator.get()
         obj = {
             'id': int(self.key.id()),
@@ -35,8 +35,8 @@ class Project(ndb.Model):
             'money': self.money,
             'status': int(self.status),
             'date': str(self.createdOn.date()),
-            'time': str(self.createdOn.time()),
-            'attachments': str(attachments_urls)
+            'time': str(self.createdOn.strftime('%H:%M:%S')),
+            'attachments': str(get_attachments(self))
         }
         return obj
 
@@ -49,7 +49,6 @@ class Project(ndb.Model):
     def hide(self):
         self.status = Status.HIDDEN
         self.put()
-
 
 
 def send_accepted_emails(project):
@@ -111,6 +110,6 @@ def get_attachments(project):
     urls = []
     attachments = File.query(File.project == project.key).fetch()
     for attachment in attachments:
-        urls.append('https://kickstarter-dev.appspot.com/file_download?blob_key=' + str(attachment.blobKey))
+        urls.append('https://kickstarter-dev.appspot.com/api/file_download?blob_key=' + str(attachment.blobKey))
 
     return urls if len(urls) > 0 else ''
