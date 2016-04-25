@@ -13,7 +13,7 @@ class UserPhoto(ndb.Model):
 
 class PhotoUploadFormHandler(webapp2.RequestHandler):
     def get(self):
-        upload_url = blobstore.create_upload_url('/api/files')
+        upload_url = blobstore.create_upload_url('/files_upload')
         # To upload files to the blobstore, the request method must be "POST"
         # and enctype must be set to "multipart/form-data".
         self.response.out.write("""
@@ -49,7 +49,7 @@ class ViewPhotoHandler(blobstore_handlers.BlobstoreDownloadHandler):
 
 
 app = webapp2.WSGIApplication([
-    webapp2.Route('/api/files', handler=PhotoUploadFormHandler),
-    webapp2.Route('/api/files_upload', handler=PhotoUploadHandler, name='upload'),
-    webapp2.Route('/api/file_download', handler=ViewPhotoHandler),
+    webapp2.Route('/files', handler=PhotoUploadFormHandler),
+    webapp2.Route('/files_upload', handler=PhotoUploadHandler),
+    webapp2.Route('/file_download', handler=ViewPhotoHandler),
     ], debug=True)

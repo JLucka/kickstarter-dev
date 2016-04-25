@@ -18,13 +18,13 @@ handlers:
   script: backend.users.UserHandler.app
   secure: always
 
-- url: /api/files_upload
+- url: /files_upload
   script: backend.files.FilesHandler.app
 
-- url: /api/file_download
+- url: /file_download
   script: backend.files.FilesHandler.app
 
-- url: /api/files
+- url: /files
   script: backend.files.FilesHandler.app
 
 - url: /api/transaction
