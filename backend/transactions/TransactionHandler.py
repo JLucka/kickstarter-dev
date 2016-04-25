@@ -37,5 +37,5 @@ def transfer_money(transaction):
 
 
 app = webapp2.WSGIApplication([
-    ('/transaction', TransactionHandler)
+    ('/api/transaction', TransactionHandler)
 ])

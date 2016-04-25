@@ -40,6 +40,4 @@ class ProjectsHandler(webapp2.RequestHandler):
         return new_project
 
 
-
-
-app = webapp2.WSGIApplication([('/projects', ProjectsHandler)])
+app = webapp2.WSGIApplication([('/api/projects', ProjectsHandler)])

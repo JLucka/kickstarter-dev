@@ -32,7 +32,7 @@ class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
             self.send_blob(self.request.get('blob_key'))
 
 
-app = webapp2.WSGIApplication([('/files', UploadLinkHandler),
-                               ('/files_upload', UploadHandler),
-                               ('/file_download', DownloadHandler)],
+app = webapp2.WSGIApplication([('/api/files', UploadLinkHandler),
+                               ('/api/files_upload', UploadHandler),
+                               ('/api/file_download', DownloadHandler)],
                               debug=True)

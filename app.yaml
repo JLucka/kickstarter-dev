@@ -6,32 +6,28 @@ threadsafe: true
 
 # Handlers match in order, put above the default handler.
 handlers:
-- url: /
-  script: backend.main.app
-  secure: always
-  login: required
 
-- url: /projects
+- url: /api/projects
   script: backend.projects.ProjectsHandler.app
 
 - url: /logout
   script: backend.users.LogoutHandler.app
   secure: always
 
-- url: /user
+- url: /api/user
   script: backend.users.UserHandler.app
   secure: always
 
-- url: /files_upload
+- url: /api/files_upload
   script: backend.files.FilesHandler.app
 
-- url: /file_download
+- url: /api/file_download
   script: backend.files.FilesHandler.app
 
-- url: /files
+- url: /api/files
   script: backend.files.FilesHandler.app
 
-- url: /transaction
+- url: /api/transaction
   script: backend.transactions.TransactionHandler.app
 
 - url: /styles
@@ -57,13 +53,16 @@ handlers:
   static_dir: frontend/routing
   secure: always
 
-- url: /projects
+- url: /api/projects
   script: backend.projects.ProjectsHandler.app
   secure: always
 
-- url: /admin
+- url: /api/admin
   script: backend.admin.AdminHandler.app
 
+- url: /.*
+  static_files: frontend/index.html
+  upload: frontend/index.html
 
 libraries:
 - name: webapp2

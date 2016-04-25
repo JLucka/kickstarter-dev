@@ -54,4 +54,4 @@ class AdminHandler(webapp2.RequestHandler):
             self.response.status = 400
 
 
-app = webapp2.WSGIApplication([('/admin', AdminHandler)])
+app = webapp2.WSGIApplication([('/api/admin', AdminHandler)])

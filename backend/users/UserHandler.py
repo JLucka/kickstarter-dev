@@ -40,5 +40,5 @@ def create_user(current_user):
         return False
 
 app = webapp2.WSGIApplication([
-    ('/user', UserHandler)
+    ('/api/user', UserHandler)
 ])
