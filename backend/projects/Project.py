@@ -76,7 +76,7 @@ def convert_to_json(projects):
 def get_entities_by_name(name):
     if name != "":
         project = Project.query(Project.name == name).get()
-        return project.to_json_object(get_attachments(project))
+        return project.to_json_object()
 
     else:
         return get_all_projects()
