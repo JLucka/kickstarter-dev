@@ -6,6 +6,11 @@ threadsafe: true
 
 # Handlers match in order, put above the default handler.
 handlers:
+- url: /
+    script: backend.main.app
+    secure: always
+    login: required
+
 - url: /api/projects
   script: backend.projects.ProjectsHandler.app
 
@@ -59,7 +64,7 @@ handlers:
 - url: /api/admin
   script: backend.admin.AdminHandler.app
 
-- url: /home
+- url: /.*
   static_files: frontend/index.html
   upload: frontend/index.html
 

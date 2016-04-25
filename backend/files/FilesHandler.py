@@ -10,7 +10,7 @@ from backend.projects.Project import Project
 
 class UploadLinkHandler(webapp2.RequestHandler):
     def get(self):
-        upload_url = blobstore.create_upload_url(webapp2.uri_for('upload', _full=True))
+        upload_url = blobstore.create_upload_url('/api/files_upload', gs_bucket_name='kickstarter-dev.appspot.com')
         self.response.write(upload_url)
 
 
