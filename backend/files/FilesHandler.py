@@ -10,7 +10,7 @@ from backend.projects.Project import Project
 
 class UploadLinkHandler(webapp2.RequestHandler):
     def get(self):
-        upload_url = blobstore.create_upload_url('/api/files_upload')
+        upload_url = blobstore.create_upload_url(webapp2.uri_for('upload', _full=True))
         self.response.write(upload_url)
 
 
@@ -39,7 +39,8 @@ class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
             self.send_blob(self.request.get('blob_key'))
 
 
-app = webapp2.WSGIApplication([('/api/files', UploadLinkHandler),
-                               ('/api/files_upload', UploadHandler),
-                               ('/api/file_download', DownloadHandler)],
-                              debug=True)
+app = webapp2.WSGIApplication([
+    webapp2.Route('/api/files', handler=UploadLinkHandler),
+    webapp2.Route('/api/files_upload', handler=UploadHandler, name='upload'),
+    webapp2.Route('/api/file_download', handler=DownloadHandler),
+    ], debug=True)
