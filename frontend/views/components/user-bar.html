@@ -49,6 +49,7 @@
             }
             #logo {
                 display: inline;
+                cursor: pointer;
             }
             #logo img {
                 height: 40px;
@@ -77,6 +78,7 @@
                 font-weight: lighter;
                 background-color: transparent;
                 color: black;
+                cursor: pointer;
             }
 
             .right-box {
@@ -119,7 +121,7 @@
                     <div class="page-box"><paper-ripple recenters></paper-ripple>{{page.name}}</div>
                 </template>
                 <template is="dom-if" if="{{decodeName(item.id)}}">
-                    <div class="page-box left-box"><paper-ripple recenters></paper-ripple>{{page.name}}</div>
+                    <div class="page-box left-box" on-click="goUp"><paper-ripple recenters></paper-ripple>{{page.name}}</div>
                     <div class="page-box right-box"><paper-ripple recenters></paper-ripple>{{decodeName(item.id)}}</div>
                 </template>
             </div>
@@ -178,7 +180,7 @@
             this.$.ajax.generateRequest();
         },
         goHome: function(e) {
-            this.set('page.name', 'home');
+            this.set('page.name', 'projects');
         },
         goAdmin: function(e) {
             this.set('page.name', 'admin-panel');
@@ -191,6 +193,9 @@
         },
         decodeName: function(name) {
             return decodeURIComponent(name);
+        },
+        goUp: function() {
+            this.set('page.name', this.page.name+'s');
         }
     });
 </script>

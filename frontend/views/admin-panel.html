@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="configuration-constants.html">
+<link rel="import" href="../routing/page-routing.html">
 
 <dom-module id="admin-panel">
     <template>
@@ -50,7 +51,9 @@
                 align-items: center;
             }
         </style>
+
         <configuration-constants name="admin" value="{{url}}"></configuration-constants>
+        <page-routing route="{{route}}" page="{{page}}"></page-routing>
 
         <iron-ajax
                 id="ajax"
@@ -61,7 +64,6 @@
 
         <iron-ajax
                 id="user"
-                auto
                 url="{{url}}"
                 handle-as="json"
                 last-response="{{users}}">
@@ -146,6 +148,16 @@
 <script>
     Polymer({
         is: 'admin-panel',
+        properties: {
+            route: Object
+        },
+        observers: ['_pathChanged(route.path)'],
+        _pathChanged: function() {
+            if(this.page && this.page.name == "admin-panel") {
+                console.log('hello');
+                this.$.user.generateRequest();
+            }
+        },
         add: function(e) {
             var id = (e.target.dataset.args == undefined ? id = e.target.parentNode.dataset.args : e.target.dataset.args);
             this.$.ajax.params = {
@@ -160,7 +172,8 @@
             this.$.ajax.generateRequest();
             this.async(function() {
                 this.$.user.generateRequest();
-            }, 400);
+                document.querySelector('#userUpdater').refreshUser();
+            }, 200);
         },
         substract: function(e) {
             var id = (e.target.dataset.args == undefined ? id = e.target.parentNode.dataset.args : e.target.dataset.args);
@@ -176,7 +189,8 @@
             this.$.ajax.generateRequest();
             this.async(function() {
                 this.$.user.generateRequest();
-            }, 400);
+                document.querySelector('#userUpdater').refreshUser();
+            }, 200);
         },
         makeAdmin: function(e) {
             var id = (e.target.dataset.args == undefined ? id = e.target.parentNode.dataset.args : e.target.dataset.args);
@@ -190,7 +204,7 @@
             this.$.ajax.generateRequest();
             this.async(function() {
                 this.$.user.generateRequest();
-            }, 400);
+            }, 200);
         }
     });
 </script>

@@ -46,7 +46,7 @@
 
             <div id="content">
                 <neon-animated-pages attr-for-selected="data-route" selected="{{page.name}}">
-                    <neon-animatable data-route="home"
+                    <neon-animatable data-route="projects"
                                      entry-animation="slide-from-left-animation"
                                      exit-animation="slide-left-animation">
                         <projects-list user-id="{{userId}}" ovc="{{ovc}}"></projects-list>
@@ -56,7 +56,9 @@
                                      exit-animation="slide-right-animation">
                         <project-details user-id="{{userId}}" ovc="{{ovc}}"></project-details>
                     </neon-animatable>
-                    <neon-animatable data-route="admin-panel">
+                    <neon-animatable data-route="admin-panel"
+                                     entry-animation="slide-from-right-animation"
+                                     exit-animation="slide-right-animation">>
                         <admin-panel></admin-panel>
                     </neon-animatable>
                 </neon-animated-pages>

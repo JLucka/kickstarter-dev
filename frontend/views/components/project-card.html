@@ -1,0 +1,198 @@
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="donation-button.html">
+<link rel="import" href="project-card.html">
+<link rel="import" href="../../routing/page-routing.html">
+<link rel="import" href="../configuration-constants.html">
+
+<dom-module id="project-card">
+    <template>
+        <style>
+            .panel-body {
+                height: 280px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-bottom: 10px;
+            }
+
+            .panel {
+                margin-top: 10px;
+            }
+
+            .panel-success .panel-footer {
+                background-color: #dff0d8;
+                border-color: #d6e9c6
+            }
+
+            .panel-danger .panel-footer {
+                background-color: #f2dede;
+                border-color: #ebccd1
+            }
+
+            .description {
+                padding-bottom: 10px;
+                padding-top: 10px;
+                border-top: 1px #dddddd solid;
+            }
+
+            .title {
+                font-family: 'Open Sans', sans-serif;
+                font-weight: bold;
+                font-size: 25px;
+                /*color: #59af5a;*/
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                cursor: pointer;
+            }
+
+            #more-info {
+                padding-bottom: 10px;
+                font-family: 'Open Sans', cursive;
+                color: gray;
+            }
+
+            #more-info span {
+                color: black;
+            }
+
+            p {
+                white-space: pre-wrap;
+                font-family: 'Open Sans', sans-serif;
+            }
+
+            iron-icon {
+                height: 18px;
+            }
+
+            iron-icon:hover {
+                color: var(--google-green-500);
+            }
+
+            paper-button span.green-hover:hover {
+                color: #3c763d !important;
+            }
+
+            .col-xs-6 {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+            .status-2 {
+                border-color: #cbcbcb;
+            }
+
+            .status-2 .panel-heading {
+                background-color: #cbcbcb;
+                color: #666666;
+            }
+
+            .status-2 .panel-footer {
+                background-color: #cbcbcb;
+                color: #666666;
+            }
+        </style>
+
+        <page-routing route="{{route}}"></page-routing>
+        <configuration-constants name="attachment" value="{{attachment}}"></configuration-constants>
+
+        <div class$="panel {{chooseClass(project.status)}} status-{{project.status}}">
+            <div class="panel-heading">
+                <div class="title text-center" on-click="showDetails">
+                    <span>{{project.name}}</span>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6 text-right" id="more-info">
+                        Created on:
+                        <br>
+                        OVC collected:
+                        <br>
+                        Created by:
+                    </div>
+                    <div class="col-xs-6">
+                        <b>
+                            {{project.date}}
+                            <br>
+                            {{project.money}}
+                            <template is="dom-if" if="{{isFunded(project.status)}}">
+                                <iron-icon icon="icons:favorite-border"></iron-icon>
+                                <paper-tooltip offset="0">Already funded <3</paper-tooltip>
+                            </template>
+                            <br>
+                            {{stripOcado(project.creatorname)}}
+                        </b>
+                    </div>
+                </div>
+                <div class="description">
+                    <template is="dom-repeat" items="{{project.attachments}}" as="image">
+                        <img src$="{{attachment}}{{image}}" />
+                    </template>
+                    <p>{{project.description}}</p>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-xs-6 text-left">
+                        <paper-button class="{{project.name}}" on-click="showDetails" >
+                            <span class="custom green-hover">
+                                <span class="{{project.name}}">See More</span><iron-icon icon="icons:chevron-right"></iron-icon>
+                            </span>
+                        </paper-button>
+                    </div>
+                    <template is="dom-if" if="{{!isExpired(project.status)}}">
+                        <div class="col-xs-6 text-right">
+                            <donation-button user-id="{{userId}}" project-id="{{project.id}}">
+                                <paper-button>
+                                    <span class="custom green-hover">
+                                        <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                                    </span>
+                                </paper-button>
+                            </donation-button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'project-card',
+        properties: {
+            userId: {
+                type: String,
+                value: '0'
+            },
+            ovc: Number,
+            project: Object,
+            marked: Boolean
+        },
+        ready: function() {
+            if(this.marked)
+                this.$$(".panel").className += " panel-danger";
+        },
+        showDetails: function(e) {
+            var id = encodeURIComponent(this.project.name);
+            this.set("route.path", '/project/'+id);
+        },
+        stripOcado: function(name) {
+            return name.replace('@ocado.com', '');
+        },
+        isFunded: function(status) {
+            return status == 1;
+        },
+        isExpired: function(status) {
+            return status == 2;
+        },
+        chooseClass: function(status) {
+            if(status < 2) {
+                return 'panel-success';
+            }
+        }
+    });
+</script>
