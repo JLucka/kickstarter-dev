@@ -16,15 +16,18 @@ class UploadLinkHandler(webapp2.RequestHandler):
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
+        print 'wchodze do upload handler'
         project_id = Project.get_by_id(int(str(self.request.get("projectId")))).key
         answer = []
         for i in range(0, len(self.get_uploads())):
+            print 'wchodze do petli'
             upload = self.get_uploads()[i]
             my_file = File()
             my_file.project = project_id
             my_file.blobKey = upload.key()
             my_file.put()
             answer.append(str(my_file.blobKey))
+        print 'wychodze z petli'
         self.response.write(answer)
 
 
