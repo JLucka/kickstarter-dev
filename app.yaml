@@ -22,6 +22,12 @@ handlers:
   script: backend.users.UserHandler.app
   secure: always
 
+- url: /files_upload
+  script: backend.files.FilesHandler.app
+
+- url: /file_download
+  script: backend.files.FilesHandler.app
+
 - url: /files
   script: backend.files.FilesHandler.app
 

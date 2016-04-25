@@ -1,24 +1,38 @@
 import webapp2
+from google.appengine.api import urlfetch
 
+from google.appengine.api.datastore_types import BlobKey
+from google.appengine.ext import blobstore
+from google.appengine.ext.webapp import blobstore_handlers
 from backend.files.File import File
 from backend.projects.Project import Project
 
 
-class FilesHandler(webapp2.RequestHandler):
-    def get(self):
-        my_file = File.get_by_id(int(self.request.get('fileId')))
-        if my_file.full_size_image:
-            self.response.headers['Content-Type'] = 'image/png'
-            self.response.out.write(my_file.full_size_image)
-        else:
-            self.response.out.write('No image')
-
+class UploadLinkHandler(webapp2.RequestHandler):
     def post(self):
+        upload_url = blobstore.create_upload_url('/files_upload') + '?projectId=' + str(self.request.get('projectId'))
+        self.response.write(urlfetch.fetch(url=upload_url, payload=self.request.body, method=urlfetch.POST))
+
+
+class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
+    def post(self):
+        upload = self.get_uploads()[0]
         my_file = File()
         my_file.project = Project.get_by_id(int(str(self.request.get("projectId")))).key
-        my_file.full_size_image = self.request.get('img')
+        my_file.blobKey = upload.key()
         my_file.put()
-        self.response.write(my_file.key.id())
+        self.response.write(my_file.blobKey)
 
 
-app = webapp2.WSGIApplication([('/files', FilesHandler)], debug=True)
+class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
+    def get(self):
+        if not blobstore.get(self.request.get('blob_key')):
+            self.error(404)
+        else:
+            self.send_blob(self.request.get('blob_key'))
+
+
+app = webapp2.WSGIApplication([('/files', UploadLinkHandler),
+                               ('/files_upload', UploadHandler),
+                               ('/file_download', DownloadHandler)],
+                              debug=True)

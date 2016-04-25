@@ -4,6 +4,8 @@ from google.appengine.api import mail
 from protorpc import messages
 import datetime
 
+from backend.files.File import File
+
 GOAL_OVC = 100
 
 
@@ -22,7 +24,7 @@ class Project(ndb.Model):
     creator = ndb.KeyProperty(kind='User')
     status = msgprop.EnumProperty(Status, default=Status.ACTIVE, indexed=True)
 
-    def to_json_object(self):
+    def to_json_object(self, attachments_urls=''):
         user = self.creator.get()
         obj = {
             'id': int(self.key.id()),
@@ -33,7 +35,8 @@ class Project(ndb.Model):
             'money': self.money,
             'status': int(self.status),
             'date': str(self.createdOn.date()),
-            'time': str(self.createdOn.time())
+            'time': str(self.createdOn.time()),
+            'attachments': str(attachments_urls)
         }
         return obj
 
@@ -74,7 +77,7 @@ def convert_to_json(projects):
 def get_entities_by_name(name):
     if name != "":
         project = Project.query(Project.name == name).get()
-        return project.to_json_object()
+        return project.to_json_object(get_attachments(project))
 
     else:
         get_all_projects()
@@ -102,3 +105,12 @@ def get_best_projects():
 def get_trending_projects():
     projects = Project.query().filter(Project.money > 30).order(-Project.createdOn).fetch(3)
     return convert_to_json(projects)
+
+
+def get_attachments(project):
+    urls = []
+    attachments = File.query(File.project == project.key).fetch()
+    for attachment in attachments:
+        urls.append('https://kickstarter-dev.appspot.com/file_download?blob_key=' + str(attachment.blobKey))
+
+    return urls if len(urls) > 0 else ''

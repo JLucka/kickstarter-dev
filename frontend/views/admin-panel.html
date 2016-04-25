@@ -16,8 +16,12 @@
                 font-family: 'Open Sans', sans-serif;
             }
 
+            paper-icon-button.cross-icon:hover {
+                color: #0fb611;
+            }
+
             .check-icon {
-                --iron-icon-fill-color: #0fb611;;
+                --iron-icon-fill-color: #0fb611;
             }
 
             .arrow-icon {
@@ -26,7 +30,7 @@
             }
 
             #header {
-                --paper-card-background-color: #91ff8c;
+                --paper-card-background-color: #dff0d8;
                 font-weight: bold;
             }
 
@@ -81,6 +85,15 @@
             </div>
         </paper-dialog>
 
+        <paper-dialog id="admin-dialog">
+            <h2>Are you sure?</h2>
+            <div>Do you really want to make this user an admin?</div>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button on-click="confirmAdmin" dialog-confirm>Accept</paper-button>
+            </div>
+        </paper-dialog>
+
         <paper-card id="header">
             <div class="card-content">
                 <div class="wide-col">
@@ -117,10 +130,11 @@
                     </div>
                     <div class="narrow-col">
                         <template is="dom-if" if="{{user.admin}}">
-                            <iron-icon class="check-icon" icon="icons:check"></iron-icon>
+                            <paper-icon-button class="check-icon" icon="icons:check" noink disabled></paper-icon-button>
                         </template>
                         <template is="dom-if" if="{{!user.admin}}">
-                            <iron-icon icon="icons:close"></iron-icon>
+                            <paper-icon-button class="cross-icon" icon="icons:close" noink
+                                               on-click="makeAdmin" data-args$="{{user.google_id}}"></paper-icon-button>
                         </template>
                     </div>
                 </div>
@@ -159,6 +173,20 @@
         },
         substractMoney: function() {
             this.$.ajax.params.amount = this.$$("#substract-input").value;
+            this.$.ajax.generateRequest();
+            this.async(function() {
+                this.$.user.generateRequest();
+            }, 400);
+        },
+        makeAdmin: function(e) {
+            var id = (e.target.dataset.args == undefined ? id = e.target.parentNode.dataset.args : e.target.dataset.args);
+            this.$.ajax.params = {
+                "userId": id,
+                "function": "make_admin"
+            };
+            this.$$("#admin-dialog").toggle();
+        },
+        confirmAdmin: function() {
             this.$.ajax.generateRequest();
             this.async(function() {
                 this.$.user.generateRequest();
