@@ -59,7 +59,7 @@ handlers:
 - url: /api/admin
   script: backend.admin.AdminHandler.app
 
-- url: /.*
+- url: /home
   static_files: frontend/index.html
   upload: frontend/index.html
 
