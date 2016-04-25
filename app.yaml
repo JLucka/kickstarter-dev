@@ -21,7 +21,6 @@ handlers:
 - url: /api/files_upload
   script: backend.files.FilesHandler.app
 
-
 - url: /api/file_download
   script: backend.files.FilesHandler.app
 
@@ -63,6 +62,9 @@ handlers:
 
 - url: /.*
   static_files: frontend/index.html
+  upload: frontend/index.html
+
+
 
 libraries:
 - name: webapp2
