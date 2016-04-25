@@ -20,7 +20,6 @@ handlers:
 
 - url: /api/files_upload
   script: backend.files.FilesHandler.app
-  upload: backend.files.FilesHandler.app
 
 
 - url: /api/file_download
