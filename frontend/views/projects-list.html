@@ -109,6 +109,15 @@
                 debounce-duration="3000"
                 loading="{{loading}}">
         </iron-ajax>
+         <iron-ajax
+                id="best-list-ajax"
+                auto
+                params = '{"best": "3"}'
+                url="{{url}}"
+                handle-as="json"
+                last-response="{{bestResponse}}">
+        </iron-ajax>
+
 
         <template is="dom-if" if="{{loading}}">
             <div class="text-center">
@@ -117,6 +126,66 @@
         </template>
 
         <div class="container-fluid">
+            <template is="dom-repeat" items="{{bestResponse}}" sort="_sort">
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <div class$="panel panel-danger status-{{item.status}}">
+                        <div class="panel-heading">
+                            <div class="title text-center">
+                                <span class="{{item.name}}" on-click="showDetails">{{item.name}}</span>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-6 text-right" id="more-info2">
+                                    Created on:
+                                    <br>
+                                    OVC collected:
+                                    <br>
+                                    Created by:
+                                </div>
+                                <div class="col-xs-6">
+                                    <b>
+                                    {{item.date}}
+                                    <br>
+                                    {{item.money}}
+                                        <template is="dom-if" if="{{isFunded(item.status)}}">
+                                            <iron-icon icon="icons:favorite-border"></iron-icon>
+                                            <paper-tooltip offset="0">Already funded <3</paper-tooltip>
+                                        </template>
+                                    <br>
+                                    {{stripOcado(item.creatorname)}}
+                                    </b>
+                                </div>
+                            </div>
+                            <div class="description">
+                                <p>{{item.description}}</p>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-xs-6 text-left">
+                                    <paper-button class="{{item.name}}" on-click="showDetails" >
+                                        <span class="custom green-hover">
+                                            <span class="{{item.name}}">See More</span><iron-icon class="{{item.name}}" icon="icons:chevron-right"></iron-icon>
+                                        </span>
+                                    </paper-button>
+                                </div>
+                                <template is="dom-if" if="{{!isExpired(item.status)}}">
+                                    <div class="col-xs-6 text-right">
+                                        <donation-button user-id="{{userId}}" project-id="{{item.id}}">
+                                            <paper-button>
+                                                <span class="custom green-hover">
+                                                    <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                                                </span>
+                                            </paper-button>
+                                        </donation-button>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
             <template is="dom-repeat" items="{{ajaxResponse}}" sort="_sort">
                 <div class="col-md-4 col-sm-12 col-xs-12">
                     <div class$="panel {{chooseClass(item.status)}} status-{{item.status}}">

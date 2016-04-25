@@ -13,9 +13,9 @@ class ProjectsHandler(webapp2.RequestHandler):
     def get(self):
         update_projects_status()
         if self.request.get("best") != "":
-            projects = get_best_projects()
+            projects = get_best_projects(int(self.request.get("best")))
         elif self.request.get('trending') != "":
-            projects = get_trending_projects()
+            projects = get_trending_projects(int(self.request.get('trending')))
         else:
             name = unicode(self.request.get("name"))
             projects = get_entities_by_name(name)

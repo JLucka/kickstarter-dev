@@ -97,13 +97,13 @@ def update_projects_status():
             project.put()
 
 
-def get_best_projects():
-    projects = Project.query().order(-Project.money).fetch(3)
+def get_best_projects(number):
+    projects = Project.query().order(-Project.money).fetch(number)
     return convert_to_json(projects)
 
 
-def get_trending_projects():
-    projects = Project.query().filter(Project.money > 30).order(-Project.createdOn).fetch(3)
+def get_trending_projects(number):
+    projects = Project.query().filter(Project.money > 30).order(-Project.createdOn).fetch(number)
     return convert_to_json(projects)
 
 
