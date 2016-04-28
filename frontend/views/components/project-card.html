@@ -1,10 +1,13 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/editor-icons.html">
 <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="donation-button.html">
 <link rel="import" href="project-card.html">
 <link rel="import" href="../../routing/page-routing.html">
 <link rel="import" href="../configuration-constants.html">
+
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 
 <dom-module id="project-card">
     <template>
@@ -144,18 +147,34 @@
                     </div>
                     <template is="dom-if" if="{{!isExpired(project.status)}}">
                         <div class="col-xs-6 text-right">
-                            <donation-button user-id="{{userId}}" project-id="{{project.id}}">
+                            <template is="dom-if" if="{{owned}}">
                                 <paper-button>
-                                    <span class="custom green-hover">
-                                        <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                                    <span class="custom green-hover" on-click="sadToggle">
+                                        <iron-icon icon="editor:mode-edit"></iron-icon>Edit
                                     </span>
                                 </paper-button>
-                            </donation-button>
+                            </template>
+                            <template is="dom-if" if="{{!owned}}">
+                                <donation-button user-id="{{userId}}" project-id="{{project.id}}">
+                                    <paper-button>
+                                        <span class="custom green-hover">
+                                            <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                                        </span>
+                                    </paper-button>
+                                </donation-button>
+                            </template>
                         </div>
                     </template>
                 </div>
             </div>
         </div>
+
+        <paper-dialog id="sad-dialog">
+            <div>Not supported yet ;(</div>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Ok</paper-button>
+            </div>
+        </paper-dialog>
 
     </template>
 </dom-module>
@@ -170,7 +189,11 @@
             },
             ovc: Number,
             project: Object,
-            marked: Boolean
+            marked: Boolean,
+            owned: {
+                type: Boolean,
+                computed: 'isOwned(project, userId)'
+            }
         },
         ready: function() {
             if(this.marked)
@@ -193,6 +216,12 @@
             if(status < 2) {
                 return 'panel-success';
             }
+        },
+        isOwned: function(project, userId) {
+            return project.creatoryid == userId;
+        },
+        sadToggle: function() {
+            this.$$('#sad-dialog').toggle();
         }
     });
 </script>

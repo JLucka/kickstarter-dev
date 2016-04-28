@@ -138,13 +138,28 @@
                 </div>
                 <div class="panel-footer text-center">
                     <template is="dom-if" if="{{!isExpired(project.status)}}">
-                        <donation-button user-id="{{userId}}" project-id="{{project.id}}">
+                        <template is="dom-if" if="{{owned}}">
                             <paper-button>
-                                    <span class="custom green-hover">
-                                        <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                                    <span class="custom green-hover" on-click="sadToggle">
+                                        <iron-icon icon="editor:mode-edit"></iron-icon>Edit
                                     </span>
+                                <paper-dialog id="sad-dialog">
+                                    <div>Not supported yet ;(</div>
+                                    <div class="buttons">
+                                        <paper-button dialog-dismiss>Ok</paper-button>
+                                    </div>
+                                </paper-dialog>
                             </paper-button>
-                        </donation-button>
+                        </template>
+                        <template is="dom-if" if="{{!owned}}">
+                            <donation-button user-id="{{userId}}" project-id="{{project.id}}">
+                                <paper-button>
+                                        <span class="custom green-hover">
+                                            <iron-icon icon="icons:favorite-border"></iron-icon>Support
+                                        </span>
+                                </paper-button>
+                            </donation-button>
+                        </template>
                     </template>
                     <template is="dom-if" if="{{isExpired(project.status)}}">
                         <paper-button noink>
@@ -173,7 +188,11 @@
                 value: true,
                 notify: true
             },
-            route: Object
+            route: Object,
+            owned: {
+                type: Boolean,
+                computed: 'isOwned(project, userId)'
+            }
         },
         observers: ['_pathChanged(route.path)'],
         _pathChanged: function() {
@@ -192,6 +211,12 @@
         },
         isExpired: function(status) {
             return status == 2;
+        },
+        isOwned: function(project, userId) {
+            return project.creatoryid == userId;
+        },
+        sadToggle: function() {
+            this.$$('#sad-dialog').toggle();
         }
     });
 </script>

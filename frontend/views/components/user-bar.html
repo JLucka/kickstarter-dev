@@ -22,11 +22,7 @@
     <template>
         <style>
             .header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
                 background-color: #f6fcf6;
-                padding: 0 20px;
             }
             #dialog {
                 width: 70%;
@@ -55,16 +51,34 @@
                 height: 40px;
                 margin: 10px 0;
             }
+            .flex-bar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            #menu {
+                white-space: nowrap;
+            }
             #bread {
-                display: inline;
+                position: absolute;
+                width: 100%;
+                z-index: 2;
                 color: black;
+                display: flex;
+                justify-content: center;
+                align-content: space-between;
+            }
+            #user-info {
+                white-space: nowrap;
+                padding-right: 12px;
             }
             .page-box {
                 position: relative;
-                display: inline;
-                border-radius: 20px;
-                padding: 0 15px;
+                border-bottom-right-radius: 20px;
+                border-bottom-left-radius: 20px;
+                padding: 0 12px;
                 border: 1px #9fa581 solid;
+                border-top-style: dashed;
                 font-family: 'Open Sans', sans-serif;
                 font-weight: bold;
                 font-size: 20px;
@@ -74,16 +88,18 @@
 
             .left-box {
                 border-bottom-right-radius: 0;
-                border-top-right-radius: 0;
+                margin-right: 2px;
                 font-weight: lighter;
-                background-color: transparent;
+                background-color: #f6fcf6;
                 color: black;
                 cursor: pointer;
             }
 
             .right-box {
                 border-bottom-left-radius: 0;
-                border-top-left-radius: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
         </style>
 
@@ -101,34 +117,37 @@
         <page-routing page="{{page}}" item="{{item}}"></page-routing>
 
         <div class="header">
-            <div>
-                <paper-menu-button vertical-align="down">
-                    <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
-                    <paper-menu class="dropdown-content">
-                        <paper-item id="form-button">New Project</paper-item>
-                        <paper-item id="logout">Logout</paper-item>
-                        <paper-item hidden$="{{!admin}}" id="admin-panel">Admin Panel</paper-item>
-                    </paper-menu>
-                </paper-menu-button>
-                <div id="logo">
-                    <img src$="{{img}}kicklogo.png"
-                         onmouseover$="this.src = '{{img}}kicklogohover.png'"
-                         onmouseout$="this.src = '{{img}}kicklogo.png'"/>
+            <div class="flex-bar">
+                <div id="menu">
+                    <paper-menu-button vertical-align="down">
+                        <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
+                        <paper-menu class="dropdown-content">
+                            <paper-item id="form-button">New Project</paper-item>
+                            <paper-item id="logout">Logout</paper-item>
+                            <paper-item hidden$="{{!admin}}" id="admin-panel">Admin Panel</paper-item>
+                        </paper-menu>
+                    </paper-menu-button>
+                    <div id="logo">
+                        <img src$="{{img}}kicklogo.png"
+                             onmouseover$="this.src = '{{img}}kicklogohover.png'"
+                             onmouseout$="this.src = '{{img}}kicklogo.png'"/>
+                    </div>
+                </div>
+                <div id="user-info">
+                    <span>{{login}} <div id="coins-frame"><img src$="{{img}}ovc.png" height="22px"/> {{ovc}}</div></span>
                 </div>
             </div>
-            <div id="bread">
-                <template is="dom-if" if="{{!decodeName(item.id)}}">
-                    <div class="page-box"><paper-ripple recenters></paper-ripple>{{page.name}}</div>
-                </template>
-                <template is="dom-if" if="{{decodeName(item.id)}}">
-                    <div class="page-box left-box" on-click="goUp"><paper-ripple recenters></paper-ripple>{{page.name}}</div>
-                    <div class="page-box right-box"><paper-ripple recenters></paper-ripple>{{decodeName(item.id)}}</div>
-                </template>
-            </div>
-            <div id="user-info">
-                <span>{{login}} <div id="coins-frame"><img src$="{{img}}ovc.png" height="22px"/> {{ovc}}</div></span>
-            </div>
         </div>
+        <div id="bread">
+            <template is="dom-if" if="{{!decodeName(item.id)}}">
+                <div class="page-box">{{page.name}}</div>
+            </template>
+            <template is="dom-if" if="{{decodeName(item.id)}}">
+                <div class="page-box left-box" on-click="goUp"><paper-ripple recenters></paper-ripple>{{page.name}}</div>
+                <div class="page-box right-box">{{decodeName(item.id)}}</div>
+            </template>
+        </div>
+
         <paper-dialog id="dialog" modal>
             <h2>Create new project</h2>
             <div>
