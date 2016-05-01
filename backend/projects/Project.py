@@ -106,6 +106,11 @@ def get_trending_projects(number):
     return convert_to_json(projects)
 
 
+def get_projects_by_status(status):
+    projects = Project.query(Project.status == Status(status))
+    return convert_to_json(projects)
+
+
 def get_attachments(project):
     urls = []
     attachments = File.query(File.project == project.key).fetch()
