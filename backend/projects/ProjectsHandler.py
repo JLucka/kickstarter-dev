@@ -4,7 +4,7 @@ import json
 
 import webapp2
 from backend.projects.Project import Project, get_entities_by_name, update_projects_status, get_best_projects, \
-    get_trending_projects
+    get_trending_projects, get_projects_by_status
 from backend.projects.ProjectValidator import validate
 from backend.users.User import User
 
@@ -15,7 +15,10 @@ DEFAULT_PAGE_SIZE = 24
 class ProjectsHandler(webapp2.RequestHandler):
     def get(self):
         update_projects_status()
-        if self.request.get("best") != "":
+        status = self.request.get("status")
+        if status:
+            projects = get_projects_by_status(int(status))
+        elif self.request.get("best") != "":
             projects = get_best_projects(int(self.request.get("best")))
         elif self.request.get('trending') != "":
             projects = get_trending_projects(int(self.request.get('trending')))
