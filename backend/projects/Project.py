@@ -50,18 +50,22 @@ class Project(ndb.Model):
         self.status = Status.HIDDEN
         self.put()
 
+    def get_url(self):
+        return "https://kickstarter-dev.appspot.com/project/" + self.name
+
 
 def send_accepted_emails(project):
         recipient = project.creator.get().name
         if '@' not in recipient:
             recipient += "@gmail.com"
         message = mail.EmailMessage(sender="Ocado Kickstarter <a.sokolowski@ocado.com>",
-                            subject="[Ocado Kickstarter] Your project has reached its goal!")
+                            subject="[Ocado Kickstarter] Your project {0} has reached its goal!".format(project.name))
         message.to = "%s <%s>" % (project.creator.get().name, recipient)
         message.body = """
-            Dear %s:
+            Dear {0}:
             Your project has reached its goal. Congratulations! You've earned it.
-            """ % project.creator.get().name
+            {1}
+            """.format(project.creator.get().name, project.get_url())
         message.send()
 
 
