@@ -31,6 +31,19 @@ class ProjectsHandler(webapp2.RequestHandler):
         else:
             self.response.status = 500
 
+    def put(self):
+        new_project_body = json.loads(self.request.body)
+        project_id = new_project_body['id']
+        old_project = Project.get_by_id(project_id)
+        if not old_project:
+            self.response.out.write("Project with id: " + str(project_id) + " was not found")
+            self.response.out.status = 404
+            return
+
+        self.update_project(old_project, new_project_body)
+        self.response.out.write(old_project)
+        self.response.status = 200
+
     def create_project_from_params(self):
         new_project = Project()
         new_project.name = unicode(self.request.get("name"))
@@ -38,6 +51,12 @@ class ProjectsHandler(webapp2.RequestHandler):
         new_project.creator = User.query(User.google_id == str(self.request.get("creatorId"))).get().key
 
         return new_project
+
+    def update_project(self, old_project, new_project_body):
+        old_project.name = new_project_body['name']
+        old_project.description = new_project_body['desc']
+        old_project.put()
+
 
 
 app = webapp2.WSGIApplication([('/api/projects', ProjectsHandler)])
