@@ -8,6 +8,9 @@ from backend.projects.Project import Project, get_entities_by_name, update_proje
 from backend.projects.ProjectValidator import validate
 from backend.users.User import User
 
+DEFAULT_PAGE = 0
+DEFAULT_PAGE_SIZE = 24
+
 
 class ProjectsHandler(webapp2.RequestHandler):
     def get(self):
@@ -18,7 +21,7 @@ class ProjectsHandler(webapp2.RequestHandler):
             projects = get_trending_projects(int(self.request.get('trending')))
         else:
             name = unicode(self.request.get("name"))
-            projects = get_entities_by_name(name)
+            projects = self.with_paging(get_entities_by_name(name))
         self.response.out.write(json.dumps(projects))
 
     def post(self):
@@ -57,6 +60,14 @@ class ProjectsHandler(webapp2.RequestHandler):
         old_project.description = new_project_body['desc']
         old_project.put()
 
+    def with_paging(self, projects):
+        request_page = self.request.get('page')
+        request_page_size = self.request.get('pageSize')
+
+        page = int(request_page if request_page else DEFAULT_PAGE)
+        page_size = int(request_page_size if request_page_size else DEFAULT_PAGE_SIZE)
+
+        return projects[page * page_size:(page + 1) * page_size] if (page + 1) * page_size <= len(projects) else projects[page * page_size:]
 
 
 app = webapp2.WSGIApplication([('/api/projects', ProjectsHandler)])
