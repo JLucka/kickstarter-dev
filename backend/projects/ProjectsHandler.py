@@ -3,29 +3,34 @@
 import json
 
 import webapp2
-from backend.projects.Project import Project, get_entities_by_name, update_projects_status, get_best_projects, \
-    get_trending_projects, get_projects_by_status
+from backend.projects.Project import *
 from backend.projects.ProjectValidator import validate
 from backend.users.User import User
+from collections import defaultdict
 
 DEFAULT_PAGE = 0
 DEFAULT_PAGE_SIZE = 24
+
+FUNCTION_MAP = {'best': get_best_projects, 'trending': get_trending_projects, 'status': get_projects_by_status}
+FUNCTION_MAP = defaultdict(lambda: get_all_projects, FUNCTION_MAP)
 
 
 class ProjectsHandler(webapp2.RequestHandler):
     def get(self):
         update_projects_status()
-        status = self.request.get("status")
-        if status:
-            projects = get_projects_by_status(int(status))
-        elif self.request.get("best") != "":
-            projects = get_best_projects(int(self.request.get("best")))
-        elif self.request.get('trending') != "":
-            projects = get_trending_projects(int(self.request.get('trending')))
-        else:
-            name = unicode(self.request.get("name"))
-            projects = self.with_paging(get_entities_by_name(name))
+        status = int(self.request.get("status") or 0)
+        projects = FUNCTION_MAP[self.request.get('function')](int(self.request.get('pageSize') or DEFAULT_PAGE_SIZE),
+                                                              status)
         self.response.out.write(json.dumps(projects))
+
+
+    def get_by_name(self, name):
+        project = get_project_by_name(unicode(name))
+        if project:
+            self.response.out.write(json.dumps(project))
+        else:
+            self.response.out.write("Project with name: " + unicode(name) + " was not found")
+            self.response.out.status = 404
 
     def post(self):
         new_project = self.create_project_from_params()
@@ -63,14 +68,7 @@ class ProjectsHandler(webapp2.RequestHandler):
         old_project.description = new_project_body['desc']
         old_project.put()
 
-    def with_paging(self, projects):
-        request_page = self.request.get('page')
-        request_page_size = self.request.get('pageSize')
 
-        page = int(request_page if request_page else DEFAULT_PAGE)
-        page_size = int(request_page_size if request_page_size else DEFAULT_PAGE_SIZE)
-
-        return projects[page * page_size:(page + 1) * page_size] if (page + 1) * page_size <= len(projects) else projects[page * page_size:]
-
-
-app = webapp2.WSGIApplication([('/api/projects', ProjectsHandler)])
+app = webapp2.WSGIApplication([
+    webapp2.Route('/api/projects', handler=ProjectsHandler),
+    webapp2.Route('/api/projects/<name:.+>', handler=ProjectsHandler, handler_method='get_by_name')])
