@@ -25,7 +25,6 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         self.response.out.write(self.request.params)
         self.response.out.status = 200
 
-def get
 
 class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self):
