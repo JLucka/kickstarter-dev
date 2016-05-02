@@ -23,7 +23,7 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
             my_file.blobKey = upload.key()
             my_file.put()
             answer.append(str(my_file.blobKey))
-        self.response.out.write(project_id)
+        self.response.out.write(answer)
         self.response.out.status = 200
 
 

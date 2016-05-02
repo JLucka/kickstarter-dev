@@ -7,7 +7,7 @@ threadsafe: true
 # Handlers match in order, put above the default handler.
 handlers:
 
-- url: /
+- url: /api/projects
   script: backend.projects.ProjectsHandler.app
 
 - url: /logout
