@@ -14,12 +14,7 @@ class UploadLinkHandler(webapp2.RequestHandler):
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
-        print long(self.request.get("projectId"))
-        print int(self.request.get("projectId"))
-        print long(str(self.request.get("projectId")))
-        print int(str(self.request.get("projectId")))
-
-        project_id = Project.get_by_id(long(str(self.request.get("projectId")))).key
+        project_id = Project.query(Project.id == str(self.request.get("projectId"))).get().key
         answer = []
         for i in range(0, len(self.get_uploads())):
             upload = self.get_uploads()[i]
