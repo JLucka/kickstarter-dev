@@ -199,7 +199,8 @@
             if(this.page && this.page.name == "project") {
                 document.querySelector('#mainContainer').scrollTop = 0;
                 this.set("loading", true);
-                this.$.detailsAjax.params.name = decodeURIComponent(this.item.id);
+//                this.$.detailsAjax.params.name = decodeURIComponent(this.item.id);   # creating legacy <3
+                this.$.detailsAjax.url =  this.url + "/" + this.item.id;
                 this.$.detailsAjax.generateRequest();
             }
         },

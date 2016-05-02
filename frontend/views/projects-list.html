@@ -31,7 +31,7 @@
          <iron-ajax
                 id="best-list-ajax"
                 auto
-                params = '{"best": "3"}'
+                params = '{"function": "best", "pageSize": "3"}'
                 url="{{url}}"
                 handle-as="json"
                 last-response="{{bestResponse}}">
