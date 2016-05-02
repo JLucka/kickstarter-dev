@@ -57,6 +57,10 @@ handlers:
   script: backend.projects.ProjectsHandler.app
   secure: always
 
+- url: /api/projects/.*
+  script: backend.projects.ProjectsHandler.app
+  secure: always
+
 - url: /api/admin
   script: backend.admin.AdminHandler.app
 

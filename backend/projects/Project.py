@@ -77,17 +77,14 @@ def convert_to_json(projects):
     return projects_jsons
 
 
-def get_entities_by_name(name):
-    if name != "":
-        project = Project.query(Project.name == name).get()
+def get_project_by_name(name):
+    project = Project.query(Project.name == name).get()
+    if project:
         return project.to_json_object()
 
-    else:
-        return get_all_projects()
 
-
-def get_all_projects():
-    projects = Project.query().fetch(25)
+def get_all_projects(*arg):
+    projects = Project.query().fetch(arg[0])
     return convert_to_json(projects)
 
 
@@ -100,18 +97,18 @@ def update_projects_status():
             project.put()
 
 
-def get_best_projects(number):
-    projects = Project.query().order(-Project.money).fetch(number)
+def get_best_projects(*arg):
+    projects = Project.query().order(-Project.money).fetch(arg[0])
     return convert_to_json(projects)
 
 
-def get_trending_projects(number):
-    projects = Project.query().filter(Project.money > 30).order(-Project.createdOn).fetch(number)
+def get_trending_projects(*arg):
+    projects = Project.query().filter(Project.money > 30).order(Project.money).order(-Project.createdOn).fetch(arg[0])
     return convert_to_json(projects)
 
 
-def get_projects_by_status(status):
-    projects = Project.query(Project.status == Status(status))
+def get_projects_by_status(*arg):
+    projects = Project.query(Project.status == Status(arg[1])).fetch(arg[0])
     return convert_to_json(projects)
 
 
