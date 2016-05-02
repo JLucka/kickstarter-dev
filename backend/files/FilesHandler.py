@@ -3,7 +3,8 @@ import webapp2
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from backend.files.File import File
-from google.appengine.ext import ndb
+
+from backend.projects.Project import Project
 
 
 class UploadLinkHandler(webapp2.RequestHandler):
@@ -18,11 +19,11 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         for i in range(0, len(self.get_uploads())):
             upload = self.get_uploads()[i]
             my_file = File()
-            my_file.project = ndb.Key('Project', str(5668600916475904))
+            my_file.project = Project.get_by_id(5186378094608384).key
             my_file.blobKey = upload.key()
             my_file.put()
             answer.append(str(my_file.blobKey))
-        self.response.out.write(self.request.params)
+        self.response.out.write(self.get_file_infos())
         self.response.out.status = 200
 
 
