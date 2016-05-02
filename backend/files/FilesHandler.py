@@ -34,7 +34,7 @@ class PhotoUploadHandler(blobstore_handlers.BlobstoreUploadHandler):
                 blob_key=upload.key())
             user_photo.put()
 
-            self.redirect('/view_photo/%s' % upload.key())
+            self.redirect('/file_download/%s' % upload.key())
 
         except:
             self.error(500)
