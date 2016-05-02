@@ -2,6 +2,8 @@ import webapp2
 
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.ext.webapp.xmpp_handlers import BaseHandler
+
 from backend.files.File import File
 
 from backend.projects.Project import Project
@@ -13,17 +15,17 @@ class UploadLinkHandler(webapp2.RequestHandler):
         self.response.out.write(upload_url)
 
 
-class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
+class UploadHandler(blobstore_handlers.BlobstoreUploadHandler, BaseHandler):
     def post(self):
         answer = []
         for i in range(0, len(self.get_uploads())):
             upload = self.get_uploads()[i]
             my_file = File()
-            my_file.project = Project.get_by_id(5186378094608384).key
+            my_file.project = Project.get_by_id(int(self.request.POST.get('projectId'))).key
             my_file.blobKey = upload.key()
             my_file.put()
             answer.append(str(my_file.blobKey))
-        self.response.out.write(self.get_file_infos())
+        self.response.out.write(answer)
         self.response.out.status = 200
 
 
