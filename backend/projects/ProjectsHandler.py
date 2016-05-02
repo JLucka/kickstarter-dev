@@ -69,5 +69,5 @@ class ProjectsHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    webapp2.Route('/api/projects', handler=ProjectsHandler),
-    webapp2.Route('/api/projects/<name:.+>', handler=ProjectsHandler, handler_method='get_by_name')])
+    webapp2.Route('/', handler=ProjectsHandler),
+    webapp2.Route('/<name:.+>', handler=ProjectsHandler, handler_method='get_by_name')])

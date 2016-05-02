@@ -7,7 +7,7 @@ threadsafe: true
 # Handlers match in order, put above the default handler.
 handlers:
 
-- url: /api/projects
+- url: /
   script: backend.projects.ProjectsHandler.app
 
 - url: /logout
@@ -30,29 +30,6 @@ handlers:
 - url: /api/transaction
   script: backend.transactions.TransactionHandler.app
 
-- url: /styles
-  static_dir: frontend/styles
-  secure: always
-
-- url: /bower_components
-  static_dir: frontend/bower_components
-  secure: always
-
-- url: /views
-  static_dir: frontend/views
-  secure: always
-
-- url: /views/components
-  static_dir: frontend/views/components
-  secure: always
-
-- url: /images
-  static_dir: frontend/images
-
-- url: /routing
-  static_dir: frontend/routing
-  secure: always
-
 - url: /api/projects
   script: backend.projects.ProjectsHandler.app
   secure: always
@@ -63,11 +40,6 @@ handlers:
 
 - url: /api/admin
   script: backend.admin.AdminHandler.app
-
-- url: /.*
-  static_files: frontend/index.html
-  upload: frontend/index.html
-  login: required
 
 
 libraries:
