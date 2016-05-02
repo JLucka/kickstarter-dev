@@ -18,13 +18,14 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         for i in range(0, len(self.get_uploads())):
             upload = self.get_uploads()[i]
             my_file = File()
-            my_file.project = ndb.Key('Project', str(self.request.get("projectId")))
+            my_file.project = ndb.Key('Project', str(5668600916475904))
             my_file.blobKey = upload.key()
             my_file.put()
             answer.append(str(my_file.blobKey))
-        self.response.out.write(answer)
+        self.response.out.write(self.request.params)
         self.response.out.status = 200
 
+def get
 
 class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self):
