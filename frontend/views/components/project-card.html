@@ -130,9 +130,6 @@
                     </div>
                 </div>
                 <div class="description">
-                    <template is="dom-repeat" items="{{project.attachments}}" as="image">
-                        <img src$="{{attachment}}{{image}}" />
-                    </template>
                     <p>{{project.description}}</p>
                 </div>
             </div>
@@ -148,8 +145,8 @@
                     <template is="dom-if" if="{{!isExpired(project.status)}}">
                         <div class="col-xs-6 text-right">
                             <template is="dom-if" if="{{owned}}">
-                                <paper-button>
-                                    <span class="custom green-hover" on-click="sadToggle">
+                                <paper-button on-click="sadToggle">
+                                    <span class="custom green-hover">
                                         <iron-icon icon="editor:mode-edit"></iron-icon>Edit
                                     </span>
                                 </paper-button>
@@ -189,15 +186,10 @@
             },
             ovc: Number,
             project: Object,
-            marked: Boolean,
             owned: {
                 type: Boolean,
                 computed: 'isOwned(project, userId)'
             }
-        },
-        ready: function() {
-            if(this.marked)
-                this.$$(".panel").className += " panel-danger";
         },
         showDetails: function(e) {
             var id = encodeURIComponent(this.project.name);

@@ -69,6 +69,10 @@
                 --paper-spinner-color: var(--google-green-500);
             }
 
+            img {
+                max-height: 100px;
+            }
+
         </style>
 
         <configuration-constants name="project" value="{{url}}"></configuration-constants>
@@ -128,6 +132,9 @@
                     </div>
                     <div class="card-content description ">
                         <p class="text-justify">{{project.description}}</p>
+                        <template is="dom-repeat" items="{{serializeUrls(project.attachments)}}" as="image">
+                            <img src$="{{image.url}}" />
+                        </template>
                     </div>
                     <div class="col-md-6 col-md-offset-3 col-sm-12">
                         <div class="progress">
@@ -199,7 +206,6 @@
             if(this.page && this.page.name == "project") {
                 document.querySelector('#mainContainer').scrollTop = 0;
                 this.set("loading", true);
-//                this.$.detailsAjax.params.name = decodeURIComponent(this.item.id);   # creating legacy <3
                 this.$.detailsAjax.url =  this.url + "/" + this.item.id;
                 this.$.detailsAjax.generateRequest();
             }
@@ -218,6 +224,19 @@
         },
         sadToggle: function() {
             this.$$('#sad-dialog').toggle();
+        },
+        serializeUrls: function(strings) {
+            if(strings != "") {
+                var urlObjects = [];
+                strings = eval(strings);
+                for(var i = 0; i < strings.length; i++) {
+                    var o = new Object();
+                    o.url = strings[i];
+                    urlObjects.push(o);
+                }
+                return urlObjects;
+            }
+            return strings;
         }
     });
 </script>
