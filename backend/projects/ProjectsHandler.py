@@ -11,8 +11,7 @@ from collections import defaultdict
 DEFAULT_PAGE = 0
 DEFAULT_PAGE_SIZE = 24
 
-FUNCTION_MAP = {'best': get_best_projects, 'trending': get_trending_projects, 'status': get_projects_by_status}
-FUNCTION_MAP = defaultdict(lambda: get_all_projects, FUNCTION_MAP)
+FUNCTION_MAP = defaultdict(lambda: get_all_projects, {'best': get_best_projects, 'trending': get_trending_projects, 'status': get_projects_by_status})
 
 
 class ProjectsHandler(webapp2.RequestHandler):
@@ -25,11 +24,11 @@ class ProjectsHandler(webapp2.RequestHandler):
 
 
     def get_by_name(self, name):
-        project = get_project_by_name(unicode(name))
+        project = get_project_by_name(name)
         if project:
             self.response.out.write(json.dumps(project))
         else:
-            self.response.out.write("Project with name: " + unicode(name) + " was not found")
+            self.response.out.write("Project with name: " + name + " was not found")
             self.response.out.status = 404
 
     def post(self):
