@@ -1,55 +1,40 @@
-from google.appengine.api import users
-from google.appengine.ext import blobstore
-from google.appengine.ext import ndb
-from google.appengine.ext.webapp import blobstore_handlers
 import webapp2
 
+from google.appengine.ext import blobstore
+from google.appengine.ext.webapp import blobstore_handlers
+from backend.files.File import File
+from backend.projects.Project import Project
 
-# This datastore model keeps track of which users uploaded which photos.
-class UserPhoto(ndb.Model):
-    user = ndb.StringProperty()
-    blob_key = ndb.BlobKeyProperty()
 
-
-class PhotoUploadFormHandler(webapp2.RequestHandler):
+class UploadLinkHandler(webapp2.RequestHandler):
     def get(self):
-        upload_url = blobstore.create_upload_url('/files_upload')
-        # To upload files to the blobstore, the request method must be "POST"
-        # and enctype must be set to "multipart/form-data".
-        self.response.out.write("""
-<html><body>
-<form action="{0}" method="POST" enctype="multipart/form-data">
-  Upload File: <input type="file" name="file"><br>
-  <input type="submit" name="submit" value="Submit">
-</form>
-</body></html>""".format(upload_url))
+        upload_url = blobstore.create_upload_url('/api/files_upload')
+        self.response.out.write(upload_url)
 
 
-class PhotoUploadHandler(blobstore_handlers.BlobstoreUploadHandler):
+class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
-        try:
-            upload = self.get_uploads()[0]
-            user_photo = UserPhoto(
-                user=users.get_current_user().user_id(),
-                blob_key=upload.key())
-            user_photo.put()
+        project_id = Project.get_by_id(int(str(self.request.get("projectId")))).key
+        answer = []
+        for i in range(0, len(self.get_uploads())):
+            upload = self.get_uploads()[i]
+            my_file = File()
+            my_file.project = project_id
+            my_file.blobKey = upload.key()
+            my_file.put()
+            answer.append(str(my_file.blobKey))
+        self.response.write(answer)
 
-            self.redirect('/file_download/%s' % upload.key())
 
-        except:
-            self.error(500)
-
-
-class ViewPhotoHandler(blobstore_handlers.BlobstoreDownloadHandler):
-    def get(self, photo_key):
-        if not blobstore.get(photo_key):
+class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
+    def get(self):
+        if not blobstore.get(self.request.get('blob_key')):
             self.error(404)
         else:
-            self.send_blob(photo_key)
+            self.send_blob(self.request.get('blob_key'))
 
 
-app = webapp2.WSGIApplication([
-    webapp2.Route('/files', handler=PhotoUploadFormHandler),
-    webapp2.Route('/files_upload', handler=PhotoUploadHandler),
-    webapp2.Route('/file_download', handler=ViewPhotoHandler),
-    ], debug=True)
+app = webapp2.WSGIApplication([('/api/files', UploadLinkHandler),
+                               ('/api/files_upload', UploadHandler),
+                               ('/api/file_download', DownloadHandler)],
+                              debug=True)
