@@ -14,16 +14,17 @@ class UploadLinkHandler(webapp2.RequestHandler):
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
-        project_id = Project.get_by_id(int(str(self.request.get("projectId")))).key
-        answer = []
-        # for i in range(0, len(self.get_uploads())):
-        #     upload = self.get_uploads()[i]
-        #     my_file = File()
-        #     my_file.project = project_id
-        #     my_file.blobKey = upload.key()
-        #     my_file.put()
-        #     answer.append(str(my_file.blobKey))
-        self.response.write(answer)
+        # project_id = Project.get_by_id(int(str(self.request.get("projectId")))).key
+        # answer = []
+        # # for i in range(0, len(self.get_uploads())):
+        # #     upload = self.get_uploads()[i]
+        # #     my_file = File()
+        # #     my_file.project = project_id
+        # #     my_file.blobKey = upload.key()
+        # #     my_file.put()
+        # #     answer.append(str(my_file.blobKey))
+        self.response.out.write('123 123')
+        self.response.out.status = 200
 
 
 class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
