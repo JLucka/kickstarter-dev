@@ -44,7 +44,7 @@
             <content></content>
         </div>
 
-        <paper-dialog id="dialog" modal>
+        <paper-dialog id="dialog" withBackdrop>
             <h2>Support project</h2>
             <div>
                 <div id$="slider-label-{{projectId}}">0</div><br>
@@ -52,7 +52,7 @@
             </div>
             <div class="buttons">
                 <paper-button dialog-dismiss>Cancel</paper-button>
-                <paper-button dialog-confirm autofocus id="donate-button">Donate</paper-button>
+                <paper-button dialog-confirm autofocus id="donate-button" keyBin>Donate</paper-button>
             </div>
         </paper-dialog>
 
