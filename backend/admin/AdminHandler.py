@@ -50,8 +50,7 @@ class AdminHandler(webapp2.RequestHandler):
         elif function == 'add_all':
             all_users = User.query().fetch()
             for user in all_users:
-                user.money += amount
-                user.put()
+                user.add_money(amount)
         elif function == 'set':
             user.set_money(amount)
             self.response.out.write(user.to_json_obj())
