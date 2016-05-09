@@ -51,7 +51,7 @@ class Project(ndb.Model):
         self.put()
 
     def get_url(self):
-        return "https://kickstarter-dev.appspot.com/project/" + self.name
+        return "https://kickstarter-dev.appspot.com/project/" + str(self.name)
 
 
 def send_accepted_emails(project):
