@@ -46,13 +46,23 @@ class AdminHandler(webapp2.RequestHandler):
         elif function == "substract":
             user.substract_money(amount)
             self.response.out.write(user.to_json_obj())
+        elif function == "substract_all":
+            all_users = User.query().fetch()
+            users_after_update = []
+            for user in all_users:
+                user.substract_money(amount)
+                users_after_update.add(user.to_json_obj())
+            self.response.out.write(users_after_update)
         elif function == 'add':
             user.add_money(amount)
             self.response.out.write(user.to_json_obj())
         elif function == 'add_all':
             all_users = User.query().fetch()
+            users_after_update = []
             for user in all_users:
                 user.add_money(amount)
+                users_after_update.add(user.to_json_obj())
+            self.response.out.write(users_after_update)
         elif function == 'set':
             user.set_money(amount)
             self.response.out.write(user.to_json_obj())
