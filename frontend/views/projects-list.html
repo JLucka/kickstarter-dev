@@ -73,7 +73,8 @@
                 params = '{"function": "best", "pageSize": "3"}'
                 url="{{url}}"
                 handle-as="json"
-                last-response="{{bestResponse}}">
+                last-response="{{bestResponse}}"
+                loading="{{loadingBest}}">
         </iron-ajax>
 
 
@@ -83,9 +84,14 @@
                     <div class="section-heading">Our <span id="best-inline" class="marked-inline">best</span> projects!</div>
                     <div>
                         <span id="best-label">best</span>
-                        <paper-icon-button icon="icons:autorenew" on-click="changeBest"></paper-icon-button>
+                        <paper-icon-button icon="icons:compare-arrows" on-click="changeBest"></paper-icon-button>
                     </div>
                 </div>
+                <template is="dom-if" if="{{loadingBest}}">
+                    <div class="text-center">
+                        <paper-spinner-lite alt="Loading project details" active></paper-spinner-lite>
+                    </div>
+                </template>
                 <template is="dom-repeat" items="{{bestResponse}}" sort="_sort">
                     <div class="col-md-4 col-sm-12 col-xs-12">
                         <project-card user-id="{{userId}}" ovc="{{ovc}}" project="{{item}}"></project-card>
@@ -97,7 +103,7 @@
                 <div class="section-heading"><span id="status-inline" class="marked-inline">Active</span> projects:</div>
                 <div>
                     <span id="status-label">active</span>
-                    <paper-icon-button icon="icons:autorenew" on-click="changeStatus"></paper-icon-button>
+                    <paper-icon-button icon="icons:compare-arrows" on-click="changeStatus"></paper-icon-button>
                 </div>
             </div>
             <template is="dom-if" if="{{loading}}">
@@ -165,14 +171,17 @@
             if(this.status == 0) {
                 this.$$("#status-label").innerHTML = 'active';
                 this.$$("#status-inline").innerHTML = 'Active';
+                ajax.params.function = "status";
                 ajax.params.status = "0"
             } else if(this.status == 1) {
                 this.$$("#status-label").innerHTML = 'funded';
                 this.$$("#status-inline").innerHTML = 'Funded';
+                ajax.params.function = "status";
                 ajax.params.status = "1";
             } else if(this.status == 2) {
                 this.$$("#status-label").innerHTML = 'expired';
                 this.$$("#status-inline").innerHTML = 'Expired';
+                ajax.params.function = "status";
                 ajax.params.status = "2";
             } else if(this.status == 3) {
                 this.$$("#status-label").innerHTML = 'all';
