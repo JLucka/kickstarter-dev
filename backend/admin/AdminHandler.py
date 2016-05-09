@@ -52,8 +52,5 @@ class AdminHandler(webapp2.RequestHandler):
         elif function == 'set':
             user.set_money(amount)
             self.response.out.write(user.to_json_obj())
-        else:
-            self.response.status = 400
-
 
 app = webapp2.WSGIApplication([('/api/admin', AdminHandler)])

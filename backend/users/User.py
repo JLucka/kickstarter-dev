@@ -17,7 +17,10 @@ class User(ndb.Model):
         return obj
 
     def substract_money(self, amount):
-        self.money -= amount
+        if self.money >= amount:
+            self.money -= amount
+        else:
+            self.money = 0
         self.put()
 
     def add_money(self, amount):
