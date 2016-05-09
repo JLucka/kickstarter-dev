@@ -15,7 +15,7 @@ class UploadLinkHandler(webapp2.RequestHandler):
         self.response.out.write(upload_url)
 
 
-class UploadHandler(blobstore_handlers.BlobstoreUploadHandler, webapp2.RequestHandler):
+class UploadHandler(BaseHandler, blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         answer = []
         for i in range(0, len(self.get_uploads())):
