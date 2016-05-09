@@ -1,3 +1,5 @@
+import json
+
 import webapp2
 
 from google.appengine.ext import blobstore
@@ -15,17 +17,28 @@ class UploadLinkHandler(webapp2.RequestHandler):
         self.response.out.write(upload_url)
 
 
-class UploadHandler(BaseHandler, blobstore_handlers.BlobstoreUploadHandler):
+class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         answer = []
         for i in range(0, len(self.get_uploads())):
             upload = self.get_uploads()[i]
             my_file = File()
-            my_file.project = Project.get_by_id(int(self.request.get('projectId'))).key
             my_file.blobKey = upload.key()
+            my_file.file_path = str(my_file.blobKey)
             my_file.put()
             answer.append(str(my_file.blobKey))
         self.response.out.write(answer)
+        self.response.out.status = 200
+
+
+class AttachHandler(webapp2.RequestHandler):
+    def post(self):
+        project = Project.get_by_id(int(self.request.get('projectId'))).key
+        files = json.loads(str(self.request.get('files')).replace("\'", '"'))
+        for blobkey in files["files"]:
+            my_file = File.query(File.file_path == str(blobkey)).get()
+            my_file.project = project
+            my_file.put()
         self.response.out.status = 200
 
 
@@ -39,5 +52,6 @@ class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
 
 app = webapp2.WSGIApplication([('/api/files', UploadLinkHandler),
                                ('/api/files_upload', UploadHandler),
-                               ('/api/file_download', DownloadHandler)],
+                               ('/api/file_download', DownloadHandler),
+                               ('/api/files_attach', AttachHandler)],
                               debug=True)

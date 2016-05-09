@@ -27,6 +27,9 @@ handlers:
 - url: /api/files
   script: backend.files.FilesHandler.app
 
+- url: /api/files_attach
+  script: backend.files.FilesHandler.app
+
 - url: /api/transaction
   script: backend.transactions.TransactionHandler.app
 
