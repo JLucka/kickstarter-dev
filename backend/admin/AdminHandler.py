@@ -41,30 +41,20 @@ class AdminHandler(webapp2.RequestHandler):
     def money_operation(self, function):
         user = User.query(User.google_id == str(self.request.get("userId"))).get()
         amount = int(self.request.get("amount"))
-        if function == "substract":
+        if amount <= 0:
+            self.response.status = 400
+        elif function == "substract":
             user.substract_money(amount)
             self.response.out.write(user.to_json_obj())
-        elif function == "substract_all":
-            all_users = User.query().fetch()
-            users_after_update = []
-            for user in all_users:
-                user.substract_money(amount)
-                users_after_update.add(user.to_json_obj())
-            self.response.out.write(list)
         elif function == 'add':
             user.add_money(amount)
             self.response.out.write(user.to_json_obj())
         elif function == 'add_all':
             all_users = User.query().fetch()
-            users_after_update = []
             for user in all_users:
                 user.add_money(amount)
-                users_after_update.add(user.to_json_obj())
-            self.response.out.write(list)
         elif function == 'set':
             user.set_money(amount)
             self.response.out.write(user.to_json_obj())
-        else:
-            self.response.status = 400
 
 app = webapp2.WSGIApplication([('/api/admin', AdminHandler)])

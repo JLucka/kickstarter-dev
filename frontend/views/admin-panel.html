@@ -106,6 +106,8 @@
                 </div>
                 <div class="narrow-col">
                     OVC
+                    <paper-icon-button class="arrow-icon" icon="hardware:keyboard-arrow-up"
+                                       on-tap="addAll"></paper-icon-button>
                 </div>
                 <div class="narrow-col">
                     Admin
@@ -163,6 +165,13 @@
             this.$.ajax.params = {
                 "userId": id,
                 "function": "add",
+                "amount": 0
+            };
+            this.$$("#add-dialog").toggle();
+        },
+        addAll: function(e) {
+            this.$.ajax.params = {
+                "function": "add_all",
                 "amount": 0
             };
             this.$$("#add-dialog").toggle();

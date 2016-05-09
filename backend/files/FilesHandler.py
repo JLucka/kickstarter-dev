@@ -15,13 +15,13 @@ class UploadLinkHandler(webapp2.RequestHandler):
         self.response.out.write(upload_url)
 
 
-class UploadHandler(blobstore_handlers.BlobstoreUploadHandler, BaseHandler):
+class UploadHandler(blobstore_handlers.BlobstoreUploadHandler, webapp2.RequestHandler):
     def post(self):
         answer = []
         for i in range(0, len(self.get_uploads())):
             upload = self.get_uploads()[i]
             my_file = File()
-            my_file.project = Project.get_by_id(int(self.request.POST.get('projectId'))).key
+            my_file.project = Project.get_by_id(int(self.request.get('projectId'))).key
             my_file.blobKey = upload.key()
             my_file.put()
             answer.append(str(my_file.blobKey))
