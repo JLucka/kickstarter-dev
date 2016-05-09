@@ -43,7 +43,7 @@ class AdminHandler(webapp2.RequestHandler):
         amount = int(self.request.get("amount"))
         if amount <= 0:
             self.response.status = 400
-        if function == "substract":
+        elif function == "substract":
             user.substract_money(amount)
             self.response.out.write(user.to_json_obj())
         elif function == 'add':
