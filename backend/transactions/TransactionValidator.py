@@ -5,8 +5,11 @@ from backend.projects.Project import Status
 def validate(response, new_transaction):
     user = new_transaction.user.get()
     project = new_transaction.project.get()
-
-    if user.google_id == project.creator.get().google_id:
+    if new_transaction.money <= 0:
+        response.status = 400
+        response.write("You can't support a project with negative amount of money")
+        return False
+    elif user.google_id == project.creator.get().google_id:
         response.status = 401
         response.write("You can't support your own project!")
         return False

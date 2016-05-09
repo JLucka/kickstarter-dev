@@ -32,6 +32,10 @@ class User(ndb.Model):
         self.admin = True
         self.put()
 
+    def remove_admin(self):
+        self.admin = False
+        self.put()
+
     @staticmethod
     def get_all_as_json():
         users_query = User.query().fetch()

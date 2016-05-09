@@ -41,7 +41,9 @@ class AdminHandler(webapp2.RequestHandler):
     def money_operation(self, function):
         user = User.query(User.google_id == str(self.request.get("userId"))).get()
         amount = int(self.request.get("amount"))
-        if function == "substract":
+        if amount <= 0:
+            self.response.status = 400
+        elif function == "substract":
             user.substract_money(amount)
             self.response.out.write(user.to_json_obj())
         elif function == 'add':
