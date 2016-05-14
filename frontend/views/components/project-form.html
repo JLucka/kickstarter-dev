@@ -1,0 +1,161 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner-styles.html">
+<link rel="import" href="../configuration-constants.html">
+
+
+<dom-module id="project-form">
+    <template>
+        <style is="custom-style">
+            #dialog {
+                width: 70%;
+            }
+
+            paper-spinner-lite {
+                margin-top: 20px;
+                --paper-spinner-color: var(--google-green-500);
+            }
+
+            #attachments img {
+                height: 100px;
+            }
+        </style>
+
+        <configuration-constants name="project" value="{{url}}"></configuration-constants>
+        <configuration-constants name="files" value="{{files}}"></configuration-constants>
+        <configuration-constants name="images" value="{{img}}"></configuration-constants>
+        <configuration-constants name="attachment" value="{{attachment}}"></configuration-constants>
+
+        <iron-ajax
+                id="ajax"
+                url="{{url}}"
+                method="POST"
+                on-response="handleResponse"
+                handle-as="json">
+        </iron-ajax>
+
+        <iron-ajax
+                id="filesAjax"
+                url="{{files}}"
+                last-response="{{uploadUrl}}"
+                handle-as="text">
+        </iron-ajax>
+
+        <iron-ajax
+                id="uploadAjax"
+                url="{{uploadUrl}}"
+                method="POST"
+                on-response="handleResponse"
+                handle-as="json">
+        </iron-ajax>
+
+        <paper-dialog id="dialog" withBackdrop>
+            <h2>Create new project</h2>
+            <div>
+                <paper-input label="Project name" char-counter maxlength="256" bind-value="{{name}}"></paper-input>
+                <paper-textarea label="Description" char-counter max-rows="8" bind-value="{{desc}}"></paper-textarea>
+                Add an attachment:
+                <form is="iron-form" action$="{{uploadUrl}}" method="post" enctype="multipart/form-data" id="form"
+                      on-iron-form-response="formResponse">
+                    <input type="file" name="fileToUpload" id="fileToUpload" multiple>
+                    <paper-button raised on-click="submit">Submit</paper-button>
+                </form>
+                <div id="attachments">
+                    <template is="dom-repeat" items="{{attachmentIds}}" as="image">
+                        <img src$="{{attachment}}{{image}}"/>
+                    </template>
+                    <template is="dom-if" if="{{loading}}">
+                        <paper-spinner-lite alt="Loading project details" active></paper-spinner-lite>
+                    </template>
+                </div>
+                <script>
+                    form.addEventListener('iron-form-presubmit', function (event) {
+                        var formData = new FormData();
+
+                        var fileInput = this.$$("#fileToUpload");
+                        for (var i = 0, file; file = fileInput.files[i]; ++i) {
+                            formData.append(file.name, file);
+                        }
+
+                        this.request.body = formData;
+                        this.request.handleAs = 'text';
+                        this.request.contentType = null;
+                    });
+                </script>
+            </div>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm autofocus id="add-button">Add</paper-button>
+            </div>
+        </paper-dialog>
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'project-form',
+        properties: {
+            name: String,
+            desc: String,
+            userId: {
+                type: String,
+                value: '0'
+            },
+            uploadUrl: {
+                type: String,
+                value: ''
+            },
+            attachmentIds: {
+                type: Array,
+                value: [],
+                notify: true
+            },
+            loading: {
+                type: Boolean,
+                value: false
+            }
+        },
+        listeners: {
+            'add-button.tap': 'addProject'
+        },
+        toggle: function () {
+            this.$.filesAjax.generateRequest();
+            this.querySelector('#dialog').toggle();
+        },
+        formResponse: function (request) {
+            var attachmentIds = eval(request.detail.response);
+            for (var i = 0; i < attachmentIds.length; i++) {
+                this.push('attachmentIds', attachmentIds[i]);
+            }
+            this.set("loading", false);
+        },
+        submit() {
+            this.$.form.submit();
+            this.$$("#fileToUpload").value = "";
+            this.set("loading", true);
+        },
+        addProject: function (e) {
+            this.$.ajax.params = {
+                "name": this.name,
+                "desc": this.desc,
+                "creatorId": this.userId,
+                "files": JSON.stringify(this.attachmentIds)
+            };
+            this.$.ajax.generateRequest();
+
+            this.set('name', '');
+            this.set('desc', '');
+            this.set('attachmentIds', []);
+        },
+        handleResponse: function (request) {
+            document.querySelector("#list-ajax").generateRequest();
+        }
+    });
+</script>

@@ -167,7 +167,6 @@
         observers: ['_pathChanged(route.path)'],
         _pathChanged: function() {
             if(this.page && this.page.name == "admin-panel") {
-                console.log('hello');
                 this.$.user.generateRequest();
             }
         },

@@ -95,10 +95,29 @@
                 background-color: #cbcbcb;
                 color: #666666;
             }
+
+            .stamp {
+                position: absolute;
+                right: 22px;
+                top: 30px;
+                opacity: 0.4;
+                z-index: 2;
+                transition: 1s;
+            }
+
+            .stamp:hover {
+                opacity: 1;
+            }
+
+            .stamp img {
+                width: 150px;
+                transform: rotate(20deg);
+            }
         </style>
 
         <page-routing route="{{route}}"></page-routing>
         <configuration-constants name="attachment" value="{{attachment}}"></configuration-constants>
+        <configuration-constants name="images" value="{{img}}"></configuration-constants>
 
         <div class$="panel {{chooseClass(project.status)}} status-{{project.status}}">
             <div class="panel-heading">
@@ -107,6 +126,22 @@
                 </div>
             </div>
             <div class="panel-body">
+                <template is="dom-if" if="{{isFunded(project.status)}}">
+                    <div class="stamp">
+                        <img src$="{{img}}funded.png" />
+                        <paper-tooltip offset="0">
+                            This project has already been funded, but if you love it, then you can still show your support!
+                        </paper-tooltip>
+                    </div>
+                </template>
+                <template is="dom-if" if="{{isExpired(project.status)}}">
+                    <div class="stamp">
+                        <img src$="{{img}}expired.png" />
+                        <paper-tooltip offset="0">
+                            This project didn't work out. <br> Maybe it should stay here to inspire future ideas?
+                        </paper-tooltip>
+                    </div>
+                </template>
                 <div class="row">
                     <div class="col-xs-6 text-right" id="more-info">
                         Created on:
@@ -120,10 +155,6 @@
                             {{project.date}}
                             <br>
                             {{project.money}}
-                            <template is="dom-if" if="{{isFunded(project.status)}}">
-                                <iron-icon icon="icons:favorite-border"></iron-icon>
-                                <paper-tooltip offset="0">Already funded <3</paper-tooltip>
-                            </template>
                             <br>
                             {{stripOcado(project.creatorname)}}
                         </b>

@@ -66,12 +66,13 @@
 
             <script>
                 document.addEventListener('WebComponentsReady', function () {
-                    var template = document.querySelector('template[is="dom-bind"]');
-                    var goodNames = ['projects', 'project', 'admin-panel'];
-                    if(!(template.page.name in goodNames)) {
-                        console.log("this is part of me");
-                        this.set('template.page.name', 'projects');
-                    }
+                    setTimeout(function(){
+                        var template = document.querySelector('template[is="dom-bind"]');
+                        var goodNames = ['projects', 'project', 'admin-panel'];
+                        if(!(template.page.name in goodNames)) {
+                            template.set('page.name', 'projects');
+                        }
+                    }, 100);
                 });
             </script>
 

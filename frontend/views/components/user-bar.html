@@ -15,6 +15,7 @@
 <link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../configuration-constants.html">
+<link rel="import" href="../components/project-form.html">
 <link rel="import" href="../../routing/page-routing.html">
 
 
@@ -23,9 +24,6 @@
         <style>
             .header {
                 background-color: #f6fcf6;
-            }
-            #dialog {
-                width: 70%;
             }
             #user-info span{
                 font-family: 'Open Sans', sans-serif;
@@ -107,17 +105,7 @@
             }
         </style>
 
-        <configuration-constants name="project" value="{{url}}"></configuration-constants>
         <configuration-constants name="images" value="{{img}}"></configuration-constants>
-
-        <iron-ajax
-                id="ajax"
-                url="{{url}}"
-                method="POST"
-                on-response="handleResponse"
-                handle-as="json">
-        </iron-ajax>
-
         <page-routing page="{{page}}" item="{{item}}"></page-routing>
 
         <div class="header">
@@ -152,17 +140,7 @@
             </template>
         </div>
 
-        <paper-dialog id="dialog" withBackdrop>
-            <h2>Create new project</h2>
-            <div>
-                <paper-input label="Project name" char-counter maxlength="256" bind-value="{{name}}"></paper-input>
-                <paper-textarea label="Description" char-counter max-rows="8" bind-value="{{desc}}"></paper-textarea>
-            </div>
-            <div class="buttons">
-                <paper-button dialog-dismiss>Cancel</paper-button>
-                <paper-button dialog-confirm autofocus id="add-button">Add</paper-button>
-            </div>
-        </paper-dialog>
+        <project-form id="dialog" user-id="{{userId}}"></project-form>
     </template>
 </dom-module>
 
@@ -170,8 +148,6 @@
     Polymer({
         is: 'user-bar',
         properties: {
-            name: String,
-            desc: String,
             userId: {
                 type: String,
                 value: '0'
@@ -186,21 +162,12 @@
         },
         listeners: {
             'form-button.tap': 'showForm',
-            'add-button.tap': 'addProject',
             'logo.tap': 'goHome',
             'logout.tap': 'logout',
             'admin-panel.tap': 'goAdmin'
         },
         showForm: function(e) {
             this.querySelector('#dialog').toggle();
-        },
-        addProject: function(e) {
-            this.$.ajax.params = {
-                "name": this.name,
-                "desc": this.desc,
-                "creatorId": this.userId
-            };
-            this.$.ajax.generateRequest();
         },
         goHome: function(e) {
             this.set('page.name', 'projects');
@@ -210,9 +177,6 @@
         },
         logout: function(e) {
             window.location.replace("/logout");
-        },
-        handleResponse: function(request) {
-            document.querySelector("#list-ajax").generateRequest();
         },
         decodeName: function(name) {
             return decodeURIComponent(name);
