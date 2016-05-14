@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/iron-icons/hardware-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="configuration-constants.html">
 <link rel="import" href="../routing/page-routing.html">
 
@@ -106,8 +107,18 @@
                 </div>
                 <div class="narrow-col">
                     OVC
-                    <paper-icon-button class="arrow-icon" icon="hardware:keyboard-arrow-up"
-                                       on-tap="addAll"></paper-icon-button>
+                    <div>
+                        <div>
+                            <paper-icon-button class="arrow-icon" icon="hardware:keyboard-arrow-up"
+                                               on-tap="addAll"></paper-icon-button>
+                            <paper-tooltip offset="0" position="top">add money to all users</paper-tooltip>
+                        </div>
+                        <div>
+                            <paper-icon-button class="arrow-icon" icon="hardware:keyboard-arrow-down"
+                                               on-click="substractAll"></paper-icon-button>
+                            <paper-tooltip offset="0">substract money from all users</paper-tooltip>
+                        </div>
+                    </div>
                 </div>
                 <div class="narrow-col">
                     Admin
@@ -189,6 +200,13 @@
             this.$.ajax.params = {
                 "userId": id,
                 "function": "substract",
+                "amount": 0
+            };
+            this.$$("#substract-dialog").toggle();
+        },
+        substractAll: function(e) {
+            this.$.ajax.params = {
+                "function": "substract_all",
                 "amount": 0
             };
             this.$$("#substract-dialog").toggle();

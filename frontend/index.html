@@ -64,6 +64,17 @@
                 </neon-animated-pages>
             </div>
 
+            <script>
+                document.addEventListener('WebComponentsReady', function () {
+                    var template = document.querySelector('template[is="dom-bind"]');
+                    var goodNames = ['projects', 'project', 'admin-panel'];
+                    if(!(template.page.name in goodNames)) {
+                        console.log("this is part of me");
+                        this.set('template.page.name', 'projects');
+                    }
+                });
+            </script>
+
         </template>
     </paper-header-panel>
 </body>
