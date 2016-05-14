@@ -6,7 +6,7 @@ from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext.webapp.xmpp_handlers import BaseHandler
 
-from backend.files.File import File
+from backend.files.File import File, attach_to_project
 
 from backend.projects.Project import Project
 
@@ -27,18 +27,15 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
             my_file.file_path = str(my_file.blobKey)
             my_file.put()
             answer.append(str(my_file.blobKey))
-        self.response.out.write(answer)
+        self.response.out.write(json.dumps(answer))
         self.response.out.status = 200
 
 
 class AttachHandler(webapp2.RequestHandler):
     def post(self):
         project = Project.get_by_id(int(self.request.get('projectId'))).key
-        files = json.loads(str(self.request.get('files')).replace("\'", '"'))
-        for blobkey in files["files"]:
-            my_file = File.query(File.file_path == str(blobkey)).get()
-            my_file.project = project
-            my_file.put()
+        files = json.loads(str(self.request.get('files')))
+        attach_to_project(files, project)
         self.response.out.status = 200
 
 
