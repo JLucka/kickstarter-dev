@@ -61,13 +61,15 @@
             <div>
                 <paper-input label="Project name" char-counter maxlength="256" bind-value="{{name}}"></paper-input>
                 <paper-textarea label="Description" char-counter max-rows="8" bind-value="{{desc}}"></paper-textarea>
+                <br><br>
                 Add an attachment:
                 <form is="iron-form" action$="{{uploadUrl}}" method="post" enctype="multipart/form-data" id="form"
-                      on-iron-form-response="formResponse">
+                      on-iron-form-response="formResponse" on-iron-form-error="formError">
                     <input type="file" name="fileToUpload" id="fileToUpload" multiple>
-                    <paper-button raised on-click="submit">Submit</paper-button>
+                    <paper-button raised on-click="submit">Submit your files</paper-button>
                 </form>
                 <div id="attachments">
+                    <span id="error" style="display: none">Could not load this file.</span>
                     <template is="dom-repeat" items="{{attachmentIds}}" as="image">
                         <img src$="{{attachment}}{{image}}"/>
                     </template>
@@ -136,10 +138,15 @@
             }
             this.set("loading", false);
         },
+        formError: function (error) {
+            this.$.error.style.display = 'block';
+            this.set("loading", false);
+        },
         submit() {
             this.$.form.submit();
             this.$$("#fileToUpload").value = "";
             this.set("loading", true);
+            this.$.error.style.display = 'none';
         },
         addProject: function (e) {
             this.$.ajax.params = {
