@@ -53,7 +53,7 @@ class Project(ndb.Model):
         self.put()
 
     def get_url(self):
-        return "https://kickstarter-dev.appspot.com/project/" + str(self.name)
+        return "https://kickstarter-dev.appspot.com/project/" + urllib.quote(str(self.name))
 
 
 def send_accepted_emails(project):
@@ -67,7 +67,7 @@ def send_accepted_emails(project):
             Dear {0}:
             Your project has reached its goal. Congratulations! You've earned it.
             {1}
-            """.format(project.creator.get().name, urllib.quote_plus(project.get_url()))
+            """.format(project.creator.get().name, project.get_url())
         message.send()
 
 
