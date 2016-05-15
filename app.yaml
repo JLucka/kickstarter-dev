@@ -9,6 +9,7 @@ handlers:
 
 - url: /api/projects
   script: backend.projects.ProjectsHandler.app
+  secure: always
 
 - url: /logout
   script: backend.users.LogoutHandler.app
@@ -20,18 +21,23 @@ handlers:
 
 - url: /api/files_upload
   script: backend.files.FilesHandler.app
+  secure: always
 
 - url: /api/file_download
   script: backend.files.FilesHandler.app
+  secure: always
 
 - url: /api/files
   script: backend.files.FilesHandler.app
+  secure: always
 
 - url: /api/files_attach
   script: backend.files.FilesHandler.app
+  secure: always
 
 - url: /api/transaction
   script: backend.transactions.TransactionHandler.app
+  secure: always
 
 - url: /styles
   static_dir: frontend/styles
@@ -51,6 +57,7 @@ handlers:
 
 - url: /images
   static_dir: frontend/images
+  secure: always
 
 - url: /routing
   static_dir: frontend/routing
@@ -66,11 +73,13 @@ handlers:
 
 - url: /api/admin
   script: backend.admin.AdminHandler.app
+  secure: always
 
 - url: /.*
   static_files: frontend/index.html
   upload: frontend/index.html
   login: required
+  secure: always
 
 
 libraries:
