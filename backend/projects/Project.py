@@ -1,3 +1,5 @@
+import urllib
+
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import msgprop
 from google.appengine.api import mail
@@ -65,7 +67,7 @@ def send_accepted_emails(project):
             Dear {0}:
             Your project has reached its goal. Congratulations! You've earned it.
             {1}
-            """.format(project.creator.get().name, project.get_url())
+            """.format(project.creator.get().name, urllib.quote_plus(project.get_url()))
         message.send()
 
 
