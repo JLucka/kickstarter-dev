@@ -69,8 +69,13 @@
                 --paper-spinner-color: var(--google-green-500);
             }
 
-            img {
+            .mini {
                 max-height: 100px;
+                cursor: pointer;
+            }
+
+            #preview {
+                max-width: 90vw;
             }
 
         </style>
@@ -133,7 +138,7 @@
                     <div class="card-content description ">
                         <p class="text-justify">{{project.description}}</p>
                         <template is="dom-repeat" items="{{serializeUrls(project.attachments)}}" as="image">
-                            <img src$="{{image.url}}" />
+                            <img src$="{{image.url}}" on-click="showImage" data-img$="{{image.url}}" class="mini" />
                         </template>
                     </div>
                     <div class="col-md-6 col-md-offset-3 col-sm-12">
@@ -146,16 +151,10 @@
                 <div class="panel-footer text-center">
                     <template is="dom-if" if="{{!isExpired(project.status)}}">
                         <template is="dom-if" if="{{owned}}">
-                            <paper-button>
-                                    <span class="custom green-hover" on-click="sadToggle">
-                                        <iron-icon icon="editor:mode-edit"></iron-icon>Edit
-                                    </span>
-                                <paper-dialog id="sad-dialog">
-                                    <div>Not supported yet ;(</div>
-                                    <div class="buttons">
-                                        <paper-button dialog-dismiss>Ok</paper-button>
-                                    </div>
-                                </paper-dialog>
+                            <paper-button on-click="edit">
+                                <span class="custom green-hover">
+                                    <iron-icon icon="editor:mode-edit"></iron-icon>Edit
+                                </span>
                             </paper-button>
                         </template>
                         <template is="dom-if" if="{{!owned}}">
@@ -178,6 +177,13 @@
                 </div>
             </div>
         </template>
+
+        <paper-dialog id="imageView">
+            <img id="preview" />
+        </paper-dialog>
+
+        <project-form project-id="{{project.id}}" method="PUT" id="editForm" user-id="{{userId}}"
+                      name="{{project.name}}" desc="{{project.description}}" attachment-ids="{{getIds(project.attachments)}}"></project-form>
     </template>
 </dom-module>
 
@@ -210,6 +216,13 @@
                 this.$.detailsAjax.generateRequest();
             }
         },
+        showImage: function(item) {
+            this.$.preview.src = item.target.dataset.img;
+            this.$.imageView.toggle();
+        },
+        edit: function() {
+            this.$.editForm.toggle();
+        },
         handleResponse: function(request) {
             this.set("loading", false);
         },
@@ -237,6 +250,18 @@
                 return urlObjects;
             }
             return strings;
+        },
+        getIds: function(urls) {
+            if(urls != "") {
+                var ids = [];
+                urls = eval(urls);
+                for(var i = 0; i < urls.length; i++) {
+                    var id = urls[i].substr(urls[i].indexOf("=") + 1);
+                    ids.push(id);
+                }
+                return ids;
+            }
+            return urls;
         }
     });
 </script>

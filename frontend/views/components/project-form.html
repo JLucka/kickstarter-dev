@@ -36,7 +36,7 @@
         <iron-ajax
                 id="ajax"
                 url="{{url}}"
-                method="POST"
+                method="{{method}}"
                 on-response="handleResponse"
                 handle-as="json">
         </iron-ajax>
@@ -59,12 +59,13 @@
         <paper-dialog id="dialog" withBackdrop>
             <h2>Create new project</h2>
             <div>
-                <paper-input label="Project name" char-counter maxlength="256" bind-value="{{name}}"></paper-input>
-                <paper-textarea label="Description" char-counter max-rows="8" bind-value="{{desc}}"></paper-textarea>
+                <paper-input label="Project name" char-counter maxlength="256" bind-value="{{name}}" value$="{{name}}"></paper-input>
+                <paper-textarea label="Description" char-counter max-rows="8" bind-value="{{desc}}" value$="{{desc}}"></paper-textarea>
                 <br><br>
                 Add an attachment:
                 <form is="iron-form" action$="{{uploadUrl}}" method="post" enctype="multipart/form-data" id="form"
-                      on-iron-form-response="formResponse" on-iron-form-error="formError">
+                      on-iron-form-response="formResponse" on-iron-form-error="formError"
+                        on-iron-form-presubmit="parseForm">
                     <input type="file" name="fileToUpload" id="fileToUpload" multiple>
                     <paper-button raised on-click="submit">Submit your files</paper-button>
                 </form>
@@ -77,20 +78,6 @@
                         <paper-spinner-lite alt="Loading project details" active></paper-spinner-lite>
                     </template>
                 </div>
-                <script>
-                    form.addEventListener('iron-form-presubmit', function (event) {
-                        var formData = new FormData();
-
-                        var fileInput = this.$$("#fileToUpload");
-                        for (var i = 0, file; file = fileInput.files[i]; ++i) {
-                            formData.append(file.name, file);
-                        }
-
-                        this.request.body = formData;
-                        this.request.handleAs = 'text';
-                        this.request.contentType = null;
-                    });
-                </script>
             </div>
             <div class="buttons">
                 <paper-button dialog-dismiss>Cancel</paper-button>
@@ -104,6 +91,14 @@
     Polymer({
         is: 'project-form',
         properties: {
+            method: {
+                type: String,
+                value: 'POST'
+            },
+            projectId: {
+                type: String,
+                value: ''
+            },
             name: String,
             desc: String,
             userId: {
@@ -131,6 +126,18 @@
             this.$.filesAjax.generateRequest();
             this.querySelector('#dialog').toggle();
         },
+        parseForm: function(event) {
+            var formData = new FormData();
+
+            var fileInput = this.$.fileToUpload;
+            for (var i = 0, file; file = fileInput.files[i]; ++i) {
+                formData.append(file.name, file);
+            }
+
+            event.target.request.body = formData;
+            event.target.request.handleAs = 'text';
+            event.target.request.contentType = null;
+        },
         formResponse: function (request) {
             var attachmentIds = eval(request.detail.response);
             for (var i = 0; i < attachmentIds.length; i++) {
@@ -144,7 +151,7 @@
         },
         submit() {
             this.$.form.submit();
-            this.$$("#fileToUpload").value = "";
+            this.$.fileToUpload.value = "";
             this.set("loading", true);
             this.$.error.style.display = 'none';
         },
@@ -155,11 +162,16 @@
                 "creatorId": this.userId,
                 "files": JSON.stringify(this.attachmentIds)
             };
+            if(this.projectId) {
+                this.$.ajax.params.id = this.projectId;
+            }
             this.$.ajax.generateRequest();
 
-            this.set('name', '');
-            this.set('desc', '');
-            this.set('attachmentIds', []);
+            if(!this.projectId) {
+                this.set('name', '');
+                this.set('desc', '');
+                this.set('attachmentIds', []);
+            }
         },
         handleResponse: function (request) {
             document.querySelector("#list-ajax").generateRequest();

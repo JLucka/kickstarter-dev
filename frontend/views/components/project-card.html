@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="donation-button.html">
 <link rel="import" href="project-card.html">
+<link rel="import" href="project-form.html">
 <link rel="import" href="../../routing/page-routing.html">
 <link rel="import" href="../configuration-constants.html">
 
@@ -176,7 +177,7 @@
                     <template is="dom-if" if="{{!isExpired(project.status)}}">
                         <div class="col-xs-6 text-right">
                             <template is="dom-if" if="{{owned}}">
-                                <paper-button on-click="sadToggle">
+                                <paper-button on-click="edit">
                                     <span class="custom green-hover">
                                         <iron-icon icon="editor:mode-edit"></iron-icon>Edit
                                     </span>
@@ -197,12 +198,8 @@
             </div>
         </div>
 
-        <paper-dialog id="sad-dialog">
-            <div>Not supported yet ;(</div>
-            <div class="buttons">
-                <paper-button dialog-dismiss>Ok</paper-button>
-            </div>
-        </paper-dialog>
+        <project-form project-id="{{project.id}}" method="PUT" id="editForm" user-id="{{userId}}"
+                        name="{{project.name}}" desc="{{project.description}}" attachment-ids="{{getIds(project.attachments)}}"></project-form>
 
     </template>
 </dom-module>
@@ -243,8 +240,20 @@
         isOwned: function(project, userId) {
             return project.creatoryid == userId;
         },
-        sadToggle: function() {
-            this.$$('#sad-dialog').toggle();
+        edit: function() {
+            this.$.editForm.toggle();
+        },
+        getIds: function(urls) {
+            if(urls != "") {
+                var ids = [];
+                urls = eval(urls);
+                for(var i = 0; i < urls.length; i++) {
+                    var id = urls[i].substr(urls[i].indexOf("=") + 1);
+                    ids.push(id);
+                }
+                return ids;
+            }
+            return urls;
         }
     });
 </script>
