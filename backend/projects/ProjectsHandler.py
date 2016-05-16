@@ -43,7 +43,7 @@ class ProjectsHandler(webapp2.RequestHandler):
 
         if project.put():
             if self.request.get("files"):
-                clear_files(project)
+                clear_files(project.key)
                 files = json.loads(str(self.request.get('files')))
                 attach_to_project(files, project.key)
             self.response.status = 201
