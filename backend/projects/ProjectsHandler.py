@@ -6,7 +6,7 @@ import webapp2
 from backend.projects.Project import *
 from backend.projects.ProjectValidator import validate
 from backend.users.User import User
-from backend.files.File import attach_to_project
+from backend.files.File import attach_to_project, clear_files
 from collections import defaultdict
 
 DEFAULT_PAGE = 0
@@ -43,6 +43,7 @@ class ProjectsHandler(webapp2.RequestHandler):
 
         if project.put():
             if self.request.get("files"):
+                clear_files(project)
                 files = json.loads(str(self.request.get('files')))
                 attach_to_project(files, project.key)
             self.response.status = 201

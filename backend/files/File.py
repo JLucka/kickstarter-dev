@@ -12,3 +12,10 @@ def attach_to_project(files, project):
         my_file = File.query(File.file_path == str(blob_key)).get()
         my_file.project = project
         my_file.put()
+
+
+def clear_files(project):
+    files = File.query(File.project == project).fetch()
+    for my_file in files:
+        my_file.project = None
+        my_file.put()
