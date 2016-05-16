@@ -69,6 +69,7 @@
                     setTimeout(function(){
                         var template = document.querySelector('template[is="dom-bind"]');
                         var goodNames = ['projects', 'project', 'admin-panel'];
+                        console.log(template.page.name);
                         if(!(template.page.name in goodNames)) {
                             template.set('page.name', 'projects');
                         }

@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/paper-badge/paper-badge.html">
 <link rel="import" href="../../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html">
 <link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
@@ -23,8 +24,22 @@
                 --paper-spinner-color: var(--google-green-500);
             }
 
+            #attachments {
+                padding-top: 20px;
+            }
+
             #attachments img {
                 height: 100px;
+            }
+
+            paper-badge {
+                --paper-badge-width: 25px;
+                --paper-badge-height: 25px;
+                --paper-badge-margin-left: -5px;
+                --paper-badge-margin-bottom: -5px;
+                --paper-badge-background: #d3d3d3;
+                --paper-badge-text-color: black;
+                cursor: pointer;
             }
         </style>
 
@@ -36,7 +51,7 @@
         <iron-ajax
                 id="ajax"
                 url="{{url}}"
-                method="{{method}}"
+                method="POST"
                 on-response="handleResponse"
                 handle-as="json">
         </iron-ajax>
@@ -72,7 +87,10 @@
                 <div id="attachments">
                     <span id="error" style="display: none">Could not load this file.</span>
                     <template is="dom-repeat" items="{{attachmentIds}}" as="image">
-                        <img src$="{{attachment}}{{image}}"/>
+                        <img src$="{{attachment}}{{image}}" id$="img{{image}}"/>
+                        <paper-badge icon="icons:close" for="img{{image}}" label="happy"
+                                     on-click="removeAttachment" data-blobkey$="{{image}}">
+                        </paper-badge>
                     </template>
                     <template is="dom-if" if="{{loading}}">
                         <paper-spinner-lite alt="Loading project details" active></paper-spinner-lite>
@@ -81,7 +99,14 @@
             </div>
             <div class="buttons">
                 <paper-button dialog-dismiss>Cancel</paper-button>
-                <paper-button dialog-confirm autofocus id="add-button">Add</paper-button>
+                <paper-button dialog-confirm autofocus id="add-button">
+                    <template is="dom-if" if="{{projectId}}">
+                        Edit
+                    </template>
+                    <template is="dom-if" if="{{!projectId}}">
+                        Add
+                    </template>
+                </paper-button>
             </div>
         </paper-dialog>
     </template>
@@ -91,10 +116,6 @@
     Polymer({
         is: 'project-form',
         properties: {
-            method: {
-                type: String,
-                value: 'POST'
-            },
             projectId: {
                 type: String,
                 value: ''
@@ -124,7 +145,7 @@
         },
         toggle: function () {
             this.$.filesAjax.generateRequest();
-            this.querySelector('#dialog').toggle();
+            this.$.dialog.toggle();
         },
         parseForm: function(event) {
             var formData = new FormData();
@@ -172,6 +193,14 @@
                 this.set('desc', '');
                 this.set('attachmentIds', []);
             }
+        },
+        removeAttachment: function(e) {
+            var id = (e.target.parentNode.dataset.blobkey == undefined ? id = e.target.parentNode.parentNode.dataset.blobkey :
+                    e.target.parentNode.dataset.blobkey);
+            var array = this.get('attachmentIds');
+            this.splice('attachmentIds', array.indexOf(id), 1);
+            this.$.dialog.toggle();
+            this.$.dialog.toggle();
         },
         handleResponse: function (request) {
             document.querySelector("#list-ajax").generateRequest();
