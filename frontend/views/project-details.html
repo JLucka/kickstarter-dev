@@ -76,6 +76,7 @@
 
             #preview {
                 max-width: 90vw;
+                max-height: 80vh;
             }
 
         </style>
@@ -182,7 +183,7 @@
             <img id="preview" />
         </paper-dialog>
 
-        <project-form project-id="{{project.id}}" method="PUT" id="editForm" user-id="{{userId}}"
+        <project-form project-id="{{project.id}}" id="editForm" user-id="{{userId}}"
                       name="{{project.name}}" desc="{{project.description}}" attachment-ids="{{getIds(project.attachments)}}"></project-form>
     </template>
 </dom-module>

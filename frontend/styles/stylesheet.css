@@ -47,3 +47,7 @@ input {
     align-items: center;
     padding: 30px;
 }
+
+.badge {
+    padding: 1px !important;
+}
