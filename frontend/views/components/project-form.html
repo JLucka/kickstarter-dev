@@ -162,9 +162,13 @@
         formResponse: function (request) {
             var attachmentIds = eval(request.detail.response);
             for (var i = 0; i < attachmentIds.length; i++) {
+                console.log(attachmentIds[i]);
+                console.log(this.get('attachmentIds'));
                 this.push('attachmentIds', attachmentIds[i]);
             }
             this.set("loading", false);
+            this.$.dialog.toggle();
+            this.$.dialog.toggle();
         },
         formError: function (error) {
             this.$.error.style.display = 'block';
@@ -204,6 +208,8 @@
         },
         handleResponse: function (request) {
             document.querySelector("#list-ajax").generateRequest();
+            document.querySelector('#best-list-ajax').generateRequest();
+            document.querySelector('#detailsAjax').generateRequest();
         }
     });
 </script>

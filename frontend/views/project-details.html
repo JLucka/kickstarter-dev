@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-styles.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/marked-element/marked-element.html">
 <link rel="import" href="components/donation-button.html">
 <link rel="import" href="configuration-constants.html">
 <link rel="import" href="../routing/page-routing.html">
@@ -136,8 +137,10 @@
                             </b>
                         </div>
                     </div>
-                    <div class="card-content description ">
-                        <p class="text-justify">{{project.description}}</p>
+                    <div class="card-content description">
+                        <marked-element markdown="{{project.description}}">
+                            <div class="markdown-html"></div>
+                        </marked-element>
                         <template is="dom-repeat" items="{{serializeUrls(project.attachments)}}" as="image">
                             <img src$="{{image.url}}" on-click="showImage" data-img$="{{image.url}}" class="mini" />
                         </template>
@@ -262,7 +265,7 @@
                 }
                 return ids;
             }
-            return urls;
+            return [];
         }
     });
 </script>
