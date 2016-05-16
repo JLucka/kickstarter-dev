@@ -33,9 +33,9 @@ class ProjectsHandler(webapp2.RequestHandler):
             self.response.out.status = 404
 
     def post(self):
-        project_id = int(self.request.get('id'))
-        if project_id:
-            project = Project.get_by_id(project_id)
+        project_id = self.request.get('id')
+        if project_id != "":
+            project = Project.get_by_id(int(project_id))
             self.update_from_params(project)
         else:
             project = self.create_project_from_params()
@@ -43,7 +43,7 @@ class ProjectsHandler(webapp2.RequestHandler):
 
         if project.put():
             if self.request.get("files"):
-                clear_files(project)
+                clear_files(project.key)
                 files = json.loads(str(self.request.get('files')))
                 attach_to_project(files, project.key)
             self.response.status = 201
