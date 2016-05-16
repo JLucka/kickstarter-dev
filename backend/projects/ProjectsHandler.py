@@ -33,30 +33,22 @@ class ProjectsHandler(webapp2.RequestHandler):
             self.response.out.status = 404
 
     def post(self):
-        new_project = self.create_project_from_params()
-        validate(self.response, new_project)
+        project_id = int(self.request.get('id'))
+        if project_id:
+            project = Project.get_by_id(project_id)
+            self.update_from_params(project)
+        else:
+            project = self.create_project_from_params()
+        validate(self.response, project)
 
-        if new_project.put():
+        if project.put():
             if self.request.get("files"):
                 files = json.loads(str(self.request.get('files')))
-                attach_to_project(files, new_project.key)
+                attach_to_project(files, project.key)
             self.response.status = 201
-            self.response.out.write(json.dumps(new_project.to_json_object()))
+            self.response.out.write(json.dumps(project.to_json_object()))
         else:
             self.response.status = 500
-
-    def put(self):
-        new_project_body = json.loads(self.request.body)
-        project_id = new_project_body['id']
-        old_project = Project.get_by_id(project_id)
-        if not old_project:
-            self.response.out.write("Project with id: " + str(project_id) + " was not found")
-            self.response.out.status = 404
-            return
-
-        self.update_project(old_project, new_project_body)
-        self.response.out.write(old_project)
-        self.response.status = 200
 
     def create_project_from_params(self):
         new_project = Project()
@@ -66,10 +58,9 @@ class ProjectsHandler(webapp2.RequestHandler):
 
         return new_project
 
-    def update_project(self, old_project, new_project_body):
-        old_project.name = new_project_body['name']
-        old_project.description = new_project_body['desc']
-        old_project.put()
+    def update_from_params(self, project):
+        project.name = unicode(self.request.get("name"))
+        project.description = unicode(self.request.get("desc"))
 
 
 app = webapp2.WSGIApplication([
