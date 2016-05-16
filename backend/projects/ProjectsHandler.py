@@ -33,9 +33,9 @@ class ProjectsHandler(webapp2.RequestHandler):
             self.response.out.status = 404
 
     def post(self):
-        project_id = int(self.request.get('id'))
-        if project_id:
-            project = Project.get_by_id(project_id)
+        project_id = self.request.get('id')
+        if project_id != "":
+            project = Project.get_by_id(int(project_id))
             self.update_from_params(project)
         else:
             project = self.create_project_from_params()
