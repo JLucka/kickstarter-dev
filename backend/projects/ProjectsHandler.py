@@ -18,11 +18,9 @@ FUNCTION_MAP = defaultdict(lambda: get_all_projects, {'best': get_best_projects,
 class ProjectsHandler(webapp2.RequestHandler):
     def get(self):
         update_projects_status()
-        status = int(self.request.get("status") or 0)
-        projects = FUNCTION_MAP[self.request.get('function')](int(self.request.get('pageSize') or DEFAULT_PAGE_SIZE),
-                                                              status)
+        params = QueryParams(self.request)
+        projects = FUNCTION_MAP[params.function](params)
         self.response.out.write(json.dumps(projects))
-
 
     def get_by_name(self, name):
         project = get_project_by_name(name)
@@ -33,36 +31,51 @@ class ProjectsHandler(webapp2.RequestHandler):
             self.response.out.status = 404
 
     def post(self):
-        project_id = self.request.get('id')
-        if project_id != "":
-            project = Project.get_by_id(int(project_id))
-            self.update_from_params(project)
+        params = QueryParams(self.request)
+        if params.id != "":
+            project = Project.get_by_id(int(params.id))
+            update_from_params(project, params)
         else:
-            project = self.create_project_from_params()
+            project = create_project_from_params(params)
         validate(self.response, project)
 
         if project.put():
-            if self.request.get("files"):
+            if params.files:
                 clear_files(project.key)
-                files = json.loads(str(self.request.get('files')))
+                files = json.loads(str(params.files))
                 attach_to_project(files, project.key)
             self.response.status = 201
             self.response.out.write(json.dumps(project.to_json_object()))
         else:
             self.response.status = 500
 
-    def create_project_from_params(self):
-        new_project = Project()
-        new_project.name = unicode(self.request.get("name"))
-        new_project.description = unicode(self.request.get("desc"))
-        new_project.creator = User.query(User.google_id == str(self.request.get("creatorId"))).get().key
 
-        return new_project
+def create_project_from_params(params):
+    new_project = Project()
+    new_project.name = unicode(params.name)
+    new_project.description = unicode(params.description)
+    new_project.creator = User.query(User.google_id == str(params.creator_id)).get().key
 
-    def update_from_params(self, project):
-        project.name = unicode(self.request.get("name"))
-        project.description = unicode(self.request.get("desc"))
+    return new_project
 
+
+def update_from_params(project, params):
+    project.name = unicode(params.name)
+    project.description = unicode(params.description)
+
+
+class QueryParams:
+    def __init__(self, request):
+        self.id = request.get("id")
+        self.name = request.get("name")
+        self.description = request.get("desc")
+        self.creator_id = request.get("creatorId")
+        self.files = request.get("files")
+        self.name = request.get("name")
+        self.status = int(request.get("status") or 0)
+        self.page = int(request.get("page") or 0)
+        self.page_size = int(request.get("pageSize") or DEFAULT_PAGE_SIZE)
+        self.function = request.get("function")
 
 app = webapp2.WSGIApplication([
     webapp2.Route('/api/projects', handler=ProjectsHandler),

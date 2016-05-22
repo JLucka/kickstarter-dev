@@ -85,8 +85,8 @@ def get_project_by_name(name):
         return project.to_json_object()
 
 
-def get_all_projects(*arg):
-    projects = Project.query().fetch(arg[0])
+def get_all_projects(query_params):
+    projects = get_with_pagination(Project.query(), query_params.page, query_params.page_size)
     return convert_to_json(projects)
 
 
@@ -99,19 +99,25 @@ def update_projects_status():
             project.put()
 
 
-def get_best_projects(*arg):
-    projects = Project.query().order(-Project.money).fetch(arg[0])
+def get_best_projects(query_params):
+    projects = Project.query().order(-Project.money).fetch_page(query_params.page, offset=query_params.page_size)
     return convert_to_json(projects)
 
 
-def get_trending_projects(*arg):
-    projects = Project.query().filter(Project.money > 30).order(Project.money).order(-Project.createdOn).fetch(arg[0])
+def get_trending_projects(query_params):
+    projects = Project.query().filter(Project.money > 30).order(Project.money).order(-Project.createdOn).fetch(query_params.page_size)
     return convert_to_json(projects)
 
 
-def get_projects_by_status(*arg):
-    projects = Project.query(Project.status == Status(arg[1])).fetch(arg[0])
+def get_projects_by_status(query_params):
+    project_query = Project.query(Project.status == Status(query_params.status))
+    projects = get_with_pagination(project_query, query_params.page, query_params.page_size)
     return convert_to_json(projects)
+
+
+def get_with_pagination(query, page, page_size):
+    return query.fetch_page(page_size, offset=page*page_size)[0]
+
 
 
 def get_attachments(project):
