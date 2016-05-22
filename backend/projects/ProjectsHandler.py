@@ -37,17 +37,16 @@ class ProjectsHandler(webapp2.RequestHandler):
             update_from_params(project, params)
         else:
             project = create_project_from_params(params)
-        validate(self.response, project)
-
-        if project.put():
-            if params.files:
-                clear_files(project.key)
-                files = json.loads(str(params.files))
-                attach_to_project(files, project.key)
-            self.response.status = 201
-            self.response.out.write(json.dumps(project.to_json_object()))
-        else:
-            self.response.status = 500
+        if validate(self.response, project):
+            if project.put():
+                if params.files:
+                    clear_files(project.key)
+                    files = json.loads(str(params.files))
+                    attach_to_project(files, project.key)
+                self.response.status = 201
+                self.response.out.write(json.dumps(project.to_json_object()))
+            else:
+                self.response.status = 500
 
 
 def create_project_from_params(params):

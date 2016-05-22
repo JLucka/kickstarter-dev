@@ -79,6 +79,10 @@ def convert_to_json(projects):
     return projects_jsons
 
 
+def check_if_name_is_taken(name):
+    return Project.query(Project.name == name).count() > 0
+
+
 def get_project_by_name(name):
     project = Project.query(Project.name == name).get()
     if project:
