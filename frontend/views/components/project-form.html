@@ -81,7 +81,7 @@
                 <form is="iron-form" action$="{{uploadUrl}}" method="post" enctype="multipart/form-data" id="form"
                       on-iron-form-response="formResponse" on-iron-form-error="formError"
                         on-iron-form-presubmit="parseForm">
-                    <input type="file" name="fileToUpload" id="fileToUpload" multiple onchange="document.querySelector('project-form').submit()">
+                    <input type="file" name="fileToUpload" id="fileToUpload" multiple on-change="submit">
                 </form>
                 <div id="attachments">
                     <span id="error" style="display: none">Could not load this file.</span>
@@ -127,7 +127,8 @@
             },
             uploadUrl: {
                 type: String,
-                value: ''
+                value: '',
+                notify: true
             },
             attachmentIds: {
                 type: Array,

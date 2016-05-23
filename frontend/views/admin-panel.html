@@ -52,6 +52,18 @@
                 display: flex;
                 align-items: center;
             }
+
+            paper-toast {
+                width: 97%;
+                font-size: 20px;
+                background-color: #ff7c6e;
+                color: #7f0009;
+            }
+
+            .money {
+                width: 50px;
+                text-align: right;
+            }
         </style>
 
         <configuration-constants name="admin" value="{{url}}"></configuration-constants>
@@ -109,7 +121,9 @@
                     Google ID
                 </div>
                 <div class="narrow-col">
-                    OVC
+                    <div class="money">
+                        OVC
+                    </div>
                     <div>
                         <div>
                             <paper-icon-button class="arrow-icon" icon="hardware:keyboard-arrow-up"
@@ -138,7 +152,9 @@
                         {{user.google_id}}
                     </div>
                     <div class="narrow-col">
-                        {{user.money}}
+                        <div class="money">
+                            {{user.money}}
+                        </div>
                         <div>
                             <paper-icon-button class="arrow-icon" icon="hardware:keyboard-arrow-up"
                                                on-tap="add" data-args$="{{user.google_id}}"></paper-icon-button><br>
