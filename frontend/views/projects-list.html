@@ -68,7 +68,7 @@
                 debounce-duration="3000"
                 loading="{{loading}}">
         </iron-ajax>
-         <iron-ajax
+        <iron-ajax
                 id="best-list-ajax"
                 auto
                 params = '{"function": "best", "pageSize": "3"}'
@@ -98,7 +98,7 @@
                 </template>
                 <template is="dom-repeat" items="{{bestResponse}}" sort="_sort">
                     <div class="col-md-4 col-sm-12 col-xs-12">
-                        <!--<project-card user-id="{{userId}}" ovc="{{ovc}}" project="{{item}}"></project-card>-->
+                        <project-card user-id="{{userId}}" ovc="{{ovc}}" project="{{item}}"></project-card>
                     </div>
                 </template>
             </paper-card>
@@ -120,7 +120,7 @@
             </template>
             <template is="dom-repeat" items="{{ajaxResponse}}" sort="_sort">
                 <div class="col-md-4 col-sm-12 col-xs-12">
-                    <!--<project-card user-id="{{userId}}" ovc="{{ovc}}" project="{{item}}"></project-card>-->
+                    <project-card user-id="{{userId}}" ovc="{{ovc}}" project="{{item}}"></project-card>
                 </div>
             </template>
         </div>
