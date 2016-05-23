@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="configuration-constants.html">
 <link rel="import" href="../routing/page-routing.html">
 
@@ -70,9 +71,11 @@
                 last-response="{{users}}">
         </iron-ajax>
 
+        <paper-toast id="toast">The amount should be a non-negative number!</paper-toast>
+
         <paper-dialog id="add-dialog">
             <h2>How much do you want to give?</h2>
-            <div><paper-input id="add-input" type="number"></paper-input></div>
+            <div><paper-input id="add-input" type="number" min="0"></paper-input></div>
             <div class="buttons">
                 <paper-button dialog-dismiss>Cancel</paper-button>
                 <paper-button on-click="addMoney" dialog-confirm>Accept</paper-button>
@@ -81,7 +84,7 @@
 
         <paper-dialog id="substract-dialog">
             <h2>How much do you want to take away?</h2>
-            <div><paper-input id="substract-input" type="number"></paper-input></div>
+            <div><paper-input id="substract-input" type="number" min="0"></paper-input></div>
             <div class="buttons">
                 <paper-button dialog-dismiss>Cancel</paper-button>
                 <paper-button on-click="substractMoney" dialog-confirm>Accept</paper-button>
@@ -187,12 +190,20 @@
             this.$$("#add-dialog").toggle();
         },
         addMoney: function() {
-            this.$.ajax.params.amount = this.$$("#add-input").value;
-            this.$.ajax.generateRequest();
-            this.async(function() {
-                this.$.user.generateRequest();
-                document.querySelector('#userUpdater').refreshUser();
-            }, 200);
+            var amount = this.$$("#add-input").value;
+            this._updateMoney(amount);
+        },
+        _updateMoney: function(amount) {
+            if(amount < 0)
+                this.$.toast.open();
+            else {
+                this.$.ajax.params.amount = amount;
+                this.$.ajax.generateRequest();
+                this.async(function() {
+                    this.$.user.generateRequest();
+                    document.querySelector('#userUpdater').refreshUser();
+                }, 200);
+            }
         },
         substract: function(e) {
             var id = (e.target.dataset.args == undefined ? id = e.target.parentNode.dataset.args : e.target.dataset.args);
@@ -211,12 +222,8 @@
             this.$$("#substract-dialog").toggle();
         },
         substractMoney: function() {
-            this.$.ajax.params.amount = this.$$("#substract-input").value;
-            this.$.ajax.generateRequest();
-            this.async(function() {
-                this.$.user.generateRequest();
-                document.querySelector('#userUpdater').refreshUser();
-            }, 200);
+            var amount = this.$$("#substract-input").value;
+            this._updateMoney(amount);
         },
         makeAdmin: function(e) {
             var id = (e.target.dataset.args == undefined ? id = e.target.parentNode.dataset.args : e.target.dataset.args);
