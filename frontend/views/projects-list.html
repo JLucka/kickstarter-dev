@@ -1,4 +1,3 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-styles.html">
@@ -99,7 +98,7 @@
                 </template>
                 <template is="dom-repeat" items="{{bestResponse}}" sort="_sort">
                     <div class="col-md-4 col-sm-12 col-xs-12">
-                        <project-card user-id="{{userId}}" ovc="{{ovc}}" project="{{item}}"></project-card>
+                        <!--<project-card user-id="{{userId}}" ovc="{{ovc}}" project="{{item}}"></project-card>-->
                     </div>
                 </template>
             </paper-card>
@@ -121,7 +120,7 @@
             </template>
             <template is="dom-repeat" items="{{ajaxResponse}}" sort="_sort">
                 <div class="col-md-4 col-sm-12 col-xs-12">
-                    <project-card user-id="{{userId}}" ovc="{{ovc}}" project="{{item}}"></project-card>
+                    <!--<project-card user-id="{{userId}}" ovc="{{ovc}}" project="{{item}}"></project-card>-->
                 </div>
             </template>
         </div>
