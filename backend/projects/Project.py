@@ -100,7 +100,8 @@ def update_projects_status():
 
 
 def get_best_projects(query_params):
-    projects = Project.query().order(-Project.money).fetch_page(query_params.page, offset=query_params.page_size)
+    project_query = Project.query().order(-Project.money)
+    projects = get_with_pagination(project_query, query_params.page, query_params.page_size)
     return convert_to_json(projects)
 
 
