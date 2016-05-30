@@ -1,5 +1,6 @@
 import urllib
 
+import operator
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import msgprop
 from google.appengine.api import mail
@@ -7,6 +8,7 @@ from protorpc import messages
 import datetime
 
 from backend.files.File import File
+from backend.transactions.Transaction import Transaction
 
 GOAL_OVC = 100
 
@@ -57,18 +59,19 @@ class Project(ndb.Model):
 
 
 def send_accepted_emails(project):
-        recipient = project.creator.get().name
-        if '@' not in recipient:
-            recipient += "@gmail.com"
-        message = mail.EmailMessage(sender="Ocado Kickstarter <a.sokolowski@ocado.com>",
-                            subject="[Ocado Kickstarter] Your project {0} has reached its goal!".format(project.name))
-        message.to = "%s <%s>" % (project.creator.get().name, recipient)
-        message.body = """
+    recipient = project.creator.get().name
+    if '@' not in recipient:
+        recipient += "@gmail.com"
+    message = mail.EmailMessage(sender="Ocado Kickstarter <a.sokolowski@ocado.com>",
+                                subject="[Ocado Kickstarter] Your project {0} has reached its goal!".format(
+                                    project.name))
+    message.to = "%s <%s>" % (project.creator.get().name, recipient)
+    message.body = """
             Dear {0}:
             Your project has reached its goal. Congratulations! You've earned it.
             {1}
             """.format(project.creator.get().name, project.get_url())
-        message.send()
+    message.send()
 
 
 def convert_to_json(projects):
@@ -106,8 +109,18 @@ def get_best_projects(query_params):
 
 
 def get_trending_projects(query_params):
-    projects = Project.query().filter(Project.money > 30).order(Project.money).order(-Project.createdOn).fetch(query_params.page_size)
-    return convert_to_json(projects)
+    timestamp = datetime.datetime.now() - datetime.timedelta(weeks=1)
+    transactions_from_last_week = Transaction.query(Transaction.time_stamp > timestamp).fetch()
+
+    projects = {}
+    for t in transactions_from_last_week:
+        projects[t.project] = 0
+
+    for t in transactions_from_last_week:
+        projects[t.project] += t.money
+
+    pk = dict(sorted(projects.iteritems(), key=operator.itemgetter(1), reverse=True)[:query_params.page_size]).keys()
+    return convert_to_json(Project.query(Project.key.IN(pk)).fetch())
 
 
 def get_projects_by_status(query_params):
@@ -117,8 +130,7 @@ def get_projects_by_status(query_params):
 
 
 def get_with_pagination(query, page, page_size):
-    return query.fetch_page(page_size, offset=page*page_size)[0]
-
+    return query.fetch_page(page_size, offset=page * page_size)[0]
 
 
 def get_attachments(project):
