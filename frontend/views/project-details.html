@@ -10,6 +10,7 @@
 <link rel="import" href="components/donation-button.html">
 <link rel="import" href="configuration-constants.html">
 <link rel="import" href="../routing/page-routing.html">
+<link href="../bower_components/prism/themes/prism.css" rel="stylesheet" type="text/css">
 
 <dom-module id="project-details">
     <template>
@@ -171,15 +172,16 @@
                         </div>
                     </div>
                     <div class="card-content description">
-                        <marked-element markdown="{{project.description}}">
-                            <div class="markdown-html"></div>
-                        </marked-element>
-
-                        <!--<prism-js language="scala" linenumbers="true">object HelloWorld {-->
-                            <!--def main(args: Array[String]): Unit = {-->
-                                <!--println("Hello, world!")-->
-                            <!--}-->
-                        <!--}</prism-js>-->
+                        <template is="dom-repeat" items="{{parseDescription(project.description)}}">
+                            <template is="dom-if" if="{{item.markdown}}">
+                                <marked-element markdown="{{item.text}}">
+                                    <div class="markdown-html"></div>
+                                </marked-element>
+                            </template>
+                            <template is="dom-if" if="{{!item.markdown}}">
+                                <prism-js language="{{item.language}}" linenumbers>{{item.text}}</prism-js>
+                            </template>
+                        </template>
 
                         <template is="dom-repeat" items="{{serializeUrls(project.attachments)}}" as="image">
                             <img src$="{{image.url}}" on-click="showImage" data-img$="{{image.url}}" class="mini" />
@@ -309,6 +311,23 @@
                 return ids;
             }
             return [];
+        },
+        parseDescription: function(description) {
+            var result = [];
+            while(description.indexOf('<code') != -1) {
+                var end = description.indexOf('<code');
+                result.push({text: description.substring(0, end), markdown: true});
+                var dummy = document.createElement('html');
+                dummy.innerHTML = description;
+                codes = dummy.getElementsByTagName('code');
+                if(codes.length > 0) {
+                    var code = codes[0].innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt');
+                    result.push({text: code, markdown: false, language: codes[0].getAttribute("language")});
+                }
+                description = description.substring(description.indexOf('</code>'));
+            }
+            result.push({text: description, markdown: true});
+            return result;
         }
     });
 </script>
