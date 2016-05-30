@@ -1,3 +1,5 @@
+testbed
+webtest
 mox
 mock
 WebOb

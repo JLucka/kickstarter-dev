@@ -123,6 +123,10 @@ def get_trending_projects(query_params):
     return convert_to_json(Project.query(Project.key.IN(pk)).fetch())
 
 
+def get_searched_projects(query_params):
+    return convert_to_json(Project.query(Project.name == query_params.phrase).fetch())
+
+
 def get_projects_by_status(query_params):
     project_query = Project.query(Project.status == Status(query_params.status))
     projects = get_with_pagination(project_query, query_params.page, query_params.page_size)
