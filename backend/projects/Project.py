@@ -119,12 +119,13 @@ def get_trending_projects(query_params):
     for t in transactions_from_last_week:
         projects[t.project] += t.money
 
+    timestamp = datetime.datetime.now() - datetime.timedelta(weeks=4)
     pk = dict(sorted(projects.iteritems(), key=operator.itemgetter(1), reverse=True)[:query_params.page_size]).keys()
-    return convert_to_json(Project.query(Project.key.IN(pk)).fetch())
+    return convert_to_json(Project.query(Project.key.IN(pk) and Project.createdOn > timestamp).fetch())
 
 
 def get_searched_projects(query_params):
-    return convert_to_json(Project.query(Project.name == query_params.phrase).fetch())
+    return convert_to_json(Project.query(query_params.phrase.IN([Project.name, Project.description])).fetch())
 
 
 def get_projects_by_status(query_params):
