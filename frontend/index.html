@@ -75,9 +75,11 @@
                             template.set('page.name', 'projects');
                         }
                         else {
-                            template.set(template.page.name, 'projects');
                             if(template.item.id != undefined && template.item.id > 0) {
-                                this.set("route.path", template.page.name+'/'+template.item.id);
+                                template.set("route.path", template.page.name+'/'+template.item.id);
+                            }
+                            else {
+                                template.set('page.name', template.page.name);
                             }
                         }
                     }, 100);

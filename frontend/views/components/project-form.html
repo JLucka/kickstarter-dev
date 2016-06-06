@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
@@ -15,7 +16,7 @@
     <template>
         <style is="custom-style">
             #dialog {
-                width: 70%;
+                width: 90%;
             }
 
             paper-spinner-lite {
@@ -39,6 +40,10 @@
                 --paper-badge-background: #d3d3d3;
                 --paper-badge-text-color: black;
                 cursor: pointer;
+            }
+
+            .description-area {
+                font-size: 10px;
             }
         </style>
 
@@ -71,15 +76,17 @@
         </iron-ajax>
 
         <paper-dialog id="dialog" withBackdrop>
-            <h2>Create new project</h2>
-            <div>
+            <paper-dialog-scrollable>
                 <paper-input label="Project name" char-counter maxlength="256" bind-value="{{name}}" value$="{{name}}"></paper-input>
-                <paper-textarea label="Description" char-counter max-rows="8" bind-value="{{desc}}" value$="{{desc}}"></paper-textarea>
+                <paper-textarea class="description-area" label="Description" placeholder='You can use code snippets here! Many languages are supported ;) Here is an example:\n<code language="java">this.isAwesome();</code>\n\nYou can use markdown here! For example:\n* **very important bolded remark** and some *italic remarks*,\n* [example link](http://example.com/) is just an example link on the list!' char-counter rows="6" max-rows="6" bind-value="{{desc}}" value$="{{desc}}"></paper-textarea>
+                <script>
+                    document.querySelector('paper-textarea').placeholder = document.querySelector('paper-textarea').placeholder.replace(/\\n/g, '\n');
+                </script>
                 <br><br>
                 Add an attachment:
                 <form is="iron-form" action$="{{uploadUrl}}" method="post" enctype="multipart/form-data" id="form"
                       on-iron-form-response="formResponse" on-iron-form-error="formError"
-                        on-iron-form-presubmit="parseForm">
+                      on-iron-form-presubmit="parseForm">
                     <input type="file" name="fileToUpload" id="fileToUpload" multiple on-change="submit">
                 </form>
                 <div id="attachments">
@@ -96,7 +103,7 @@
                         <paper-spinner-lite alt="Loading project details" active></paper-spinner-lite>
                     </template>
                 </div>
-            </div>
+            </paper-dialog-scrollable>
             <div class="buttons">
                 <paper-button dialog-dismiss>Cancel</paper-button>
                 <paper-button dialog-confirm autofocus id="add-button">
