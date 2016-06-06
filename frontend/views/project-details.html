@@ -273,6 +273,7 @@
                 document.querySelector('#mainContainer').scrollTop = 0;
                 this.set("loading", true);
                 this.$.detailsAjax.url =  this.url + "/" + this.item.id;
+                this.set('project', {"status": 1, "date": "", "name": "", "time": "", "creatoryid": "", "money": 0, "creatorname": "", "attachments": "", "id": 0, "description": ""});
                 this.$.detailsAjax.generateRequest();
             }
         },
