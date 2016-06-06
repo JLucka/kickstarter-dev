@@ -237,7 +237,7 @@
         <paper-dialog id="imageView">
             <img id="preview" />
             <br>
-            <paper-icon-button icon="file-download" class="download-button"></paper-icon-button>
+            <paper-icon-button icon="file-download" class="download-button" on-click="download"></paper-icon-button>
             <span class="file-name">Name</span>
         </paper-dialog>
 
@@ -264,7 +264,8 @@
             owned: {
                 type: Boolean,
                 computed: 'isOwned(project, userId)'
-            }
+            },
+            currentAttachment: String
         },
         observers: ['_pathChanged(route.path)'],
         _pathChanged: function() {
@@ -276,8 +277,13 @@
             }
         },
         showImage: function(item) {
+            this.set("currentAttachment", item.target.dataset.img);
             this.$.preview.src = item.target.dataset.img;
             this.$.imageView.toggle();
+        },
+        download: function() {
+            var win = window.open(this.currentAttachment, '_blank');
+            win.focus();
         },
         edit: function() {
             this.$.editForm.toggle();
@@ -330,14 +336,13 @@
             while(description.indexOf('<code') != -1) {
                 var end = description.indexOf('<code');
                 result.push({text: description.substring(0, end), markdown: true});
-                var dummy = document.createElement('html');
-                dummy.innerHTML = description;
-                codes = dummy.getElementsByTagName('code');
-                if(codes.length > 0) {
-                    var code = codes[0].innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt');
-                    result.push({text: code, markdown: false, language: codes[0].getAttribute("language")});
-                }
-                description = description.substring(description.indexOf('</code>'));
+                var language = description.match(/".+"/)[0];
+                language = language.replace(/"/g, '');
+                description = description.substring(description.indexOf('>')+1);
+                end = description.indexOf('</code>');
+                var code = description.substring(0, end).replace(/</g, '&lt;').replace(/>/g, '&gt');
+                result.push({text: code, markdown: false, language: language});
+                description = description.substring(end+7);
             }
             result.push({text: description, markdown: true});
             return result;

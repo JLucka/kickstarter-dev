@@ -98,7 +98,7 @@
                 cursor: pointer;
             }
 
-            paper-icon-button {
+            paper-icon-button.close-button {
                 height: 30px;
                 width: 30px;
                 margin-bottom: 10px;
@@ -128,7 +128,7 @@
                 <div>
                     <paper-input id="searchInput" label="search" no-label-float on-change="search">
                         <div prefix><iron-icon icon="icons:search"></iron-icon></div>
-                        <paper-icon-button suffix on-click="clearInput" icon="clear" alt="clear" title="clear">
+                        <paper-icon-button class="close-button" suffix on-click="clearInput" icon="clear" alt="clear" title="clear">
                         </paper-icon-button>
                     </paper-input>
                 </div>

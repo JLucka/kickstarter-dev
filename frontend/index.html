@@ -37,7 +37,7 @@
 
             <active-user id="userUpdater" name="{{login}}" ovc="{{ovc}}" user-id="{{userId}}" admin="{{admin}}"></active-user>
 
-            <page-routing page="{{page}}"></page-routing>
+            <page-routing page="{{page}}" item="{{item}}"></page-routing>
 
             <user-bar admin="{{admin}}"
                       login="{{login}}"
@@ -73,6 +73,12 @@
                         console.log(template.page.name);
                         if(goodNames.indexOf(template.page.name) === -1) {
                             template.set('page.name', 'projects');
+                        }
+                        else {
+                            template.set(template.page.name, 'projects');
+                            if(template.item.id != undefined && template.item.id > 0) {
+                                this.set("route.path", template.page.name+'/'+template.item.id);
+                            }
                         }
                     }, 100);
                 });
