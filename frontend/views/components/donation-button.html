@@ -126,6 +126,7 @@
             }, 400);
         },
         onSupportClick: function(e) {
+            this.$$('#dotation-slider-'+this.projectId).value = 0;
             this.querySelector('#dialog').toggle();
             this.async(function() {
                 var slider = this.$$('#dotation-slider-'+this.projectId);

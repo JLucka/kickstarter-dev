@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-styles.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/marked-element/marked-element.html">
 <link rel="import" href="../bower_components/prism-js/prism-js.html">
 <link rel="import" href="components/donation-button.html">
@@ -97,6 +98,15 @@
                 transform: rotate(20deg);
             }
 
+            .download-button {
+                margin-top: 2px;
+                margin-left: 20px;
+                margin-bottom: 5px;
+            }
+
+            .file-name {
+                padding: 0 2px;
+            }
         </style>
 
         <configuration-constants name="project" value="{{url}}"></configuration-constants>
@@ -226,6 +236,9 @@
 
         <paper-dialog id="imageView">
             <img id="preview" />
+            <br>
+            <paper-icon-button icon="file-download" class="download-button"></paper-icon-button>
+            <span class="file-name">Name</span>
         </paper-dialog>
 
         <project-form project-id="{{project.id}}" id="editForm" user-id="{{userId}}"

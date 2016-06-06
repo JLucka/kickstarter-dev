@@ -71,7 +71,7 @@
                         var template = document.querySelector('template[is="dom-bind"]');
                         var goodNames = ['projects', 'project', 'admin-panel'];
                         console.log(template.page.name);
-                        if(!(template.page.name in goodNames)) {
+                        if(goodNames.indexOf(template.page.name) === -1) {
                             template.set('page.name', 'projects');
                         }
                     }, 100);

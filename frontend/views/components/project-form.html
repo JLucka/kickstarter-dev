@@ -84,11 +84,13 @@
                 </form>
                 <div id="attachments">
                     <span id="error" style="display: none">Could not load this file.</span>
-                    <template is="dom-repeat" items="{{attachmentIds}}" as="image">
-                        <img src$="{{attachment}}{{image}}" id$="img{{image}}"/>
-                        <paper-badge icon="icons:close" for="img{{image}}" label="happy"
-                                     on-click="removeAttachment" data-blobkey$="{{image}}">
-                        </paper-badge>
+                    <template is="dom-if" if="{{visible}}">
+                        <template is="dom-repeat" items="{{attachmentIds}}" as="image">
+                            <img src$="{{attachment}}{{image}}" id$="img{{image}}"/>
+                            <paper-badge icon="icons:close" for="img{{image}}" label="happy"
+                                         on-click="removeAttachment" data-blobkey$="{{image}}">
+                            </paper-badge>
+                        </template>
                     </template>
                     <template is="dom-if" if="{{loading}}">
                         <paper-spinner-lite alt="Loading project details" active></paper-spinner-lite>
@@ -137,6 +139,10 @@
             loading: {
                 type: Boolean,
                 value: false
+            },
+            visible: {
+                type: Boolean,
+                value: false
             }
         },
         listeners: {
@@ -145,6 +151,7 @@
         toggle: function () {
             this.$.filesAjax.generateRequest();
             this.$.dialog.toggle();
+            this.set("visible", "true");
         },
         parseForm: function(event) {
             var formData = new FormData();

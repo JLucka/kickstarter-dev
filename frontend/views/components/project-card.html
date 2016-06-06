@@ -114,6 +114,10 @@
                 width: 150px;
                 transform: rotate(20deg);
             }
+
+            .creator {
+                cursor: pointer;
+            }
         </style>
 
         <page-routing route="{{route}}"></page-routing>
@@ -157,7 +161,7 @@
                             <br>
                             {{project.money}}
                             <br>
-                            {{stripOcado(project.creatorname)}}
+                            <span class="creator" on-click="searchCreator">{{stripOcado(project.creatorname)}}</span>
                         </b>
                     </div>
                 </div>
@@ -256,6 +260,11 @@
                 return ids;
             }
             return [];
+        },
+        searchCreator: function() {
+            var userBar = document.querySelector('user-bar');
+            userBar.$.searchInput.value = this.stripOcado(this.project.creatorname);
+            userBar.search();
         }
     });
 </script>

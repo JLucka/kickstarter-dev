@@ -6,6 +6,8 @@
 <link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../configuration-constants.html">
 <link rel="import" href="../components/project-form.html">
 <link rel="import" href="../../routing/page-routing.html">
@@ -95,6 +97,12 @@
             paper-item {
                 cursor: pointer;
             }
+
+            paper-icon-button {
+                height: 30px;
+                width: 30px;
+                margin-bottom: 10px;
+            }
         </style>
 
         <configuration-constants name="images" value="{{img}}"></configuration-constants>
@@ -116,6 +124,13 @@
                              onmouseover$="this.src = '{{img}}kicklogohover.png'"
                              onmouseout$="this.src = '{{img}}kicklogo.png'"/>
                     </div>
+                </div>
+                <div>
+                    <paper-input id="searchInput" label="search" no-label-float on-change="search">
+                        <div prefix><iron-icon icon="icons:search"></iron-icon></div>
+                        <paper-icon-button suffix on-click="clearInput" icon="clear" alt="clear" title="clear">
+                        </paper-icon-button>
+                    </paper-input>
                 </div>
                 <div id="user-info">
                     <span>{{login}} <div id="coins-frame"><img src$="{{img}}ovc.png" height="22px"/> {{ovc}}</div></span>
@@ -175,6 +190,20 @@
         },
         goUp: function() {
             this.set('page.name', this.page.name+'s');
+        },
+        search: function(evt) {
+            var phrase = this.$.searchInput.value;
+            var projectList = document.querySelector('projects-list');
+            if(phrase.length !== 0) {
+                projectList.hideBest(true);
+            } else {
+                projectList.hideBest(false);
+            }
+            projectList.searchPhrase(phrase);
+        },
+        clearInput: function() {
+            this.$.searchInput.value = '';
+            this.search();
         }
     });
 </script>

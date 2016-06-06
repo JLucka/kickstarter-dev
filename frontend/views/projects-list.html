@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="components/project-card.html">
 <link rel="import" href="configuration-constants.html">
 
@@ -80,7 +81,7 @@
 
 
         <div class="container-fluid">
-            <paper-card elevation="3">
+            <paper-card elevation="3" id="bestProjects" hidden$="{{hide}}">
                 <div class="section-title">
                     <div class="section-heading">Our <span id="best-inline" class="marked-inline">best</span> projects!</div>
                     <div>
@@ -105,7 +106,7 @@
 
             <div class="list-title">
                 <div class="section-heading"><span id="status-inline" class="marked-inline">Active</span> projects:</div>
-                <div>
+                <div hidden$="{{hide}}">
                     <span id="status-label">active</span>
                     <paper-icon-button icon="icons:compare-arrows" on-click="changeStatus"></paper-icon-button>
                     <paper-tooltip offset="0">
@@ -131,6 +132,9 @@
     Polymer({
         is: 'projects-list',
         properties: {
+            hide: {
+                type: Boolean
+            },
             userId: {
                 type: String,
                 value: '0'
@@ -202,6 +206,29 @@
                 ajax.params =  new Object();
             }
             ajax.generateRequest();
+        },
+        hideBest: function(hide) {
+            this.set('hide', hide);
+        },
+        searchPhrase: function(phrase) {
+            var ajax = this.$$("#list-ajax");
+            if(phrase.length !== 0) {
+                ajax.params = {
+                    function: "search",
+                    phrase: phrase
+                };
+                this.$$("#status-inline").innerHTML = 'Result';
+                ajax.generateRequest();
+            } else {
+                ajax.params = {
+                    function: "status",
+                    status: "0"
+                };
+                this.$$("#status-label").innerHTML = 'active';
+                this.$$("#status-inline").innerHTML = 'Active';
+                this.$$("#next-status-label").innerHTML = 'funded/expired/all';
+                ajax.generateRequest();
+            }
         }
     });
 </script>
