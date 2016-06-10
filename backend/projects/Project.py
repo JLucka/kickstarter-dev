@@ -119,8 +119,8 @@ def get_trending_projects(query_params):
     for t in transactions_from_last_week:
         projects[t.project] += t.money
 
-    pk = dict(sorted(projects.iteritems(), key=operator.itemgetter(1), reverse=True)[:query_params.page_size]).keys()
-    return convert_to_json(Project.query(Project.key.IN(pk) and Project.status == Status.ACTIVE).fetch())
+    pk = sorted(projects, key=projects.__getitem__)[:3]
+    return convert_to_json(Project.query(Project.key.IN(pk), Project.status == Status.ACTIVE).fetch())
 
 
 def get_searched_projects(query_params):
