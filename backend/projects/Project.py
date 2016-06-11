@@ -109,18 +109,19 @@ def get_best_projects(query_params):
 
 
 def get_trending_projects(query_params):
-    timestamp = datetime.datetime.now() - datetime.timedelta(weeks=1)
-    transactions_from_last_week = Transaction.query(Transaction.time_stamp > timestamp).fetch()
-
-    projects = {}
-    for t in transactions_from_last_week:
-        projects[t.project] = 0
-
-    for t in transactions_from_last_week:
-        projects[t.project] += t.money
-
-    pk = sorted(projects, key=projects.__getitem__)[:query_params.page_size]
-    return convert_to_json(Project.query(ndb.AND(Project.key.IN(pk), Project.status == Status.ACTIVE)).fetch())
+    # timestamp = datetime.datetime.now() - datetime.timedelta(weeks=1)
+    # transactions_from_last_week = Transaction.query(Transaction.time_stamp > timestamp).fetch()
+    #
+    # projects = {}
+    # for t in transactions_from_last_week:
+    #     projects[t.project] = 0
+    #
+    # for t in transactions_from_last_week:
+    #     projects[t.project] += t.money
+    #
+    # pk = sorted(projects, key=projects.__getitem__)[:query_params.page_size]
+    # return convert_to_json(Project.query(ndb.AND(Project.key.IN(pk), Project.status == Status.ACTIVE)).fetch())
+    return []
 
 
 def get_searched_projects(query_params):
