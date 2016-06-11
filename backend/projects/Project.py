@@ -109,7 +109,7 @@ def get_best_projects(query_params):
 
 
 def get_trending_projects(query_params):
-    timestamp = datetime.datetime.now() - datetime.timedelta(weeks=1)
+    timestamp = datetime.datetime.now() - datetime.timedelta(weeks=4)
     transactions_from_last_week = Transaction.query(Transaction.time_stamp > timestamp).fetch()
     projects = {}
     for t in transactions_from_last_week:
