@@ -119,7 +119,7 @@ def get_trending_projects(query_params):
     for t in transactions_from_last_week:
         projects[t.project] += t.money
 
-    pk = sorted(projects, key=projects.__getitem__)[:query_params.pageSize]
+    pk = sorted(projects, key=projects.__getitem__)[:query_params.page_size]
     return convert_to_json(Project.query(ndb.AND(Project.key.IN(pk), Project.status == Status.ACTIVE)).fetch())
 
 
