@@ -9,6 +9,7 @@ import datetime
 
 from backend.files.File import File
 from backend.transactions.Transaction import Transaction
+from backend.users.User import User
 
 GOAL_OVC = 100
 
@@ -131,6 +132,17 @@ def get_projects_by_status(query_params):
     projects = get_with_pagination(project_query, query_params.page, query_params.page_size)
     return convert_to_json(projects)
 
+
+def search_for_projects(query_params):
+    search_phrase = query_params.phrase
+    all_projects = Project.query().fetch()
+    return convert_to_json(filter(lambda p: search_phrase in p.name or search_phrase in p.description
+                                      or len(get_usernames_for_phrase(search_phrase)) > 0,
+                                  all_projects))
+
+
+def get_usernames_for_phrase(phrase):
+    return filter(lambda u: phrase in u.name, User.query().fetch())
 
 def get_with_pagination(query, page, page_size):
     return query.fetch_page(page_size, offset=page * page_size)[0]
