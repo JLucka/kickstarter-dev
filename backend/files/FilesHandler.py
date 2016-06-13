@@ -28,7 +28,7 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
             my_file.content_type = upload.content_type
             my_file.file_name = upload.filename
             my_file.put()
-            answer.append(str(my_file.blobKey))
+            answer.append(my_file.to_json())
         self.response.out.write(json.dumps(answer))
         self.response.out.status = 200
 

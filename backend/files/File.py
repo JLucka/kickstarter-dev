@@ -12,7 +12,8 @@ class File(ndb.Model):
         obj = {
             'url': 'https://kickstarter-dev.appspot.com/api/file_download?blob_key=' + str(self.blobKey),
             'content_type': str(self.content_type),
-            'file_name': str(self.file_name)
+            'file_name': str(self.file_name),
+            'blob_key': str(self.blobKey)
         }
         return obj
 
