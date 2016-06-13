@@ -13,7 +13,8 @@ DEFAULT_PAGE = 0
 DEFAULT_PAGE_SIZE = 24
 
 FUNCTION_MAP = defaultdict(lambda: get_all_projects, {'best': get_best_projects, 'trending': get_trending_projects,
-                                                      'status': get_projects_by_status, 'search': get_searched_projects})
+                                                      'status': get_projects_by_status, 'search': get_searched_projects,
+                                                      'search': search_for_projects})
 
 
 class ProjectsHandler(webapp2.RequestHandler):
@@ -76,6 +77,7 @@ class QueryParams:
         self.status = int(request.get("status") or 0)
         self.page = int(request.get("page") or 0)
         self.page_size = int(request.get("pageSize") or DEFAULT_PAGE_SIZE)
+        self.phrase = str(request.get("phrase"))
         self.function = request.get("function")
 
 app = webapp2.WSGIApplication([
