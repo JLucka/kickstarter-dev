@@ -123,10 +123,6 @@ def get_trending_projects(query_params):
     return convert_to_json(Project.query(ndb.AND(Project.key.IN(pk), Project.status == Status.ACTIVE)).fetch())
 
 
-def get_searched_projects(query_params):
-    return convert_to_json(Project.query(query_params.phrase.IN([Project.name, Project.description])).fetch())
-
-
 def get_projects_by_status(query_params):
     project_query = Project.query(Project.status == Status(query_params.status))
     projects = get_with_pagination(project_query, query_params.page, query_params.page_size)
@@ -137,8 +133,11 @@ def search_for_projects(query_params):
     search_phrase = query_params.phrase
     all_projects = Project.query().fetch()
     return convert_to_json(filter(lambda p: search_phrase in p.name or search_phrase in p.description
-                                      or len(get_usernames_for_phrase(search_phrase)) > 0,
+                                      or check_project_author(p, search_phrase),
                                   all_projects))
+
+def check_project_author(project, phrase):
+    return project.creator.get().name == phrase
 
 
 def get_usernames_for_phrase(phrase):

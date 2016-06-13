@@ -13,7 +13,7 @@ DEFAULT_PAGE = 0
 DEFAULT_PAGE_SIZE = 24
 
 FUNCTION_MAP = defaultdict(lambda: get_all_projects, {'best': get_best_projects, 'trending': get_trending_projects,
-                                                      'status': get_projects_by_status, 'search': get_searched_projects,
+                                                      'status': get_projects_by_status,
                                                       'search': search_for_projects})
 
 
