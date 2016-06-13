@@ -1,3 +1,4 @@
+import json
 import urllib
 
 import operator
@@ -41,7 +42,7 @@ class Project(ndb.Model):
             'status': int(self.status),
             'date': str(self.createdOn.date()),
             'time': str(self.createdOn.strftime('%H:%M:%S')),
-            'attachments': str(get_attachments(self))
+            'attachments': get_attachments(self)
         }
         return obj
 
@@ -136,6 +137,7 @@ def search_for_projects(query_params):
                                       or check_project_author(p, search_phrase),
                                   all_projects))
 
+
 def check_project_author(project, phrase):
     return phrase in project.creator.get().name.lower()
 
@@ -143,14 +145,14 @@ def check_project_author(project, phrase):
 def get_usernames_for_phrase(phrase):
     return filter(lambda u: phrase in u.name, User.query().fetch())
 
+
 def get_with_pagination(query, page, page_size):
     return query.fetch_page(page_size, offset=page * page_size)[0]
 
 
 def get_attachments(project):
-    urls = []
+    attachments_json = []
     attachments = File.query(File.project == project.key).fetch()
     for attachment in attachments:
-        urls.append('https://kickstarter-dev.appspot.com/api/file_download?blob_key=' + str(attachment.blobKey))
-
-    return urls if len(urls) > 0 else ''
+        attachments_json.append(attachment.to_json())
+    return attachments_json if len(attachments_json) > 0 else ''
