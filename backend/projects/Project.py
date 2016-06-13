@@ -130,14 +130,14 @@ def get_projects_by_status(query_params):
 
 
 def search_for_projects(query_params):
-    search_phrase = query_params.phrase
+    search_phrase = query_params.phrase.lower()
     all_projects = Project.query().fetch()
-    return convert_to_json(filter(lambda p: search_phrase in p.name or search_phrase in p.description
+    return convert_to_json(filter(lambda p: search_phrase in p.name.lower() or search_phrase in p.description.lower()
                                       or check_project_author(p, search_phrase),
                                   all_projects))
 
 def check_project_author(project, phrase):
-    return project.creator.get().name == phrase
+    return phrase in project.creator.get().name.lower()
 
 
 def get_usernames_for_phrase(phrase):
