@@ -1,3 +1,4 @@
+import json
 import urllib
 
 import operator
@@ -9,6 +10,7 @@ import datetime
 
 from backend.files.File import File
 from backend.transactions.Transaction import Transaction
+from backend.users.User import User
 
 GOAL_OVC = 100
 
@@ -40,7 +42,7 @@ class Project(ndb.Model):
             'status': int(self.status),
             'date': str(self.createdOn.date()),
             'time': str(self.createdOn.strftime('%H:%M:%S')),
-            'attachments': str(get_attachments(self))
+            'attachments': get_attachments(self)
         }
         return obj
 
@@ -109,9 +111,8 @@ def get_best_projects(query_params):
 
 
 def get_trending_projects(query_params):
-    timestamp = datetime.datetime.now() - datetime.timedelta(weeks=1)
+    timestamp = datetime.datetime.now() - datetime.timedelta(weeks=4)
     transactions_from_last_week = Transaction.query(Transaction.time_stamp > timestamp).fetch()
-
     projects = {}
     for t in transactions_from_last_week:
         projects[t.project] = 0
@@ -119,12 +120,8 @@ def get_trending_projects(query_params):
     for t in transactions_from_last_week:
         projects[t.project] += t.money
 
-    pk = sorted(projects, key=projects.__getitem__)[:query_params.pageSize]
+    pk = sorted(projects, key=projects.__getitem__)[:query_params.page_size]
     return convert_to_json(Project.query(ndb.AND(Project.key.IN(pk), Project.status == Status.ACTIVE)).fetch())
-
-
-def get_searched_projects(query_params):
-    return convert_to_json(Project.query(query_params.phrase.IN([Project.name, Project.description])).fetch())
 
 
 def get_projects_by_status(query_params):
@@ -133,14 +130,29 @@ def get_projects_by_status(query_params):
     return convert_to_json(projects)
 
 
+def search_for_projects(query_params):
+    search_phrase = query_params.phrase.lower()
+    all_projects = Project.query().fetch()
+    return convert_to_json(filter(lambda p: search_phrase in p.name.lower() or search_phrase in p.description.lower()
+                                      or check_project_author(p, search_phrase),
+                                  all_projects))
+
+
+def check_project_author(project, phrase):
+    return phrase in project.creator.get().name.lower()
+
+
+def get_usernames_for_phrase(phrase):
+    return filter(lambda u: phrase in u.name, User.query().fetch())
+
+
 def get_with_pagination(query, page, page_size):
     return query.fetch_page(page_size, offset=page * page_size)[0]
 
 
 def get_attachments(project):
-    urls = []
+    attachments_json = []
     attachments = File.query(File.project == project.key).fetch()
     for attachment in attachments:
-        urls.append('https://kickstarter-dev.appspot.com/api/file_download?blob_key=' + str(attachment.blobKey))
-
-    return urls if len(urls) > 0 else ''
+        attachments_json.append(attachment.to_json())
+    return attachments_json if len(attachments_json) > 0 else ''

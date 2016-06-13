@@ -5,6 +5,17 @@ class File(ndb.Model):
     project = ndb.KeyProperty(kind='Project')
     blobKey = ndb.BlobKeyProperty(required=True)
     file_path = ndb.TextProperty(indexed=True)
+    content_type = ndb.StringProperty()
+    file_name = ndb.StringProperty()
+
+    def to_json(self):
+        obj = {
+            'url': 'https://kickstarter-dev.appspot.com/api/file_download?blob_key=' + str(self.blobKey),
+            'content_type': str(self.content_type),
+            'file_name': str(self.file_name),
+            'blob_key': str(self.blobKey)
+        }
+        return obj
 
 
 def attach_to_project(files, project):
@@ -19,3 +30,4 @@ def clear_files(project):
     for my_file in files:
         my_file.project = None
         my_file.put()
+
