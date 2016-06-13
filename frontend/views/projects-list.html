@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
 <link rel="import" href="components/project-card.html">
 <link rel="import" href="configuration-constants.html">
 
@@ -79,7 +80,6 @@
                 loading="{{loadingBest}}">
         </iron-ajax>
 
-
         <div class="container-fluid">
             <paper-card elevation="3" id="bestProjects" hidden$="{{hide}}">
                 <div class="section-title">
@@ -119,11 +119,15 @@
                     <paper-spinner-lite alt="Loading project details" active></paper-spinner-lite>
                 </div>
             </template>
-            <template is="dom-repeat" items="{{ajaxResponse}}" sort="_sort">
-                <div class="col-md-4 col-sm-12 col-xs-12">
-                    <project-card user-id="{{userId}}" ovc="{{ovc}}" project="{{item}}"></project-card>
-                </div>
-            </template>
+
+            <iron-scroll-threshold id="ironScrollThreshold" lower-threshold="500" on-lower-threshold="loadMoreData">
+                <template is="dom-repeat" items="{{ajaxResponse}}" sort="_sort">
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <project-card user-id="{{userId}}" ovc="{{ovc}}" project="{{item}}"></project-card>
+                    </div>
+                </template>
+            </iron-scroll-threshold>
+
         </div>
     </template>
 </dom-module>
@@ -145,6 +149,10 @@
                 value: true
             },
             status: {
+                type: Number,
+                value: 0
+            },
+            pageNumber: {
                 type: Number,
                 value: 0
             }
@@ -229,6 +237,15 @@
                 this.$$("#next-status-label").innerHTML = 'funded/expired/all';
                 ajax.generateRequest();
             }
+        },
+        loadMoreData: function() {
+            console.log("Hello, it's me!");
+            var page = this.get(page) + 1;
+            this.set('pageNumber', page);
+            var ajax = this.$$("#list-ajax");
+            ajax.params.page = page;
+            ajax.generateRequest();
+            this.$.ironScrollThreshold.clearTriggers();
         }
     });
 </script>

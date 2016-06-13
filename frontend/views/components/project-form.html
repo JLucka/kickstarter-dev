@@ -93,9 +93,14 @@
                     <span id="error" style="display: none">Could not load this file.</span>
                     <template is="dom-if" if="{{visible}}">
                         <template is="dom-repeat" items="{{attachmentIds}}" as="image">
-                            <img src$="{{attachment}}{{image}}" id$="img{{image}}"/>
-                            <paper-badge icon="icons:close" for="img{{image}}" label="happy"
-                                         on-click="removeAttachment" data-blobkey$="{{image}}">
+                            <template is="dom-if" if="{{isImage(image.content_type)}}">
+                                <img src$="{{image.url}}" id$="img{{image.blob_key}}"/>
+                            </template>
+                            <template is="dom-if" if="{{!isImage(image.content_type)}}">
+                                <img src$="{{img}}file.png" id$="img{{image.blob_key}}"/>
+                            </template>
+                            <paper-badge icon="icons:close" for="img{{image.blob_key}}" label="happy"
+                                         on-click="removeAttachment" data-blobkey$="{{image.blob_key}}">
                             </paper-badge>
                         </template>
                     </template>
@@ -173,11 +178,11 @@
             event.target.request.contentType = null;
         },
         formResponse: function (request) {
-            var attachmentIds = eval(request.detail.response);
-            for (var i = 0; i < attachmentIds.length; i++) {
-                console.log(attachmentIds[i]);
+            var attachments = JSON.parse(request.detail.response);
+            for (var i = 0; i < attachments.length; i++) {
+                console.log(attachments[i]);
                 console.log(this.get('attachmentIds'));
-                this.push('attachmentIds', attachmentIds[i]);
+                this.push('attachmentIds', attachments[i]);
             }
             this.set("loading", false);
             this.$.dialog.toggle();
@@ -194,11 +199,15 @@
             this.$.error.style.display = 'none';
         },
         addProject: function (e) {
+            var ids = [];
+            for(var i = 0; i < this.attachmentIds.length; i++) {
+                ids.push(this.attachmentIds[i].blob_key);
+            }
             this.$.ajax.params = {
                 "name": this.name,
                 "desc": this.desc,
                 "creatorId": this.userId,
-                "files": JSON.stringify(this.attachmentIds)
+                "files": JSON.stringify(ids)
             };
             if(this.projectId) {
                 this.$.ajax.params.id = this.projectId;
@@ -223,6 +232,9 @@
             document.querySelector("#list-ajax").generateRequest();
             document.querySelector('#best-list-ajax').generateRequest();
             document.querySelector('#detailsAjax').generateRequest();
+        },
+        isImage: function(mime) {
+            return mime.startsWith("image");
         }
     });
 </script>

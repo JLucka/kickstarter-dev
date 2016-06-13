@@ -205,7 +205,7 @@
         </div>
 
         <project-form project-id="{{project.id}}" id="editForm" user-id="{{userId}}"
-                        name="{{project.name}}" desc="{{project.description}}" attachment-ids="{{getIds(project.attachments)}}"></project-form>
+                        name="{{project.name}}" desc="{{project.description}}" attachment-ids="{{project.attachments}}"></project-form>
 
     </template>
 </dom-module>
@@ -249,18 +249,18 @@
         edit: function() {
             this.$.editForm.toggle();
         },
-        getIds: function(urls) {
-            if(urls != "") {
-                var ids = [];
-                urls = eval(urls);
-                for(var i = 0; i < urls.length; i++) {
-                    var id = urls[i].substr(urls[i].indexOf("=") + 1);
-                    ids.push(id);
-                }
-                return ids;
-            }
-            return [];
-        },
+//        getIds: function(urls) {
+//            if(urls != "") {
+//                var ids = [];
+//                urls = eval(urls);
+//                for(var i = 0; i < urls.length; i++) {
+//                    var id = urls[i].substr(urls[i].indexOf("=") + 1);
+//                    ids.push(id);
+//                }
+//                return ids;
+//            }
+//            return [];
+//        },
         searchCreator: function() {
             var userBar = document.querySelector('user-bar');
             userBar.$.searchInput.value = this.stripOcado(this.project.creatorname);

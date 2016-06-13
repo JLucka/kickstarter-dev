@@ -193,8 +193,13 @@
                             </template>
                         </template>
 
-                        <template is="dom-repeat" items="{{serializeUrls(project.attachments)}}" as="image">
-                            <img src$="{{image.url}}" on-click="showImage" data-img$="{{image.url}}" class="mini" />
+                        <template is="dom-repeat" items="{{project.attachments}}" as="image">
+                            <template is="dom-if" if="{{isImage(image.content_type)}}">
+                                <img src$="{{image.url}}" on-click="showImage" data-img$="{{image}}" class="mini" />
+                            </template>
+                            <template is="dom-if" if="{{!isImage(image.content_type)}}">
+                                <img src$="{{img}}file.png" on-click="showImage" data-img$="{{image}}" class="mini" />
+                            </template>
                         </template>
                     </div>
                     <div class="col-md-6 col-md-offset-3 col-sm-12">
@@ -235,14 +240,19 @@
         </template>
 
         <paper-dialog id="imageView">
-            <img id="preview" />
+            <template is="dom-if" if="{{isImage(currentAttachment.content_type)}}">
+                <img id="preview" src$="{{currentAttachment.url}}" />
+            </template>
+            <template is="dom-if" if="{{!isImage(currentAttachment.content_type)}}">
+                <img id="preview" src$="{{img}}file.png" />
+            </template>
             <br>
             <paper-icon-button icon="file-download" class="download-button" on-click="download"></paper-icon-button>
-            <span class="file-name">Name</span>
+            <span id="fileName" class="file-name">{{currentAttachment.file_name}}</span>
         </paper-dialog>
 
         <project-form project-id="{{project.id}}" id="editForm" user-id="{{userId}}"
-                      name="{{project.name}}" desc="{{project.description}}" attachment-ids="{{getIds(project.attachments)}}"></project-form>
+                      name="{{project.name}}" desc="{{project.description}}" attachment-ids="{{project.attachments}}"></project-form>
     </template>
 </dom-module>
 
@@ -265,7 +275,14 @@
                 type: Boolean,
                 computed: 'isOwned(project, userId)'
             },
-            currentAttachment: String
+            currentAttachment: {
+                type: Object,
+                value: {
+                    url: '',
+                    file_name: 'File',
+                    content_type: ''
+                }
+            }
         },
         observers: ['_pathChanged(route.path)'],
         _pathChanged: function() {
@@ -278,12 +295,11 @@
             }
         },
         showImage: function(item) {
-            this.set("currentAttachment", item.target.dataset.img);
-            this.$.preview.src = item.target.dataset.img;
+            this.set("currentAttachment", JSON.parse(item.target.dataset.img));
             this.$.imageView.toggle();
         },
         download: function() {
-            var win = window.open(this.currentAttachment, '_blank');
+            var win = window.open(this.currentAttachment.url, '_blank');
             win.focus();
         },
         edit: function() {
@@ -307,31 +323,18 @@
         sadToggle: function() {
             this.$$('#sad-dialog').toggle();
         },
-        serializeUrls: function(strings) {
-            if(strings != "") {
-                var urlObjects = [];
-                strings = eval(strings);
-                for(var i = 0; i < strings.length; i++) {
-                    var o = new Object();
-                    o.url = strings[i];
-                    urlObjects.push(o);
-                }
-                return urlObjects;
-            }
-            return strings;
-        },
-        getIds: function(urls) {
-            if(urls != "") {
-                var ids = [];
-                urls = eval(urls);
-                for(var i = 0; i < urls.length; i++) {
-                    var id = urls[i].substr(urls[i].indexOf("=") + 1);
-                    ids.push(id);
-                }
-                return ids;
-            }
-            return [];
-        },
+//        getIds: function(attachments) {
+//            if(attachments != "") {
+//                var ids = [];
+//                urls = eval(urls);
+//                for(var i = 0; i < attachments.length; i++) {
+//                    var id = urls[i].substr(urls[i].indexOf("=") + 1);
+//                    ids.push(id);
+//                }
+//                return ids;
+//            }
+//            return [];
+//        },
         parseDescription: function(description) {
             var result = [];
             while(description.indexOf('<code') != -1) {
@@ -347,6 +350,9 @@
             }
             result.push({text: description, markdown: true});
             return result;
+        },
+        isImage: function(mime) {
+            return mime.startsWith("image");
         }
     });
 </script>
